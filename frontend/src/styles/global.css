@@ -1,0 +1,1305 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #050505;
+  color: #f6f6f4;
+  --black: #050505;
+  --panel: #101112;
+  --panel-soft: #17191b;
+  --line: rgba(255, 255, 255, 0.1);
+  --muted: #a7a9ad;
+  --silver: #d9dde2;
+  --metal: linear-gradient(135deg, #f5f7f8 0%, #8f969f 45%, #fdfdfd 58%, #6d737b 100%);
+  --shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 22% 15%, rgba(255, 255, 255, 0.035), transparent 26%),
+    linear-gradient(135deg, #000 0%, #050505 54%, #000 100%);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.login-screen {
+  min-height: 100vh;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(360px, 1fr) minmax(320px, 420px);
+  gap: 72px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 42px clamp(24px, 7vw, 92px);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.045), transparent 24%),
+    linear-gradient(160deg, #000 0%, #030303 48%, #000 100%);
+  background-size: 110px 110px, auto, auto;
+}
+
+.login-screen::before,
+.login-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.login-screen::before {
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent) 48% 50% / 34% 1px no-repeat,
+    radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.035), transparent 18%);
+}
+
+.login-screen::after {
+  box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.92);
+}
+
+.login-card,
+.form-panel,
+.chart-card,
+.command-panel,
+.history-panel,
+.today-panel,
+.exercise-info,
+.workout-list {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+}
+
+.login-card {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 14px;
+  padding: 82px 28px 30px;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.login-showcase {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: 520px;
+}
+
+.login-showcase .lion-logo {
+  transform: scale(1.48);
+}
+
+.login-showcase .lion-logo.hero .lion-mark {
+  margin-bottom: 62px;
+}
+
+.login-orbit {
+  position: absolute;
+  width: min(88vw, 760px);
+  aspect-ratio: 1;
+  left: 7vw;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  opacity: 0.9;
+}
+
+.phone-frame {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 360px);
+  min-height: 720px;
+  justify-self: center;
+  overflow: hidden;
+  border-radius: 40px;
+  border: 2px solid rgba(229, 232, 235, 0.72);
+  background:
+    radial-gradient(circle at 50% 11%, rgba(255, 255, 255, 0.045), transparent 19%),
+    linear-gradient(180deg, rgba(3, 3, 3, 0.99), rgba(0, 0, 0, 1));
+  box-shadow:
+    inset 0 0 0 8px #000,
+    inset 0 0 0 9px rgba(255, 255, 255, 0.09),
+    0 38px 100px rgba(0, 0, 0, 0.68);
+}
+
+.phone-frame::before,
+.phone-frame::after {
+  content: "";
+  position: absolute;
+  left: -4px;
+  width: 4px;
+  border-radius: 4px 0 0 4px;
+  background: linear-gradient(#9ca1a8, #34383c);
+}
+
+.phone-frame::before {
+  top: 124px;
+  height: 52px;
+}
+
+.phone-frame::after {
+  top: 202px;
+  height: 72px;
+}
+
+.phone-speaker {
+  position: absolute;
+  z-index: 3;
+  top: 13px;
+  left: 50%;
+  width: 108px;
+  height: 27px;
+  transform: translateX(-50%);
+  border-radius: 0 0 18px 18px;
+  background: #050607;
+}
+
+.login-card h2,
+.section-heading h2,
+.command-panel h2,
+.history-panel h2,
+.today-panel h2,
+.exercise-info h2,
+.workout-list h2 {
+  margin: 0;
+  font-size: 1.55rem;
+  letter-spacing: 0;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--silver);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.lion-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.lion-logo.hero {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.lion-mark {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  color: #f5f7f8;
+}
+
+.lion-logo.hero .lion-mark {
+  width: 210px;
+  height: 210px;
+}
+
+.lion-mark img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.brand-lockup {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.brand-lockup span {
+  display: block;
+  color: #e8ecef;
+  font-size: clamp(0.8rem, 1.7vw, 1.8rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.brand-lockup strong {
+  display: block;
+  margin-top: 5px;
+  color: #f7f8f8;
+  font-size: clamp(1rem, 2.5vw, 2.7rem);
+  line-height: 1;
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.24);
+}
+
+.brand-lockup small {
+  display: block;
+  margin-top: 15px;
+  color: #e7e9ea;
+  font-size: clamp(0.48rem, 1.08vw, 0.92rem);
+  letter-spacing: 0.18em;
+}
+
+.lion-logo strong,
+.profile-chip strong {
+  display: block;
+}
+
+.lion-logo small,
+.profile-chip small,
+.topbar span,
+.stat-card small,
+.student-card span,
+.workout-card span,
+.login-card small {
+  color: var(--muted);
+}
+
+.login-card .lion-logo.hero .lion-mark {
+  width: 136px;
+  height: 136px;
+  margin-bottom: 42px;
+}
+
+.login-card .brand-lockup span {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+}
+
+.login-card .brand-lockup strong {
+  font-size: 1.05rem;
+  margin-top: 4px;
+}
+
+.login-card .brand-lockup small {
+  display: none;
+}
+
+.login-card label > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.login-card .input-shell {
+  min-height: 52px;
+  border-color: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(24, 29, 31, 0.92), rgba(9, 12, 13, 0.96));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.login-card .metal-button {
+  min-height: 50px;
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+}
+
+.welcome-copy {
+  margin: 12px 0 8px;
+  color: #e8eaec;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.forgot-link {
+  justify-self: end;
+  margin-top: -4px;
+  border: 0;
+  background: transparent;
+  color: #d5d8db;
+  font-size: 0.72rem;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.social-row {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.social-row button {
+  width: 54px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.login-card > small {
+  text-align: center;
+  font-size: 0.72rem;
+}
+
+.login-card > small strong {
+  color: #fff;
+}
+
+.input-shell,
+.search-shell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.24);
+  border-radius: 8px;
+  padding: 0 14px;
+  color: var(--silver);
+}
+
+label span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--silver);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  color: #fff;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.22);
+  border-radius: 8px;
+  outline: none;
+  padding: 13px 14px;
+}
+
+.input-shell input,
+.search-shell input,
+.check-card input {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.metal-button,
+.ghost-button,
+.icon-button,
+.nav-item,
+.task-list button,
+.workout-card button,
+.check-card button {
+  border: 0;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.metal-button {
+  min-height: 50px;
+  border-radius: 8px;
+  color: #050505;
+  background: var(--metal);
+  font-weight: 900;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.7), 0 18px 42px rgba(255, 255, 255, 0.09);
+}
+
+.metal-button.inline,
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 18px;
+}
+
+.metal-button:hover,
+.ghost-button:hover,
+.icon-button:hover,
+.nav-item:hover,
+.task-list button:hover,
+.workout-card button:hover,
+.check-card button:hover {
+  transform: translateY(-2px);
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 26px 18px;
+  border-right: 1px solid var(--line);
+  background: rgba(5, 5, 5, 0.72);
+  backdrop-filter: blur(24px);
+}
+
+.nav-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 34px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 14px;
+  color: var(--muted);
+  border-radius: 8px;
+  background: transparent;
+  text-align: left;
+}
+
+.nav-item.active {
+  color: #fff;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--line);
+}
+
+.sidebar-footer {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 22px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.sidebar-footer span {
+  display: block;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.main-panel {
+  min-width: 0;
+  padding: 28px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 26px;
+}
+
+.topbar h1 {
+  margin: 4px 0;
+  font-size: clamp(1.8rem, 3vw, 3.2rem);
+  letter-spacing: 0;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.compact-search {
+  width: min(100%, 320px);
+}
+
+.icon-button {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-soft);
+}
+
+.profile-chip > span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--metal);
+  color: #050505;
+  font-weight: 950;
+}
+
+.page-grid {
+  display: grid;
+  gap: 22px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.stat-card,
+.student-card,
+.workout-card,
+.check-card,
+.exercise-row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025));
+}
+
+.stat-card {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+}
+
+.stat-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  color: #090909;
+  border-radius: 8px;
+  background: var(--metal);
+}
+
+.stat-card span {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.stat-card strong {
+  display: block;
+  margin: 6px 0 3px;
+  font-size: 2rem;
+}
+
+.dashboard-layout,
+.workout-layout,
+.exercise-detail,
+.student-portal {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.55fr);
+  gap: 22px;
+}
+
+.workout-layout {
+  grid-template-columns: 1fr;
+}
+
+.chart-card,
+.command-panel,
+.history-panel,
+.today-panel,
+.exercise-info,
+.workout-list,
+.form-panel,
+.content-section {
+  padding: 24px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.section-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.status-pill {
+  color: #060606;
+  background: var(--metal);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 900;
+  font-size: 0.78rem;
+}
+
+.bar-chart {
+  height: 320px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: end;
+  gap: 14px;
+  padding-top: 22px;
+}
+
+.bar-group {
+  display: grid;
+  gap: 10px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.bar-track {
+  height: 260px;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 8px;
+}
+
+.bar-track span {
+  width: 100%;
+  min-height: 16px;
+  border-radius: 5px 5px 0 0;
+  background: #8d949b;
+}
+
+.bar-track span:nth-child(2) {
+  background: #f0f2f2;
+}
+
+.bar-track span:nth-child(3) {
+  background: #34383c;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 18px;
+  color: var(--muted);
+}
+
+.chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chart-legend i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-silver { background: #8d949b; }
+.legend-white { background: #f0f2f2; }
+.legend-dark { background: #34383c; }
+
+.task-list,
+.exercise-checklist,
+.metric-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.task-list button,
+.workout-card button {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  padding: 14px;
+  color: #fff;
+  text-align: left;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.task-list span {
+  color: var(--silver);
+  white-space: nowrap;
+}
+
+.content-section {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(14px);
+}
+
+.student-modal {
+  width: min(100%, 760px);
+  max-height: min(90vh, 760px);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.09), transparent 32%),
+    linear-gradient(145deg, rgba(18, 19, 20, 0.98), rgba(3, 3, 3, 0.98));
+  box-shadow: 0 34px 100px rgba(0, 0, 0, 0.72);
+}
+
+.student-modal .section-heading {
+  align-items: flex-start;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.students-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.student-card {
+  overflow: hidden;
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.student-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.student-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  filter: saturate(0.76) contrast(1.1);
+}
+
+.student-card-body {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.student-card h3 {
+  margin: 0 0 4px;
+}
+
+.student-card p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.mini-progress {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mini-progress span {
+  display: block;
+  height: 100%;
+  background: var(--metal);
+}
+
+.form-panel {
+  display: grid;
+  gap: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.form-grid.compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.wide,
+.form-grid textarea {
+  grid-column: 1 / -1;
+}
+
+.exercise-builder,
+.workout-list {
+  display: grid;
+  gap: 14px;
+}
+
+.exercise-row {
+  padding: 16px;
+}
+
+.exercise-row strong {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.exercise-row-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.exercise-row-title strong {
+  margin: 0;
+}
+
+.exercise-row-title span,
+.upload-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.exercise-search-field {
+  position: relative;
+}
+
+.exercise-suggestions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 12;
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(4, 4, 4, 0.96);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+}
+
+.exercise-suggestions button {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  padding: 10px;
+  color: #fff;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.exercise-suggestions strong {
+  margin: 0;
+}
+
+.exercise-suggestions span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.video-input {
+  display: grid;
+  gap: 8px;
+}
+
+.video-input span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.78rem;
+}
+
+.upload-name {
+  margin-top: 10px;
+}
+
+.ghost-button {
+  min-height: 48px;
+  color: #fff;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.builder-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.workout-card {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.workout-card.active-edit {
+  border-color: rgba(255, 255, 255, 0.42);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04));
+}
+
+.workout-card-header {
+  display: grid;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.workout-card-header small {
+  color: var(--silver);
+  font-size: 0.76rem;
+}
+
+.workout-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.workout-list > .eyebrow,
+.workout-list > h2 {
+  grid-column: 1 / -1;
+}
+
+.workout-card strong,
+.workout-card span {
+  display: block;
+}
+
+.workout-card button {
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.video-panel {
+  min-height: 580px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #000;
+  box-shadow: var(--shadow);
+}
+
+.video-panel iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.exercise-info {
+  align-self: start;
+}
+
+.exercise-info p:not(.eyebrow) {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.metric-stack span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--silver);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.today-panel {
+  align-self: start;
+  display: grid;
+  gap: 18px;
+}
+
+.progress-ring {
+  width: min(100%, 260px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  margin: 12px auto 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, #101112 58%, transparent 59%),
+    conic-gradient(#f3f4f4 var(--value), #25282b 0);
+}
+
+.progress-ring strong {
+  font-size: 3rem;
+}
+
+.progress-ring small {
+  color: var(--muted);
+  margin-top: -56px;
+}
+
+.check-card {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 14px;
+  padding: 18px;
+}
+
+.check-card.done {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04));
+}
+
+.check-card button {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.check-card h3,
+.check-card p {
+  margin: 0 0 8px;
+}
+
+.check-card p {
+  color: var(--muted);
+}
+
+.check-card label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 300px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--silver);
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.timeline-item span {
+  color: var(--silver);
+  font-weight: 800;
+}
+
+.timeline-item p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+@media (max-width: 1180px) {
+  .app-shell {
+    grid-template-columns: 92px minmax(0, 1fr);
+  }
+
+  .sidebar .lion-logo div:not(.lion-mark),
+  .nav-item span,
+  .sidebar-footer {
+    display: none;
+  }
+
+  .sidebar {
+    padding: 20px 14px;
+  }
+
+  .nav-item {
+    justify-content: center;
+  }
+
+  .stats-grid,
+  .students-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 820px) {
+  .login-screen,
+  .app-shell,
+  .dashboard-layout,
+  .workout-layout,
+  .exercise-detail,
+  .student-portal {
+    grid-template-columns: 1fr;
+  }
+
+  .login-screen {
+    min-height: 100svh;
+    display: grid;
+    padding: 18px;
+  }
+
+  .login-showcase,
+  .login-orbit {
+    display: none;
+  }
+
+  .phone-frame {
+    width: min(100%, 390px);
+    min-height: min(720px, calc(100svh - 36px));
+  }
+
+  .login-card {
+    padding-top: 70px;
+  }
+
+  .app-shell {
+    padding-bottom: 78px;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    z-index: 10;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-right: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .sidebar .lion-logo {
+    display: none;
+  }
+
+  .nav-list {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    width: 100%;
+    margin: 0;
+  }
+
+  .nav-item {
+    padding: 12px 6px;
+  }
+
+  .main-panel {
+    padding: 20px;
+  }
+
+  .topbar-actions,
+  .section-heading {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .search-shell {
+    width: 100%;
+  }
+
+  .stats-grid,
+  .students-grid,
+  .workout-list,
+  .form-grid,
+  .form-grid.compact {
+    grid-template-columns: 1fr;
+  }
+
+  .video-panel {
+    min-height: 340px;
+  }
+
+  .bar-chart {
+    height: 260px;
+  }
+
+  .bar-track {
+    height: 200px;
+  }
+}
+
+@media (max-width: 520px) {
+  .profile-chip,
+  .topbar-actions .icon-button {
+    display: none;
+  }
+
+  .form-panel,
+  .chart-card,
+  .command-panel,
+  .history-panel,
+  .today-panel,
+  .exercise-info,
+  .workout-list,
+  .content-section {
+    padding: 18px;
+  }
+
+  .stats-grid {
+    gap: 12px;
+  }
+}

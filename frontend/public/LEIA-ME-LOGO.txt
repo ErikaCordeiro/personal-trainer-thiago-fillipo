@@ -1,0 +1,5 @@
+Coloque aqui o arquivo exato da logo enviada no chat com este nome:
+
+lion-juda-logo.png
+
+O app ja esta preparado para carregar /lion-juda-logo.png sem redesenhar nem alterar a imagem.
