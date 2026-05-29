@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Apple, Chrome, Lock, Mail } from "lucide-react";
 import LionLogo from "../components/LionLogo.jsx";
 import { apiRequest, login as apiLogin } from "../services/api.js";
 
 export default function Login({ onLogin }) {
+  const [credentials, setCredentials] = useState({
+    email: "erikagcordeiro18@gmail.coom",
+    password: "Personal@123"
+  });
+
+  const fillTestUser = (email) => {
+    setCredentials({
+      email,
+      password: "Personal@123"
+    });
+  };
+
   const submit = async (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -39,16 +51,36 @@ export default function Login({ onLogin }) {
             <span>Email</span>
             <div className="input-shell">
               <Mail size={16} />
-              <input name="email" type="email" placeholder="E-mail" defaultValue="erikagcordeiro18@gmail.coom" required />
+              <input
+                name="email"
+                type="email"
+                placeholder="E-mail"
+                value={credentials.email}
+                onChange={(event) => setCredentials((current) => ({ ...current, email: event.target.value }))}
+                required
+              />
             </div>
           </label>
           <label>
             <span>Senha</span>
             <div className="input-shell">
               <Lock size={16} />
-              <input name="password" type="password" placeholder="Senha" defaultValue="Personal@123" minLength={8} required />
+              <input
+                name="password"
+                type="password"
+                placeholder="Senha"
+                value={credentials.password}
+                onChange={(event) => setCredentials((current) => ({ ...current, password: event.target.value }))}
+                minLength={8}
+                required
+              />
             </div>
           </label>
+          <div className="test-login-presets" aria-label="Acessos salvos para teste">
+            <span>Ambiente de teste</span>
+            <button type="button" onClick={() => fillTestUser("thiago@personal.com")}>Personal Thiago</button>
+            <button type="button" onClick={() => fillTestUser("erikagcordeiro18@gmail.coom")}>Aluno Erika</button>
+          </div>
           <button className="forgot-link" type="button">Esqueci minha senha</button>
           <button className="metal-button" type="submit">Entrar</button>
           <div className="login-divider">ou continue com</div>

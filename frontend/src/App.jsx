@@ -1,24 +1,49 @@
 import React from "react";
 import { useMemo, useState } from "react";
-import Sidebar from "./components/Sidebar.jsx";
-import Header from "./components/Header.jsx";
+import PersonalLayout from "./layouts/PersonalLayout.jsx";
+import StudentLayout from "./layouts/StudentLayout.jsx";
 import Login from "./pages/Login.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
+import StudentDashboard from "./pages/Dashboard.jsx";
+import PersonalDashboard from "./pages/PersonalDashboard.jsx";
 import Students from "./pages/Students.jsx";
 import WorkoutBuilder from "./pages/WorkoutBuilder.jsx";
 import ExerciseDetail from "./pages/ExerciseDetail.jsx";
 import StudentPortal from "./pages/StudentPortal.jsx";
+import WorkoutExecution from "./pages/WorkoutExecution.jsx";
 import Progress from "./pages/Progress.jsx";
+import StudentDiet from "./pages/StudentDiet.jsx";
+import StudentAssessments from "./pages/StudentAssessments.jsx";
+import PersonalDiet from "./pages/PersonalDiet.jsx";
+import PersonalAssessments from "./pages/PersonalAssessments.jsx";
+import PersonalProgress from "./pages/PersonalProgress.jsx";
+import PersonalStudentProgress from "./pages/PersonalStudentProgress.jsx";
+import CoachIA from "./pages/CoachIA.jsx";
+import AboutPersonal from "./pages/AboutPersonal.jsx";
 import { students as mockStudents, workouts as mockWorkouts } from "./data/mockData.js";
 
 const pageMeta = {
-  dashboard: ["Dashboard do Personal", "Controle a operação do estúdio em tempo real."],
+  dashboard: ["Dashboard", "Disciplina hoje, liberdade amanhã."],
   students: ["Alunos", "Visualize, encontre e edite seus atletas com rapidez."],
-  "workout-builder": ["Criação de Treino", "Monte protocolos personalizados com vídeo, carga e descanso."],
+  "workout-builder": ["Treinos", "Monte protocolos personalizados com vídeo, carga e descanso."],
   exercise: ["Exercício", "Execução guiada com parâmetros claros e vídeo incorporado."],
-  "student-view": ["Área do Aluno", "Treino do dia, check-ins e registro de carga."],
-  progress: ["Progresso", "Histórico, evolução e indicadores de consistência."]
+  "student-view": ["Treino", "Treino do dia, check-ins e registro de carga."],
+  diet: ["Dietas", "Gestao alimentar, hidratacao e registros nutricionais dos alunos."],
+  assessments: ["Avaliações", "Registre, acompanhe e analise a evolução física dos seus alunos."],
+  progress: ["Progresso", "Histórico, evolução e indicadores de consistência."],
+  "student-progress-detail": ["Progresso individual", "Central individual de performance do aluno."],
+  coach: ["Coach IA", "Seu assistente inteligente para treino, dieta e evolução."],
+  "about-personal": ["Sobre o Personal", "Conheça a metodologia, experiência e filosofia do Thiago Fillipo."]
 };
+
+const rolePath = {
+  personal: "/dashboard/personal",
+  student: "/dashboard/aluno"
+};
+
+function pushRoute(role) {
+  const path = rolePath[role] || rolePath.personal;
+  window.history.replaceState(null, "", path);
+}
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -26,7 +51,21 @@ export default function App() {
   const [selectedExercise, setSelectedExercise] = useState(mockWorkouts[0].exercises[0]);
   const [students, setStudents] = useState(mockStudents);
   const [workouts, setWorkouts] = useState(mockWorkouts);
-  const [completed, setCompleted] = useState(() => new Set(["ex-001"]));
+  const [completed, setCompleted] = useState(() => new Set());
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [executionWorkoutId, setExecutionWorkoutId] = useState(null);
+  const [selectedStudentId, setSelectedStudentId] = useState(mockStudents[0]?.id);
+  const [personalProfile, setPersonalProfile] = useState({
+    name: "Thiago Fillipo",
+    bio: "Personal trainer focado em força, disciplina, performance e transformação real. Une estratégia, técnica e acompanhamento próximo para cada aluno evoluir com segurança.",
+    specialty: "Hipertrofia, emagrecimento e performance",
+    experience: "10+ anos de atuação",
+    method: "Disciplina, foco e propósito",
+    philosophy: "Treinar não é apenas cumprir exercícios. É construir uma versão mais forte, constante e confiante todos os dias.",
+    highlights: ["Treinos personalizados", "Acompanhamento de evolução", "Ajustes por performance", "Feedback inteligente", "Estratégia individual por objetivo"],
+    email: "thiago@personal.com",
+    instagram: "@personal.thiagofillipo"
+  });
 
   const meta = pageMeta[activePage] || pageMeta.dashboard;
   const activeWorkout = useMemo(() => workouts[0], [workouts]);
@@ -35,76 +74,190 @@ export default function App() {
     return (
       <Login
         onLogin={(user) => {
-          setSession(user);
-          if (user.role === "student") {
-            setActivePage("student-view");
-          }
+          const normalizedRole = user.role === "student" || user.role === "aluno" ? "student" : "personal";
+          const normalizedUser = { ...user, role: normalizedRole };
+          setSession(normalizedUser);
+          setActivePage("dashboard");
+          pushRoute(normalizedRole);
         }}
       />
     );
   }
 
-  const navigate = (page) => setActivePage(page);
+  const isStudent = session.role === "student";
+  const navigate = (page) => {
+    setActivePage(page);
+    setSidebarOpen(false);
+    if (page !== "workout-execution") {
+      setExecutionWorkoutId(null);
+    }
+    if (page === "coach") {
+      window.history.replaceState(null, "", isStudent ? "/aluno/coach-ia" : "/personal/coach-ia");
+    } else if (page === "about-personal") {
+      window.history.replaceState(null, "", isStudent ? "/aluno/sobre-o-personal" : "/personal/sobre-o-personal");
+    } else if (isStudent && page === "progress") {
+      window.history.replaceState(null, "", "/aluno/progresso");
+    } else if (isStudent && page === "diet") {
+      window.history.replaceState(null, "", "/aluno/dieta");
+    } else if (isStudent && page === "assessments") {
+      window.history.replaceState(null, "", "/aluno/avaliacao");
+    } else if (!isStudent && page === "diet") {
+      window.history.replaceState(null, "", "/dashboard/personal/dietas");
+    } else if (!isStudent && page === "assessments") {
+      window.history.replaceState(null, "", "/personal/avaliacoes");
+    } else if (!isStudent && page === "progress") {
+      window.history.replaceState(null, "", "/personal/progresso");
+    } else if (!isStudent && page === "student-progress-detail") {
+      window.history.replaceState(null, "", `/personal/aluno/${selectedStudentId || "aluno"}/progresso`);
+    } else {
+      pushRoute(isStudent ? "student" : "personal");
+    }
+  };
+
+  const openWorkoutExecution = (workoutId) => {
+    resetWorkoutProgress(workoutId);
+    setExecutionWorkoutId(workoutId);
+    setActivePage("workout-execution");
+    setSidebarOpen(false);
+    window.history.replaceState(null, "", `/aluno/treino/${workoutId}`);
+  };
+
+  const resetWorkoutProgress = (workoutId) => {
+    const workout = workouts.find((item) => item.id === workoutId) || activeWorkout;
+    const exerciseIds = new Set(workout.exercises.map((exercise) => exercise.id));
+    setCompleted((current) => {
+      const next = new Set(current);
+      exerciseIds.forEach((id) => next.delete(id));
+      return next;
+    });
+  };
+
+  const openStudentProgress = (student) => {
+    setSelectedStudentId(student.id);
+    setActivePage("student-progress-detail");
+    setSidebarOpen(false);
+    window.history.replaceState(null, "", `/personal/aluno/${student.id}/progresso`);
+  };
+
+  const commonLayoutProps = {
+    activePage,
+    meta,
+    onNavigate: navigate,
+    onLogout: () => {
+      setSession(null);
+      window.history.replaceState(null, "", "/");
+    },
+    session,
+    sidebarOpen,
+    setSidebarOpen,
+    student: students[0]
+  };
+
+  const sharedPages = (
+    <>
+      {activePage === "exercise" && <ExerciseDetail exercise={selectedExercise} />}
+      {activePage === "student-view" && (
+        <StudentPortal
+          workout={activeWorkout}
+          workouts={workouts}
+          completed={completed}
+          onStartWorkout={openWorkoutExecution}
+          onToggleExercise={(id) => {
+            setCompleted((current) => {
+              const next = new Set(current);
+              next.has(id) ? next.delete(id) : next.add(id);
+              return next;
+            });
+          }}
+        />
+      )}
+      {activePage === "workout-execution" && (
+        <WorkoutExecution
+          workout={workouts.find((item) => item.id === executionWorkoutId) || activeWorkout}
+          completed={completed}
+          onBack={() => navigate("student-view")}
+          onToggleExercise={(id) => {
+            setCompleted((current) => {
+              const next = new Set(current);
+              next.has(id) ? next.delete(id) : next.add(id);
+              return next;
+            });
+          }}
+          onFinishWorkout={() => resetWorkoutProgress(executionWorkoutId)}
+        />
+      )}
+      {isStudent && activePage === "progress" && <Progress student={students[0]} students={students} workouts={workouts} completed={completed} />}
+      {activePage === "coach" && <CoachIA role={isStudent ? "student" : "personal"} student={students[0]} />}
+      {activePage === "about-personal" && (
+        <AboutPersonal
+          profile={personalProfile}
+          editable={!isStudent}
+          onSave={setPersonalProfile}
+        />
+      )}
+    </>
+  );
+
+  if (isStudent) {
+    return (
+      <StudentLayout {...commonLayoutProps}>
+        {activePage === "dashboard" && <StudentDashboard students={students} workouts={workouts} onNavigate={navigate} />}
+        {activePage === "diet" && <StudentDiet student={students[0]} />}
+        {activePage === "assessments" && <StudentAssessments student={students[0]} />}
+        {sharedPages}
+      </StudentLayout>
+    );
+  }
 
   return (
-    <div className="app-shell">
-      <Sidebar activePage={activePage} onNavigate={navigate} />
-      <main className="main-panel">
-        <Header title={meta[0]} subtitle={meta[1]} user={session} onLogout={() => setSession(null)} />
-        {activePage === "dashboard" && (
-          <Dashboard students={students} workouts={workouts} onNavigate={navigate} />
-        )}
-        {activePage === "students" && (
-          <Students
-            students={students}
-            workouts={workouts}
-            onSaveStudent={(student) => {
-              setStudents((current) => {
-                if (student.id) {
-                  return current.map((item) => item.id === student.id ? { ...item, ...student } : item);
-                }
-                return [
-                  { ...student, id: crypto.randomUUID(), avatar: mockStudents[0].avatar, adherence: 0 },
-                  ...current
-                ];
-              });
-            }}
-          />
-        )}
-        {activePage === "workout-builder" && (
-          <WorkoutBuilder
-            students={students}
-            workouts={workouts}
-            onOpenExercise={(exercise) => {
-              setSelectedExercise(exercise);
-              navigate("exercise");
-            }}
-            onSaveWorkout={(workout) => {
-              setWorkouts((current) => {
-                const exists = current.some((item) => item.id === workout.id);
-                return exists
-                  ? current.map((item) => item.id === workout.id ? workout : item)
-                  : [workout, ...current];
-              });
-            }}
-          />
-        )}
-        {activePage === "exercise" && <ExerciseDetail exercise={selectedExercise} />}
-        {activePage === "student-view" && (
-          <StudentPortal
-            workout={activeWorkout}
-            completed={completed}
-            onToggleExercise={(id) => {
-              setCompleted((current) => {
-                const next = new Set(current);
-                next.has(id) ? next.delete(id) : next.add(id);
-                return next;
-              });
-            }}
-          />
-        )}
-        {activePage === "progress" && <Progress students={students} workouts={workouts} completed={completed} />}
-      </main>
-    </div>
+    <PersonalLayout {...commonLayoutProps}>
+      {activePage === "dashboard" && <PersonalDashboard students={students} workouts={workouts} onNavigate={navigate} />}
+      {activePage === "diet" && <PersonalDiet students={students} />}
+      {activePage === "assessments" && <PersonalAssessments students={students} />}
+      {activePage === "progress" && <PersonalProgress students={students} onOpenStudentProgress={openStudentProgress} />}
+      {activePage === "student-progress-detail" && (
+        <PersonalStudentProgress
+          student={students.find((student) => student.id === selectedStudentId) || students[0]}
+          onBack={() => navigate("students")}
+        />
+      )}
+      {activePage === "students" && (
+        <Students
+          students={students}
+          workouts={workouts}
+          onOpenProgress={openStudentProgress}
+          onSaveStudent={(student) => {
+            setStudents((current) => {
+              if (student.id) {
+                return current.map((item) => item.id === student.id ? { ...item, ...student } : item);
+              }
+              return [
+                { ...student, id: crypto.randomUUID(), avatar: mockStudents[0].avatar, adherence: 0, workoutIds: student.workoutIds || [] },
+                ...current
+              ];
+            });
+          }}
+        />
+      )}
+      {activePage === "workout-builder" && (
+        <WorkoutBuilder
+          students={students}
+          workouts={workouts}
+          onOpenExercise={(exercise) => {
+            setSelectedExercise(exercise);
+            navigate("exercise");
+          }}
+          onSaveWorkout={(workout) => {
+            setWorkouts((current) => {
+              const exists = current.some((item) => item.id === workout.id);
+              return exists
+                ? current.map((item) => item.id === workout.id ? workout : item)
+                : [workout, ...current];
+            });
+          }}
+        />
+      )}
+      {sharedPages}
+    </PersonalLayout>
   );
 }

@@ -1,16 +1,33 @@
 import React from "react";
 import { Clock, Dumbbell, Repeat, ShieldCheck } from "lucide-react";
 
+function canEmbedYoutube(videoUrl) {
+  return videoUrl?.includes("youtube.com/embed/");
+}
+
+function toYoutubeWatchUrl(videoUrl) {
+  if (!videoUrl) return "";
+  return videoUrl.replace("/embed/", "/watch?v=");
+}
+
 export default function ExerciseDetail({ exercise }) {
   return (
     <section className="exercise-detail">
       <div className="video-panel">
-        <iframe
-          src={exercise.videoUrl}
-          title={exercise.name}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
+        {canEmbedYoutube(exercise.videoUrl) ? (
+          <iframe
+            src={exercise.videoUrl}
+            title={exercise.name}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : (
+          <div className="video-fallback">
+            <strong>Video recomendado disponivel</strong>
+            <span>Abra no YouTube para assistir a recomendacao do instrutor.</span>
+            <a href={toYoutubeWatchUrl(exercise.videoUrl)} target="_blank" rel="noreferrer">Abrir video</a>
+          </div>
+        )}
       </div>
       <aside className="exercise-info">
         <p className="eyebrow">Execução técnica</p>

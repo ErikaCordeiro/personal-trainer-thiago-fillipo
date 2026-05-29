@@ -14,6 +14,13 @@ const blankExercise = {
   videoFile: ""
 };
 
+const preferredInstructor = "Leandro Twin";
+
+const buildInstructorYoutubeUrl = (exerciseName) => {
+  const query = encodeURIComponent(`${preferredInstructor} ${exerciseName} execução correta`);
+  return `https://www.youtube.com/results?search_query=${query}`;
+};
+
 export default function WorkoutBuilder({ students, workouts, onOpenExercise, onSaveWorkout }) {
   const [exercises, setExercises] = useState([{ ...blankExercise, id: crypto.randomUUID() }]);
   const [activeSuggestId, setActiveSuggestId] = useState(null);
@@ -35,7 +42,7 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
         ...exercise,
         name: suggestion.name,
         explanation: suggestion.explanation,
-        videoUrl: suggestion.videoUrl
+        videoUrl: buildInstructorYoutubeUrl(suggestion.name)
       };
     }));
     setActiveSuggestId(null);
@@ -53,7 +60,7 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
       status: "Historico",
       focus: form.get("focus"),
       duration: form.get("duration"),
-      date: editingWorkout?.date || "Novo",
+      date: form.get("date") || "Segunda",
       exercises: exercises.map((exercise) => ({ ...exercise, done: false }))
     });
     setEditingWorkout(null);
@@ -81,6 +88,7 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
           <label><span>Aluno</span><select name="studentId" key={`student-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.studentId || students[0]?.id}>{students.map((student) => <option key={student.id} value={student.id}>{student.name}</option>)}</select></label>
           <label><span>Foco</span><input name="focus" key={`focus-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.focus || "Forca, hipertrofia e cardio"} /></label>
           <label><span>Duracao</span><input name="duration" key={`duration-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.duration || "60 min"} /></label>
+          <label><span>Dia da semana</span><select name="date" key={`date-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.date || "Segunda"}>{["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"].map((day) => <option key={day} value={day}>{day}</option>)}</select></label>
         </div>
         <div className="exercise-builder">
           {exercises.map((exercise, index) => {
@@ -113,7 +121,7 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
                         {suggestions.map((suggestion) => (
                           <button key={suggestion.name} type="button" onClick={() => applySuggestion(exercise.id, suggestion)}>
                             <strong>{suggestion.name}</strong>
-                            <span>{suggestion.muscle}</span>
+                            <span>{suggestion.muscle} - Video disponivel com {preferredInstructor}</span>
                           </button>
                         ))}
                       </div>
@@ -126,6 +134,11 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
                   <label className="video-input">
                     <span><Link size={15} /> Link do YouTube</span>
                     <input placeholder="https://youtube.com/..." value={exercise.videoUrl} onChange={(event) => updateExercise(exercise.id, "videoUrl", event.target.value)} />
+                    {exercise.videoUrl && (
+                      <a className="recommended-video-link" href={exercise.videoUrl} target="_blank" rel="noreferrer">
+                        Video recomendado disponivel - {preferredInstructor}
+                      </a>
+                    )}
                   </label>
                   <label className="video-input">
                     <span><Upload size={15} /> Upload de video</span>

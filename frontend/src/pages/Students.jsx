@@ -3,7 +3,7 @@ import { Plus, Save, Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import StudentCard from "../components/StudentCard.jsx";
 
-export default function Students({ students, workouts, onSaveStudent }) {
+export default function Students({ students, workouts, onSaveStudent, onOpenProgress }) {
   const [query, setQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState(null);
@@ -24,7 +24,8 @@ export default function Students({ students, workouts, onSaveStudent }) {
       height: Number(form.get("height")),
       objective: form.get("objective"),
       notes: form.get("notes"),
-      workoutId: form.get("workoutId") || null
+      workoutId: form.getAll("workoutIds")[0] || null,
+      workoutIds: form.getAll("workoutIds")
     });
     setIsModalOpen(false);
     setEditingStudent(null);
@@ -61,7 +62,12 @@ export default function Students({ students, workouts, onSaveStudent }) {
         </div>
         <div className="students-grid">
           {filtered.map((student) => (
-            <StudentCard key={student.id} student={student} onOpen={() => openEditStudent(student)} />
+            <StudentCard
+              key={student.id}
+              student={student}
+              onOpen={() => openEditStudent(student)}
+              onOpenProgress={onOpenProgress}
+            />
           ))}
         </div>
       </section>
@@ -85,15 +91,23 @@ export default function Students({ students, workouts, onSaveStudent }) {
               <label><span>Peso</span><input name="weight" type="number" min="30" step="0.1" required defaultValue={editingStudent?.weight || ""} /></label>
               <label><span>Altura</span><input name="height" type="number" min="1" max="2.5" step="0.01" required defaultValue={editingStudent?.height || ""} /></label>
               <label><span>Objetivo</span><input name="objective" required placeholder="Hipertrofia, definicao, performance..." defaultValue={editingStudent?.objective || ""} /></label>
-              <label className="wide">
-                <span>Treino do aluno</span>
-                <select name="workoutId" defaultValue={editingStudent?.workoutId || ""}>
-                  <option value="">Selecionar depois</option>
+              <div className="wide field-block">
+                <span>Treinos do aluno</span>
+                <div className="multi-workout-picker">
                   {workouts.map((workout) => (
-                    <option key={workout.id} value={workout.id}>{workout.name} - {workout.focus}</option>
+                    <label key={workout.id}>
+                      <input
+                        type="checkbox"
+                        name="workoutIds"
+                        value={workout.id}
+                        defaultChecked={(editingStudent?.workoutIds || [editingStudent?.workoutId]).filter(Boolean).includes(workout.id)}
+                      />
+                      <span>{workout.name}</span>
+                      <small>{workout.focus}</small>
+                    </label>
                   ))}
-                </select>
-              </label>
+                </div>
+              </div>
               <label className="wide">
                 <span>Observacoes</span>
                 <textarea name="notes" rows="4" placeholder="Lesoes, limitacoes, rotina, preferencias e estrategia." defaultValue={editingStudent?.notes || ""} />
