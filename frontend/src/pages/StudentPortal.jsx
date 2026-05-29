@@ -10,7 +10,7 @@ function normalizeDay(value = "") {
 
 export default function StudentPortal({ workout, workouts = [], completed, onStartWorkout, onToggleExercise }) {
   const [loads, setLoads] = useState({});
-  const [selectedWorkoutId, setSelectedWorkoutId] = useState(workout.id);
+  const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const exercisesRef = useRef(null);
   const availableWorkouts = workouts.length ? workouts : [workout];
   const selectedWorkout = availableWorkouts.find((item) => item.id === selectedWorkoutId) || workout;
@@ -79,7 +79,7 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
                     type="button"
                     onClick={() => {
                       setSelectedWorkoutId(item.id);
-                      exercisesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      window.setTimeout(() => exercisesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
                     }}
                   >
                     <strong>{item.name}</strong>
@@ -93,6 +93,7 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
         </div>
       </article>
 
+      {selectedWorkoutId && (
       <article className="selected-workout-panel" ref={exercisesRef}>
         <div className="section-heading">
           <div>
@@ -136,6 +137,7 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
           })}
         </div>
       </article>
+      )}
     </section>
   );
 }

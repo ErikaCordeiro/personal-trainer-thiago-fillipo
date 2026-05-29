@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Bot, Dumbbell, MessageCircle, Send, Sparkles, Utensils, Wand2 } from "lucide-react";
+import { ArrowLeft, Bot, Dumbbell, MessageCircle, Send, Sparkles, Utensils, Wand2 } from "lucide-react";
 
 const quickPrompts = {
   personal: [
@@ -18,7 +18,7 @@ const quickPrompts = {
   ]
 };
 
-export default function CoachIA({ role = "student", student }) {
+export default function CoachIA({ role = "student", student, onClose }) {
   const [messages, setMessages] = useState([
     {
       from: "coach",
@@ -42,6 +42,10 @@ export default function CoachIA({ role = "student", student }) {
 
   return (
     <section className="coach-page-premium">
+      <button className="coach-mobile-close" type="button" onClick={onClose}>
+        <ArrowLeft size={18} />
+        Fechar chat
+      </button>
       <article className="coach-hero-premium">
         <div>
           <p className="eyebrow">Coach IA</p>

@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "/api" : "http://localhost:8000/api");
 
 export function getToken() {
   return localStorage.getItem("ptf_token");
@@ -11,7 +11,7 @@ export function setToken(token) {
 export async function apiRequest(path, options = {}) {
   const token = getToken();
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), options.timeoutMs || 1500);
+  const timeout = window.setTimeout(() => controller.abort(), options.timeoutMs || 10000);
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
     signal: controller.signal,

@@ -1,5 +1,9 @@
-from fastapi import FastAPI
+from pathlib import Path
+
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.api.routes import auth, exercises, progress, students, users, videos, workouts
 from app.core.config import settings
@@ -29,3 +33,22 @@ app.include_router(videos.router, prefix="/api/videos", tags=["videos"])
 @app.get("/health")
 def health_check():
     return {"status": "ok", "service": settings.APP_NAME}
+
+
+FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+
+if FRONTEND_DIST.exists():
+    assets_dir = FRONTEND_DIST / "assets"
+    if assets_dir.exists():
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    def serve_frontend(full_path: str):
+        if full_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="Not found")
+
+        requested_path = FRONTEND_DIST / full_path
+        if requested_path.is_file():
+            return FileResponse(requested_path)
+
+        return FileResponse(FRONTEND_DIST / "index.html")

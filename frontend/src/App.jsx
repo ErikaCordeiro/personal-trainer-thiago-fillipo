@@ -187,7 +187,13 @@ export default function App() {
         />
       )}
       {isStudent && activePage === "progress" && <Progress student={students[0]} students={students} workouts={workouts} completed={completed} />}
-      {activePage === "coach" && <CoachIA role={isStudent ? "student" : "personal"} student={students[0]} />}
+      {activePage === "coach" && (
+        <CoachIA
+          role={isStudent ? "student" : "personal"}
+          student={students[0]}
+          onClose={() => navigate("dashboard")}
+        />
+      )}
       {activePage === "about-personal" && (
         <AboutPersonal
           profile={personalProfile}

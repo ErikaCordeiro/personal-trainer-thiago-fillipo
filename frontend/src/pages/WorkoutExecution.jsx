@@ -224,6 +224,7 @@ export default function WorkoutExecution({ workout, completed, onBack, onToggleE
               {paused ? <Play size={18} /> : <Pause size={18} />}
               {paused ? "Continuar" : "Pausar"}
             </button>
+            <button type="button" onClick={finishCurrent}>Concluir exercicio</button>
             <button type="button" onClick={() => setFinishModalOpen(true)}>Finalizar treino</button>
           </div>
         </aside>

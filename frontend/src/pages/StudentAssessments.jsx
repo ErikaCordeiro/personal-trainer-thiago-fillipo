@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Activity,
   Apple,
@@ -17,6 +17,7 @@ import {
   Sparkles,
   TrendingDown,
   Trophy
+  , X
 } from "lucide-react";
 
 const summary = [
@@ -77,6 +78,11 @@ const quickActions = [
 
 export default function StudentAssessments({ student }) {
   const name = student?.name || "Erika Gomes";
+  const [detailModal, setDetailModal] = useState(null);
+
+  const openDetail = (type, title, value, delta) => {
+    setDetailModal({ type, title, value, delta });
+  };
 
   return (
     <section className="student-assessment-page student-assessment-premium">
@@ -125,7 +131,7 @@ export default function StudentAssessments({ student }) {
               </div>
             ))}
           </div>
-          <button type="button">Ver todas as medidas</button>
+          <button type="button" onClick={() => openDetail("measures", "Medidas corporais", "10 medidas", "Evolucao media de -2,3 cm")}>Ver todas as medidas</button>
         </article>
 
         <article className="student-assessment-card skinfold">
@@ -196,7 +202,7 @@ export default function StudentAssessments({ student }) {
             <span>↔</span>
             <img src={student?.avatar || "/erika-gomes.jpeg"} alt="Depois" />
           </div>
-          <button type="button">Ver todas as fotos</button>
+          <button type="button" onClick={() => openDetail("photos", "Fotos da avaliacao", "3 fotos", "Comparativo frontal, lateral e traseiro")}>Ver todas as fotos</button>
         </article>
       </div>
 
@@ -212,7 +218,7 @@ export default function StudentAssessments({ student }) {
                 <polyline points="4,20 42,32 78,38 114,54 150,64 176,76" />
                 <circle cx="176" cy="76" r="4" />
               </svg>
-              <button type="button">Ver mais</button>
+              <button type="button" onClick={() => openDetail("evolution", label, value, delta)}>Ver mais</button>
             </div>
           ))}
         </div>
@@ -231,7 +237,7 @@ export default function StudentAssessments({ student }) {
               ))}
             </tbody>
           </table>
-          <button type="button">Ver todas as avaliacoes</button>
+          <button type="button" onClick={() => openDetail("history", "Historico de avaliacoes", "5 avaliacoes", "Ultima avaliacao em 18/06/2025")}>Ver todas as avaliacoes</button>
         </article>
 
         <article className="student-assessment-card personal-notes">
@@ -241,7 +247,7 @@ export default function StudentAssessments({ student }) {
             Excelente evolucao. Reducao significativa de gordura corporal e aumento de massa magra.
             Continue mantendo consistencia nos treinos e na alimentacao. Proximo objetivo: reduzir gordura para abaixo de 20%.
           </p>
-          <button type="button">Ver todas as observacoes</button>
+          <button type="button" onClick={() => openDetail("notes", "Observacoes do personal", "Proximo objetivo", "Reduzir gordura corporal para abaixo de 20%")}>Ver todas as observacoes</button>
         </article>
 
         <article className="student-assessment-card quick-actions">
@@ -264,6 +270,34 @@ export default function StudentAssessments({ student }) {
         <Activity size={22} />
         <span>Disciplina hoje, resultado amanha. Voce esta no caminho certo.</span>
       </div>
+
+      {detailModal && (
+        <div className="assessment-detail-backdrop" role="presentation" onMouseDown={() => setDetailModal(null)}>
+          <article className="assessment-detail-modal" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
+            <button className="modal-close" type="button" onClick={() => setDetailModal(null)} aria-label="Fechar">
+              <X size={20} />
+            </button>
+            <p className="eyebrow">Detalhes da avaliacao</p>
+            <h2>{detailModal.title}</h2>
+            <div className="assessment-detail-highlight">
+              <strong>{detailModal.value}</strong>
+              <span>{detailModal.delta}</span>
+            </div>
+            <svg viewBox="0 0 320 150" className="assessment-detail-chart" aria-label={`Grafico de ${detailModal.title}`}>
+              <line x1="16" y1="122" x2="304" y2="122" />
+              <line x1="16" y1="82" x2="304" y2="82" />
+              <line x1="16" y1="42" x2="304" y2="42" />
+              <polyline points="18,42 72,58 126,68 180,86 238,98 302,112" />
+              <circle cx="302" cy="112" r="5" />
+            </svg>
+            <p>
+              Essa evolucao compara sua avaliacao atual com os registros anteriores. O objetivo e mostrar tendencia,
+              constancia e onde ajustar treino, dieta e hidratacao.
+            </p>
+            <button className="metal-button inline" type="button" onClick={() => setDetailModal(null)}>Entendi</button>
+          </article>
+        </div>
+      )}
     </section>
   );
 }

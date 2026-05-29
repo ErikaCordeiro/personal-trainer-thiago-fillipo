@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Apple, Chrome, Lock, Mail } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Apple, Chrome, Download, Lock, Mail } from "lucide-react";
 import LionLogo from "../components/LionLogo.jsx";
 import { apiRequest, login as apiLogin } from "../services/api.js";
 
@@ -8,6 +8,27 @@ export default function Login({ onLogin }) {
     email: "erikagcordeiro18@gmail.coom",
     password: "Personal@123"
   });
+  const [installPrompt, setInstallPrompt] = useState(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault();
+      setInstallPrompt(event);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+  }, []);
+
+  const installApp = async () => {
+    if (!installPrompt) {
+      return;
+    }
+
+    installPrompt.prompt();
+    await installPrompt.userChoice;
+    setInstallPrompt(null);
+  };
 
   const fillTestUser = (email) => {
     setCredentials({
@@ -83,6 +104,12 @@ export default function Login({ onLogin }) {
           </div>
           <button className="forgot-link" type="button">Esqueci minha senha</button>
           <button className="metal-button" type="submit">Entrar</button>
+          {installPrompt ? (
+            <button className="install-app-button" type="button" onClick={installApp}>
+              <Download size={15} />
+              Instalar app
+            </button>
+          ) : null}
           <div className="login-divider">ou continue com</div>
           <div className="social-row">
             <button type="button" aria-label="Entrar com Google"><Chrome size={22} /></button>

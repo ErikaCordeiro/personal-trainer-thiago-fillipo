@@ -194,7 +194,7 @@ const dailyStats = [
 export default function StudentDiet({ student }) {
   const [water, setWater] = useState(2.1);
   const [waterAmount, setWaterAmount] = useState("300");
-  const [foods, setFoods] = useState(initialFoods);
+  const [foods, setFoods] = useState([]);
   const [mealName, setMealName] = useState("Almoco");
   const [mealTime, setMealTime] = useState("13:00");
   const [mealPhoto, setMealPhoto] = useState("");
@@ -259,6 +259,13 @@ export default function StudentDiet({ student }) {
     setModal("recipe");
   };
 
+  const handleMealPhotoUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setMealPhoto(URL.createObjectURL(file));
+    setFoods(initialFoods);
+  };
+
   const saveRecipeAction = (message) => {
     setSavedMessage(message);
     setModal(null);
@@ -320,20 +327,30 @@ export default function StudentDiet({ student }) {
               <Sparkles size={22} />
             </div>
             <p className="ai-disclaimer">A analise por foto e uma estimativa. Voce pode editar os alimentos e quantidades antes de salvar.</p>
-            <div className="ai-meal-grid compact-ai-preview">
-              <div className="meal-photo-card">
-                <img src={mealPhoto || "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=720&q=80"} alt="Refeicao analisada" />
+            <div className={`ai-meal-grid compact-ai-preview ${mealPhoto ? "has-analysis" : "awaiting-photo"}`}>
+              <div className="meal-photo-card empty-photo-card">
+                {mealPhoto ? (
+                  <img src={mealPhoto} alt="Refeicao analisada" />
+                ) : (
+                  <div className="empty-meal-photo">
+                    <Camera size={34} />
+                    <strong>Adicionar foto do prato</strong>
+                    <span>A leitura da comida aparece logo depois do envio.</span>
+                  </div>
+                )}
                 <button type="button" onClick={() => setModal("meal")}><Camera size={18} /> Tirar foto ou enviar imagem</button>
               </div>
-              <div className="ai-summary-panel">
-                <span>Alimentos identificados</span>
-                <strong>{foods.length} itens - {totalCalories} kcal</strong>
-                <p>{totalProtein}g proteina - {totalCarbs}g carboidratos - {totalFats}g gorduras</p>
-                <div className="ai-food-chips">
-                  {foods.slice(0, 5).map((food) => <em key={food.id}>{food.name}</em>)}
+              {mealPhoto ? (
+                <div className="ai-summary-panel">
+                  <span>Alimentos identificados</span>
+                  <strong>{foods.length} itens - {totalCalories} kcal</strong>
+                  <p>{totalProtein}g proteina - {totalCarbs}g carboidratos - {totalFats}g gorduras</p>
+                  <div className="ai-food-chips">
+                    {foods.slice(0, 5).map((food) => <em key={food.id}>{food.name}</em>)}
+                  </div>
+                  <button type="button" onClick={() => setModal("meal")}>Editar analise</button>
                 </div>
-                <button type="button" onClick={() => setModal("meal")}>Editar analise</button>
-              </div>
+              ) : null}
             </div>
           </article>
 
@@ -482,16 +499,25 @@ export default function StudentDiet({ student }) {
               </div>
               <Bot size={24} />
             </div>
-            <p className="ai-disclaimer">A analise por foto e uma estimativa. Edite alimentos, peso e macros antes de salvar.</p>
-            <div className="meal-register-grid">
+            <p className="ai-disclaimer">Envie uma foto do prato. Depois disso a IA monta uma estimativa editavel dos alimentos, peso e macros.</p>
+            <div className={`meal-register-grid ${mealPhoto ? "has-analysis" : "awaiting-photo"}`}>
               <div className="meal-upload-card">
-                <img src={mealPhoto || "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=720&q=80"} alt="Imagem da refeicao" />
+                {mealPhoto ? (
+                  <img src={mealPhoto} alt="Imagem da refeicao" />
+                ) : (
+                  <div className="empty-meal-photo modal-empty-photo">
+                    <Camera size={42} />
+                    <strong>Foto vazia</strong>
+                    <span>Toque no botao abaixo para enviar ou tirar a foto da refeicao.</span>
+                  </div>
+                )}
                 <label>
                   <Camera size={18} />
                   Tirar foto ou enviar imagem
-                  <input type="file" accept="image/*" onChange={(event) => setMealPhoto(event.target.files?.[0] ? URL.createObjectURL(event.target.files[0]) : "")} />
+                  <input type="file" accept="image/*" capture="environment" onChange={handleMealPhotoUpload} />
                 </label>
               </div>
+              {mealPhoto ? (
               <div className="meal-editor-panel">
                 <div className="meal-editor-head">
                   <label>
@@ -528,6 +554,7 @@ export default function StudentDiet({ student }) {
                   <button type="button" onClick={saveMeal}><Save size={16} /> Salvar refeicao</button>
                 </div>
               </div>
+              ) : null}
             </div>
           </article>
         </div>

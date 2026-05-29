@@ -1,0 +1,41 @@
+{
+  "name": "Personal Thiago Fillipo",
+  "short_name": "Thiago Fillipo",
+  "description": "App premium para treinos, dieta, avaliações e progresso físico.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "categories": ["fitness", "health", "productivity"],
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/pwa-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Área do aluno",
+      "short_name": "Aluno",
+      "url": "/dashboard/aluno",
+      "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Painel do personal",
+      "short_name": "Personal",
+      "url": "/dashboard/personal",
+      "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}
