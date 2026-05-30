@@ -19,15 +19,27 @@ def normalize_email(email: str | None) -> str | None:
     return email.strip().lower() if email else None
 
 
+def normalize_password(password: str | None) -> str | None:
+    return password.strip() if password else None
+
+
 def seed() -> None:
     init_db()
     db = SessionLocal()
     try:
         is_production = settings.ENVIRONMENT.lower() == "production"
         personal_email = normalize_email(settings.SEED_PERSONAL_EMAIL)
-        personal_password = settings.SEED_PERSONAL_PASSWORD
+        personal_password = normalize_password(settings.SEED_PERSONAL_PASSWORD)
         student_email = normalize_email(settings.SEED_STUDENT_EMAIL)
-        student_password = settings.SEED_STUDENT_PASSWORD
+        student_password = normalize_password(settings.SEED_STUDENT_PASSWORD)
+
+        print(
+            "[seed] personal_email="
+            f"{personal_email or 'not-configured'}; "
+            f"personal_password_len={len(personal_password or '')}; "
+            f"student_email={student_email or 'not-configured'}; "
+            f"student_password_len={len(student_password or '')}"
+        )
 
         legacy_personal = db.scalar(select(User).where(User.email == "thiago@personal.com"))
         if is_production and legacy_personal and not personal_password:
@@ -36,6 +48,7 @@ def seed() -> None:
             return
 
         if not personal_email or not personal_password:
+            print("[seed] personal seed skipped: missing SEED_PERSONAL_EMAIL or SEED_PERSONAL_PASSWORD")
             return
 
         existing = db.scalar(select(User).where(func.lower(User.email) == personal_email)) or legacy_personal
@@ -47,6 +60,7 @@ def seed() -> None:
             existing.is_active = True
             db.commit()
             personal = existing
+            print(f"[seed] personal user updated: {personal_email}")
         else:
             personal = User(
                 name="Thiago Filippo",
@@ -56,6 +70,7 @@ def seed() -> None:
             )
             db.add(personal)
             db.flush()
+            print(f"[seed] personal user created: {personal_email}")
 
         student_user = None
         if student_email and student_password:
@@ -66,6 +81,7 @@ def seed() -> None:
                 student_user.hashed_password = hash_password(student_password)
                 student_user.role = UserRole.STUDENT
                 student_user.is_active = True
+                print(f"[seed] student user updated: {student_email}")
             else:
                 student_user = User(
                     name="Erika Gomes Cordeiro",
@@ -75,6 +91,7 @@ def seed() -> None:
                 )
                 db.add(student_user)
                 db.flush()
+                print(f"[seed] student user created: {student_email}")
 
         existing_student = None
         if student_user:
@@ -87,6 +104,7 @@ def seed() -> None:
             existing_student.name = student_user.name if student_user else existing_student.name
             existing_student.email = student_email or existing_student.email
             db.commit()
+            print("[seed] existing student profile linked to seeded user")
             return
 
         student = Student(
@@ -102,6 +120,7 @@ def seed() -> None:
         )
         db.add(student)
         db.flush()
+        print("[seed] student profile created")
 
         exercise = Exercise(
             personal_id=personal.id,
