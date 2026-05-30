@@ -9,6 +9,7 @@ export default function Login({ onLogin, onSignup }) {
     password: ""
   });
   const [installPrompt, setInstallPrompt] = useState(null);
+  const [installMessage, setInstallMessage] = useState("");
   const [loginError, setLoginError] = useState("");
   const [signupOpen, setSignupOpen] = useState(false);
   const [signupMessage, setSignupMessage] = useState("");
@@ -25,12 +26,14 @@ export default function Login({ onLogin, onSignup }) {
 
   const installApp = async () => {
     if (!installPrompt) {
+      setInstallMessage("No celular, abra o menu do navegador e toque em Adicionar a tela inicial.");
       return;
     }
 
     installPrompt.prompt();
     await installPrompt.userChoice;
     setInstallPrompt(null);
+    setInstallMessage("");
   };
 
   const submit = async (event) => {
@@ -109,12 +112,11 @@ export default function Login({ onLogin, onSignup }) {
           {loginError ? <p className="login-error">{loginError}</p> : null}
           <button className="forgot-link" type="button">Esqueci minha senha</button>
           <button className="metal-button" type="submit">Entrar</button>
-          {installPrompt ? (
-            <button className="install-app-button" type="button" onClick={installApp}>
-              <Download size={15} />
-              Instalar app
-            </button>
-          ) : null}
+          <button className="install-app-button" type="button" onClick={installApp}>
+            <Download size={15} />
+            Instalar app
+          </button>
+          {installMessage ? <p className="install-app-hint">{installMessage}</p> : null}
           <div className="login-divider">ou continue com</div>
           <div className="social-row">
             <button type="button" aria-label="Entrar com Google"><Chrome size={22} /></button>
