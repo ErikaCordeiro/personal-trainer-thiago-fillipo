@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     CORS_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"
+    SEED_PERSONAL_EMAIL: str | None = None
+    SEED_PERSONAL_PASSWORD: str | None = None
+    SEED_STUDENT_EMAIL: str | None = None
+    SEED_STUDENT_PASSWORD: str | None = None
 
     @field_validator("DATABASE_URL")
     @classmethod

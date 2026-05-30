@@ -3,7 +3,7 @@ import { Plus, Save, Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import StudentCard from "../components/StudentCard.jsx";
 
-export default function Students({ students, workouts, onSaveStudent, onOpenProgress }) {
+export default function Students({ students, pendingStudents = [], workouts, onSaveStudent, onApproveStudent, onOpenProgress }) {
   const [query, setQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState(null);
@@ -71,6 +71,38 @@ export default function Students({ students, workouts, onSaveStudent, onOpenProg
           ))}
         </div>
       </section>
+
+      {pendingStudents.length > 0 && (
+        <section className="content-section pending-students-section">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Aprovacao de acesso</p>
+              <h2>Cadastros aguardando aprovacao</h2>
+              <span>Revise os dados enviados pelo aluno e aprove para liberar o uso do app.</span>
+            </div>
+          </div>
+          <div className="pending-student-grid">
+            {pendingStudents.map((student) => (
+              <article key={student.id} className="pending-student-card">
+                <div>
+                  <strong>{student.name}</strong>
+                  <span>{student.email}</span>
+                </div>
+                <dl>
+                  <div><dt>Idade</dt><dd>{student.age} anos</dd></div>
+                  <div><dt>Peso</dt><dd>{student.weight} kg</dd></div>
+                  <div><dt>Altura</dt><dd>{student.height} m</dd></div>
+                  <div><dt>Objetivo</dt><dd>{student.objective}</dd></div>
+                </dl>
+                {student.notes ? <p>{student.notes}</p> : null}
+                <button className="metal-button inline" type="button" onClick={() => onApproveStudent?.(student)}>
+                  Aprovar e liberar app
+                </button>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       {isModalOpen && (
         <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label={editingStudent ? "Editar aluno" : "Adicionar aluno"}>

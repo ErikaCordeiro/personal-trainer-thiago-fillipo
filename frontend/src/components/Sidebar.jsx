@@ -62,6 +62,7 @@ export default function Sidebar({
   profileInitials = "TF"
 }) {
   const [collapsed, setCollapsed] = useState(false);
+  const effectiveCollapsed = collapsed && !mobileOpen;
   const inactive = new Set(["finance", "agenda", "chat", "reports", "settings", "profile", "messages", "files", "calendar"]);
 
   const handleNavigate = (item) => {
@@ -84,7 +85,7 @@ export default function Sidebar({
         aria-label="Fechar menu"
         onClick={onClose}
       />
-      <aside className={`sidebar ${collapsed ? "collapsed" : ""} ${mobileOpen ? "mobile-open" : ""}`}>
+      <aside className={`sidebar ${effectiveCollapsed ? "collapsed" : ""} ${mobileOpen ? "mobile-open" : ""}`}>
         <div className="sidebar-header">
           <button
             className="sidebar-toggle menu-toggle"
@@ -94,7 +95,7 @@ export default function Sidebar({
           >
             <Menu size={20} />
           </button>
-          <LionLogo compact={collapsed} />
+          <LionLogo compact={effectiveCollapsed} />
         </div>
 
         <nav className="nav-list">
@@ -106,7 +107,7 @@ export default function Sidebar({
                 className={`nav-item ${activePage === item.id ? "active" : ""}`}
                 onClick={() => handleNavigate(item)}
                 type="button"
-                title={collapsed ? item.label : undefined}
+                title={effectiveCollapsed ? item.label : undefined}
               >
                 <Icon size={19} />
                 <span>{item.label}</span>
@@ -139,10 +140,10 @@ export default function Sidebar({
             className="sidebar-toggle collapse-toggle"
             type="button"
             onClick={toggleCollapsed}
-            aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+            aria-label={effectiveCollapsed ? "Expandir menu" : "Recolher menu"}
           >
-            {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-            <span>{collapsed ? "Expandir" : "Recolher"}</span>
+            {effectiveCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+            <span>{effectiveCollapsed ? "Expandir" : "Recolher"}</span>
           </button>
         </div>
       </aside>

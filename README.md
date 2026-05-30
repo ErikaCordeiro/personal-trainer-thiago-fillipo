@@ -82,11 +82,16 @@ uvicorn app.main:app --reload
 
 A API roda em `http://localhost:8000`, com documentacao em `http://localhost:8000/docs`.
 
-## Acessos mockados
+## Acessos de producao
 
-- Personal: `thiago@personal.com` / `Personal@123`
-- Aluno: `aluno@personal.com` / `Aluno@12345`
-- Aluno Erika no ambiente de teste: `erikagcordeiro18@gmail.coom` / `Personal@123`
+Nao deixe senhas reais no codigo. No deploy, configure as credenciais iniciais pelas variaveis privadas da plataforma:
+
+- `SEED_PERSONAL_EMAIL`
+- `SEED_PERSONAL_PASSWORD`
+- `SEED_STUDENT_EMAIL` opcional
+- `SEED_STUDENT_PASSWORD` opcional
+
+Em producao, o seed nao cria usuarios padrao se essas variaveis nao existirem.
 
 ## V1 instalavel
 
@@ -121,6 +126,8 @@ Passos na Railway:
    - `ENVIRONMENT`: `production`
    - `ACCESS_TOKEN_EXPIRE_MINUTES`: `1440`
    - `CORS_ORIGINS`: URL publica do proprio servico Railway
+   - `SEED_PERSONAL_EMAIL`: email privado do personal administrador
+   - `SEED_PERSONAL_PASSWORD`: senha privada forte do personal administrador
 5. Faça deploy pela branch `main`.
 
 Depois do deploy, teste:

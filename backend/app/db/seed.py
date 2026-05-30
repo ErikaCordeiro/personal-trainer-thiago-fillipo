@@ -1,7 +1,9 @@
+import secrets
 from datetime import date
 
 from sqlalchemy import select
 
+from app.core.config import settings
 from app.core.security import hash_password
 from app.db.init_db import init_db
 from app.db.session import SessionLocal
@@ -17,28 +19,52 @@ def seed() -> None:
     init_db()
     db = SessionLocal()
     try:
-        existing = db.scalar(select(User).where(User.email == "thiago@personal.com"))
+        is_production = settings.ENVIRONMENT.lower() == "production"
+        personal_email = settings.SEED_PERSONAL_EMAIL
+        personal_password = settings.SEED_PERSONAL_PASSWORD
+        student_email = settings.SEED_STUDENT_EMAIL
+        student_password = settings.SEED_STUDENT_PASSWORD
+
+        legacy_personal = db.scalar(select(User).where(User.email == "thiago@personal.com"))
+        if is_production and legacy_personal and not personal_password:
+            legacy_personal.hashed_password = hash_password(secrets.token_urlsafe(48))
+            db.commit()
+            return
+
+        if not personal_email or not personal_password:
+            return
+
+        existing = db.scalar(select(User).where(User.email == personal_email)) or legacy_personal
         if existing:
+            existing.email = personal_email
+            existing.name = "Thiago Fillipo"
+            existing.hashed_password = hash_password(personal_password)
+            db.commit()
             return
 
         personal = User(
             name="Thiago Fillipo",
-            email="thiago@personal.com",
-            hashed_password=hash_password("Personal@123"),
+            email=personal_email,
+            hashed_password=hash_password(personal_password),
             role=UserRole.PERSONAL,
         )
-        student_user = User(
-            name="Rafael Martins",
-            email="aluno@personal.com",
-            hashed_password=hash_password("Aluno@12345"),
-            role=UserRole.STUDENT,
-        )
-        db.add_all([personal, student_user])
+        db.add(personal)
         db.flush()
+
+        student_user = None
+        if student_email and student_password:
+            student_user = User(
+                name="Rafael Martins",
+                email=student_email,
+                hashed_password=hash_password(student_password),
+                role=UserRole.STUDENT,
+            )
+            db.add(student_user)
+            db.flush()
 
         student = Student(
             personal_id=personal.id,
-            user_id=student_user.id,
+            user_id=student_user.id if student_user else None,
             name="Rafael Martins",
             email="rafael@email.com",
             age=34,

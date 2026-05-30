@@ -371,6 +371,17 @@ button {
   font-size: 0.72rem;
 }
 
+.login-error {
+  margin: -2px 0 0;
+  color: #f8d7da;
+  border: 1px solid rgba(248, 215, 218, 0.22);
+  border-radius: 12px;
+  background: rgba(148, 28, 39, 0.18);
+  padding: 10px 12px;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
 .login-divider {
   display: flex;
   align-items: center;
@@ -412,6 +423,29 @@ button {
 
 .login-card > small strong {
   color: #fff;
+}
+
+.signup-link-button {
+  display: inline;
+  color: #fff;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.signup-success-message {
+  margin: -4px 0 0;
+  color: #d7f8df;
+  border: 1px solid rgba(153, 255, 181, 0.2);
+  border-radius: 12px;
+  background: rgba(21, 112, 52, 0.18);
+  padding: 10px 12px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-align: center;
 }
 
 .input-shell,
@@ -10008,6 +10042,171 @@ body,
 .assessment-detail-modal .metal-button {
   width: 100%;
   margin-top: 20px;
+}
+
+.signup-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 180;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.74);
+  backdrop-filter: blur(14px);
+}
+
+.signup-modal {
+  width: min(92vw, 720px);
+  max-height: 90dvh;
+  overflow-y: auto;
+  display: grid;
+  gap: 18px;
+  padding: 26px;
+  border: 1px solid rgba(245, 245, 245, 0.16);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.13), transparent 28%),
+    linear-gradient(145deg, rgba(21, 22, 23, 0.98), rgba(3, 3, 3, 0.98));
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.pending-students-section {
+  border-color: rgba(245, 245, 245, 0.18);
+}
+
+.pending-student-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.pending-student-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(245, 245, 245, 0.13);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025));
+}
+
+.pending-student-card strong,
+.pending-student-card span,
+.pending-student-card p,
+.pending-student-card dt,
+.pending-student-card dd {
+  margin: 0;
+}
+
+.pending-student-card span,
+.pending-student-card p,
+.pending-student-card dt {
+  color: rgba(245, 245, 245, 0.66);
+}
+
+.pending-student-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.pending-student-card div {
+  min-width: 0;
+}
+
+.pending-student-card dd {
+  color: #fff;
+  font-weight: 900;
+}
+
+@media (max-width: 760px) {
+  .login-screen {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center;
+    gap: 0;
+    padding: max(14px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom));
+    overflow-y: auto;
+  }
+
+  .login-showcase,
+  .login-orbit {
+    display: none;
+  }
+
+  .phone-frame {
+    width: min(100%, 390px);
+    min-height: auto;
+    max-height: none;
+    border-radius: 32px;
+  }
+
+  .login-card {
+    min-height: calc(100dvh - 32px);
+    align-content: center;
+    padding: 62px 22px 28px;
+  }
+
+  .login-card .lion-logo.hero .lion-mark {
+    width: clamp(112px, 36vw, 148px);
+    height: clamp(112px, 36vw, 148px);
+    margin-bottom: 28px;
+  }
+
+  .login-card .input-shell {
+    min-height: 50px;
+  }
+
+  .signup-modal {
+    width: min(94vw, 430px);
+    padding: 20px;
+  }
+
+  .signup-modal .form-grid,
+  .pending-student-card dl {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell > .sidebar.mobile-open:not(.collapsed) .brand-lockup,
+  .app-shell > .sidebar.mobile-open:not(.collapsed) .nav-item span,
+  .app-shell > .sidebar.mobile-open:not(.collapsed) .sidebar-profile,
+  .app-shell > .sidebar.mobile-open:not(.collapsed) .coach-card,
+  .app-shell > .sidebar.mobile-open:not(.collapsed) .collapse-toggle span {
+    display: initial !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .app-shell > .sidebar.mobile-open:not(.collapsed) .nav-item {
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    text-align: left !important;
+  }
+
+  .app-shell > .sidebar.mobile-open:not(.collapsed) .sidebar-header {
+    grid-template-columns: 44px minmax(0, 1fr) !important;
+  }
+
+  .app-shell > .sidebar.mobile-open.collapsed {
+    width: 88px !important;
+    max-width: 88px !important;
+    padding-inline: 12px !important;
+  }
+
+  .app-shell > .sidebar.mobile-open.collapsed .brand-lockup,
+  .app-shell > .sidebar.mobile-open.collapsed .nav-item span,
+  .app-shell > .sidebar.mobile-open.collapsed .sidebar-profile,
+  .app-shell > .sidebar.mobile-open.collapsed .coach-card,
+  .app-shell > .sidebar.mobile-open.collapsed .collapse-toggle span {
+    display: none !important;
+  }
+
+  .app-shell > .sidebar.mobile-open.collapsed .nav-item,
+  .app-shell > .sidebar.mobile-open.collapsed .sidebar-toggle {
+    justify-content: center !important;
+    padding-inline: 0 !important;
+  }
 }
 
 /* Mobile V1 polish: drawer and diet photo-first flow */

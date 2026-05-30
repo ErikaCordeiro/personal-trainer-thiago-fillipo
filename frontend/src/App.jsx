@@ -1,5 +1,5 @@
 import React from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PersonalLayout from "./layouts/PersonalLayout.jsx";
 import StudentLayout from "./layouts/StudentLayout.jsx";
 import Login from "./pages/Login.jsx";
@@ -50,6 +50,13 @@ export default function App() {
   const [activePage, setActivePage] = useState("dashboard");
   const [selectedExercise, setSelectedExercise] = useState(mockWorkouts[0].exercises[0]);
   const [students, setStudents] = useState(mockStudents);
+  const [pendingStudents, setPendingStudents] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("ptf_pending_students") || "[]");
+    } catch {
+      return [];
+    }
+  });
   const [workouts, setWorkouts] = useState(mockWorkouts);
   const [completed, setCompleted] = useState(() => new Set());
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -63,16 +70,26 @@ export default function App() {
     method: "Disciplina, foco e propósito",
     philosophy: "Treinar não é apenas cumprir exercícios. É construir uma versão mais forte, constante e confiante todos os dias.",
     highlights: ["Treinos personalizados", "Acompanhamento de evolução", "Ajustes por performance", "Feedback inteligente", "Estratégia individual por objetivo"],
-    email: "thiago@personal.com",
+    email: "contato@thiagofillipo.com",
     instagram: "@personal.thiagofillipo"
   });
 
   const meta = pageMeta[activePage] || pageMeta.dashboard;
   const activeWorkout = useMemo(() => workouts[0], [workouts]);
 
+  useEffect(() => {
+    localStorage.setItem("ptf_pending_students", JSON.stringify(pendingStudents));
+  }, [pendingStudents]);
+
   if (!session) {
     return (
       <Login
+        onSignup={(student) => {
+          setPendingStudents((current) => [
+            { ...student, id: crypto.randomUUID(), status: "pending", requestedAt: new Date().toISOString() },
+            ...current
+          ]);
+        }}
         onLogin={(user) => {
           const normalizedRole = user.role === "student" || user.role === "aluno" ? "student" : "personal";
           const normalizedUser = { ...user, role: normalizedRole };
@@ -230,8 +247,23 @@ export default function App() {
       {activePage === "students" && (
         <Students
           students={students}
+          pendingStudents={pendingStudents}
           workouts={workouts}
           onOpenProgress={openStudentProgress}
+          onApproveStudent={(student) => {
+            setStudents((current) => [
+              {
+                ...student,
+                avatar: mockStudents[0].avatar,
+                adherence: 0,
+                workoutIds: student.workoutIds || [],
+                workoutId: student.workoutId || null,
+                status: "active"
+              },
+              ...current
+            ]);
+            setPendingStudents((current) => current.filter((item) => item.id !== student.id));
+          }}
           onSaveStudent={(student) => {
             setStudents((current) => {
               if (student.id) {
