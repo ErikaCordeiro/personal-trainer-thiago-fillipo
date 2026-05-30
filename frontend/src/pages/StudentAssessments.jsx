@@ -21,25 +21,25 @@ import {
 } from "lucide-react";
 
 const summary = [
-  { label: "IMC", value: "25,6", status: "Sobrepeso", delta: "↓ 1,0 desde 20/05", icon: HeartPulse },
-  { label: "Gordura corporal", value: "24,3%", status: "Moderado", delta: "↓ 2,1% desde 20/05", icon: TrendingDown },
-  { label: "Massa magra", value: "54,1 kg", status: "Adequado", delta: "↑ 1,4 kg desde 20/05", icon: Trophy },
-  { label: "Massa gorda", value: "18,3 kg", status: "Moderado", delta: "↓ 1,1 kg desde 20/05", icon: Scale },
+  { label: "IMC", value: "25,6", status: "Sobrepeso", delta: "â†“ 1,0 desde 20/05", icon: HeartPulse },
+  { label: "Gordura corporal", value: "24,3%", status: "Moderado", delta: "â†“ 2,1% desde 20/05", icon: TrendingDown },
+  { label: "Massa magra", value: "54,1 kg", status: "Adequado", delta: "â†‘ 1,4 kg desde 20/05", icon: Trophy },
+  { label: "Massa gorda", value: "18,3 kg", status: "Moderado", delta: "â†“ 1,1 kg desde 20/05", icon: Scale },
   { label: "TMB", value: "1.680 kcal", status: "por dia", delta: "Taxa metabolica basal", icon: Flame },
-  { label: "Agua corporal", value: "39,6 L", status: "Adequado", delta: "↑ 0,8 L desde 20/05", icon: Droplets }
+  { label: "Agua corporal", value: "39,6 L", status: "Adequado", delta: "â†‘ 0,8 L desde 20/05", icon: Droplets }
 ];
 
 const measurements = [
-  ["Pescoco", "34,2", "34,6", "↓ 0,4"],
-  ["Ombro", "108,5", "109,2", "↓ 0,7"],
-  ["Peito", "98,0", "98,7", "↓ 0,7"],
-  ["Cintura", "78,2", "81,3", "↓ 3,1"],
-  ["Abdomen", "85,4", "88,8", "↓ 3,4"],
-  ["Quadril", "102,3", "103,8", "↓ 1,5"],
-  ["Braco", "30,5", "30,8", "↓ 0,3"],
-  ["Antebraco", "26,1", "26,4", "↓ 0,3"],
-  ["Coxa", "56,1", "56,8", "↓ 0,7"],
-  ["Panturrilha", "36,2", "36,6", "↓ 0,4"]
+  ["Pescoco", "34,2", "34,6", "â†“ 0,4"],
+  ["Ombro", "108,5", "109,2", "â†“ 0,7"],
+  ["Peito", "98,0", "98,7", "â†“ 0,7"],
+  ["Cintura", "78,2", "81,3", "â†“ 3,1"],
+  ["Abdomen", "85,4", "88,8", "â†“ 3,4"],
+  ["Quadril", "102,3", "103,8", "â†“ 1,5"],
+  ["Braco", "30,5", "30,8", "â†“ 0,3"],
+  ["Antebraco", "26,1", "26,4", "â†“ 0,3"],
+  ["Coxa", "56,1", "56,8", "â†“ 0,7"],
+  ["Panturrilha", "36,2", "36,6", "â†“ 0,4"]
 ];
 
 const skinfolds = [
@@ -53,11 +53,11 @@ const skinfolds = [
 ];
 
 const evolution = [
-  ["Peso (kg)", "72,4 kg", "↓ 2,8 kg"],
-  ["Gordura corporal (%)", "24,3%", "↓ 2,1%"],
-  ["Massa magra (kg)", "54,1 kg", "↑ 1,4 kg"],
-  ["IMC", "25,6", "↓ 1,0"],
-  ["Medidas (media)", "-2,3 cm", "↓"]
+  ["Peso (kg)", "72,4 kg", "â†“ 2,8 kg"],
+  ["Gordura corporal (%)", "24,3%", "â†“ 2,1%"],
+  ["Massa magra (kg)", "54,1 kg", "â†‘ 1,4 kg"],
+  ["IMC", "25,6", "â†“ 1,0"],
+  ["Medidas (media)", "-2,3 cm", "â†“"]
 ];
 
 const history = [
@@ -199,7 +199,7 @@ export default function StudentAssessments({ student }) {
           <h2>Comparar com avaliacao anterior</h2>
           <div>
             <img src={student?.avatar || "/erika-gomes.jpeg"} alt="Antes" />
-            <span>↔</span>
+            <span>â†”</span>
             <img src={student?.avatar || "/erika-gomes.jpeg"} alt="Depois" />
           </div>
           <button type="button" onClick={() => openDetail("photos", "Fotos da avaliacao", "3 fotos", "Comparativo frontal, lateral e traseiro")}>Ver todas as fotos</button>
@@ -242,7 +242,7 @@ export default function StudentAssessments({ student }) {
 
         <article className="student-assessment-card personal-notes">
           <h2>Observacoes do seu personal</h2>
-          <span>Thiago Fillipo - 18/06/2025</span>
+          <span>Thiago Filippo - 18/06/2025</span>
           <p>
             Excelente evolucao. Reducao significativa de gordura corporal e aumento de massa magra.
             Continue mantendo consistencia nos treinos e na alimentacao. Proximo objetivo: reduzir gordura para abaixo de 20%.

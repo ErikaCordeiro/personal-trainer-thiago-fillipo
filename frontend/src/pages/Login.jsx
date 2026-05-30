@@ -26,7 +26,12 @@ export default function Login({ onLogin, onSignup }) {
 
   const installApp = async () => {
     if (!installPrompt) {
-      setInstallMessage("No celular, abra o menu do navegador e toque em Adicionar a tela inicial.");
+      const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+      setInstallMessage(
+        isIOS
+          ? "No iPhone, abra no Safari, toque em Compartilhar e depois em Adicionar a Tela de Inicio."
+          : "No celular, abra o menu do navegador e toque em Adicionar a Tela inicial."
+      );
       return;
     }
 

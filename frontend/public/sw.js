@@ -1,8 +1,9 @@
-const CACHE_NAME = "personal-thiago-fillipo-v1";
+const CACHE_NAME = "personal-thiago-filippo-v2";
 const APP_SHELL = [
   "/",
   "/manifest.webmanifest",
   "/lion-juda-logo.png",
+  "/apple-touch-icon.png",
   "/pwa-icon-192.png",
   "/pwa-icon-512.png"
 ];

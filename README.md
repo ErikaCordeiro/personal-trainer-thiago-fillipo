@@ -1,4 +1,4 @@
-# Personal Thiago Fillipo
+# Personal Thiago Filippo
 
 App full stack para personal trainer gerenciar alunos, treinos, exercicios, videos, dieta, avaliacoes e progresso fisico com uma experiencia premium, minimalista e responsiva.
 
@@ -53,14 +53,15 @@ npm run preview
 
 Abra o endereco exibido pelo Vite Preview. No Chrome/Edge, use o icone de instalar app na barra do navegador ou o botao `Instalar app` na tela de login quando ele aparecer.
 
-No celular, acesse a URL publicada com HTTPS e escolha `Adicionar a tela inicial` ou `Instalar app` no navegador.
+No Android, acesse a URL publicada com HTTPS e toque em `Instalar app`.
+No iPhone, abra a URL pelo Safari, toque em compartilhar e escolha `Adicionar a Tela de Inicio`.
 
 ## Backend
 
 Crie o banco PostgreSQL:
 
 ```sql
-CREATE DATABASE personal_thiago_fillipo;
+CREATE DATABASE personal_thiago_filippo;
 ```
 
 Configure o ambiente:
@@ -128,7 +129,7 @@ Passos na Railway:
    - `CORS_ORIGINS`: URL publica do proprio servico Railway
    - `SEED_PERSONAL_EMAIL`: email privado do personal administrador
    - `SEED_PERSONAL_PASSWORD`: senha privada forte do personal administrador
-5. Faça deploy pela branch `main`.
+5. FaÃ§a deploy pela branch `main`.
 
 Depois do deploy, teste:
 

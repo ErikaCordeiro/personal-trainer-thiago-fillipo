@@ -5,9 +5,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    APP_NAME: str = "Personal Thiago Fillipo API"
+    APP_NAME: str = "Personal Thiago Filippo API"
     ENVIRONMENT: str = "development"
-    DATABASE_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5432/personal_thiago_fillipo"
+    DATABASE_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5432/personal_thiago_filippo"
     SECRET_KEY: str = Field(default="dev-change-this-secret-key-before-production", min_length=32)
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60

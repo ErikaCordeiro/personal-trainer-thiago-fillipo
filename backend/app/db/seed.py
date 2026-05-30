@@ -1,7 +1,7 @@
 import secrets
 from datetime import date
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from app.core.config import settings
 from app.core.security import hash_password
@@ -15,14 +15,18 @@ from app.models.video import Video
 from app.models.workout import Workout, WorkoutExercise
 
 
+def normalize_email(email: str | None) -> str | None:
+    return email.strip().lower() if email else None
+
+
 def seed() -> None:
     init_db()
     db = SessionLocal()
     try:
         is_production = settings.ENVIRONMENT.lower() == "production"
-        personal_email = settings.SEED_PERSONAL_EMAIL
+        personal_email = normalize_email(settings.SEED_PERSONAL_EMAIL)
         personal_password = settings.SEED_PERSONAL_PASSWORD
-        student_email = settings.SEED_STUDENT_EMAIL
+        student_email = normalize_email(settings.SEED_STUDENT_EMAIL)
         student_password = settings.SEED_STUDENT_PASSWORD
 
         legacy_personal = db.scalar(select(User).where(User.email == "thiago@personal.com"))
@@ -34,39 +38,62 @@ def seed() -> None:
         if not personal_email or not personal_password:
             return
 
-        existing = db.scalar(select(User).where(User.email == personal_email)) or legacy_personal
+        existing = db.scalar(select(User).where(func.lower(User.email) == personal_email)) or legacy_personal
         if existing:
             existing.email = personal_email
-            existing.name = "Thiago Fillipo"
+            existing.name = "Thiago Filippo"
             existing.hashed_password = hash_password(personal_password)
+            existing.role = UserRole.PERSONAL
+            existing.is_active = True
             db.commit()
-            return
-
-        personal = User(
-            name="Thiago Fillipo",
-            email=personal_email,
-            hashed_password=hash_password(personal_password),
-            role=UserRole.PERSONAL,
-        )
-        db.add(personal)
-        db.flush()
+            personal = existing
+        else:
+            personal = User(
+                name="Thiago Filippo",
+                email=personal_email,
+                hashed_password=hash_password(personal_password),
+                role=UserRole.PERSONAL,
+            )
+            db.add(personal)
+            db.flush()
 
         student_user = None
         if student_email and student_password:
-            student_user = User(
-                name="Rafael Martins",
-                email=student_email,
-                hashed_password=hash_password(student_password),
-                role=UserRole.STUDENT,
-            )
-            db.add(student_user)
-            db.flush()
+            student_user = db.scalar(select(User).where(func.lower(User.email) == student_email))
+            if student_user:
+                student_user.email = student_email
+                student_user.name = "Erika Gomes Cordeiro"
+                student_user.hashed_password = hash_password(student_password)
+                student_user.role = UserRole.STUDENT
+                student_user.is_active = True
+            else:
+                student_user = User(
+                    name="Erika Gomes Cordeiro",
+                    email=student_email,
+                    hashed_password=hash_password(student_password),
+                    role=UserRole.STUDENT,
+                )
+                db.add(student_user)
+                db.flush()
+
+        existing_student = None
+        if student_user:
+            existing_student = db.scalar(select(Student).where(Student.user_id == student_user.id))
+        if not existing_student:
+            existing_student = db.scalar(select(Student).where(Student.personal_id == personal.id))
+        if existing_student:
+            existing_student.personal_id = personal.id
+            existing_student.user_id = student_user.id if student_user else existing_student.user_id
+            existing_student.name = student_user.name if student_user else existing_student.name
+            existing_student.email = student_email or existing_student.email
+            db.commit()
+            return
 
         student = Student(
             personal_id=personal.id,
             user_id=student_user.id if student_user else None,
-            name="Rafael Martins",
-            email="rafael@email.com",
+            name=student_user.name if student_user else "Rafael Martins",
+            email=student_email or "rafael@email.com",
             age=34,
             weight=86,
             height=1.82,

@@ -22,17 +22,17 @@ import AboutPersonal from "./pages/AboutPersonal.jsx";
 import { students as mockStudents, workouts as mockWorkouts } from "./data/mockData.js";
 
 const pageMeta = {
-  dashboard: ["Dashboard", "Disciplina hoje, liberdade amanhã."],
+  dashboard: ["Dashboard", "Disciplina hoje, liberdade amanhÃ£."],
   students: ["Alunos", "Visualize, encontre e edite seus atletas com rapidez."],
-  "workout-builder": ["Treinos", "Monte protocolos personalizados com vídeo, carga e descanso."],
-  exercise: ["Exercício", "Execução guiada com parâmetros claros e vídeo incorporado."],
+  "workout-builder": ["Treinos", "Monte protocolos personalizados com vÃ­deo, carga e descanso."],
+  exercise: ["ExercÃ­cio", "ExecuÃ§Ã£o guiada com parÃ¢metros claros e vÃ­deo incorporado."],
   "student-view": ["Treino", "Treino do dia, check-ins e registro de carga."],
   diet: ["Dietas", "Gestao alimentar, hidratacao e registros nutricionais dos alunos."],
-  assessments: ["Avaliações", "Registre, acompanhe e analise a evolução física dos seus alunos."],
-  progress: ["Progresso", "Histórico, evolução e indicadores de consistência."],
+  assessments: ["AvaliaÃ§Ãµes", "Registre, acompanhe e analise a evoluÃ§Ã£o fÃ­sica dos seus alunos."],
+  progress: ["Progresso", "HistÃ³rico, evoluÃ§Ã£o e indicadores de consistÃªncia."],
   "student-progress-detail": ["Progresso individual", "Central individual de performance do aluno."],
-  coach: ["Coach IA", "Seu assistente inteligente para treino, dieta e evolução."],
-  "about-personal": ["Sobre o Personal", "Conheça a metodologia, experiência e filosofia do Thiago Fillipo."]
+  coach: ["Coach IA", "Seu assistente inteligente para treino, dieta e evoluÃ§Ã£o."],
+  "about-personal": ["Sobre o Personal", "ConheÃ§a a metodologia, experiÃªncia e filosofia do Thiago Filippo."]
 };
 
 const rolePath = {
@@ -63,15 +63,15 @@ export default function App() {
   const [executionWorkoutId, setExecutionWorkoutId] = useState(null);
   const [selectedStudentId, setSelectedStudentId] = useState(mockStudents[0]?.id);
   const [personalProfile, setPersonalProfile] = useState({
-    name: "Thiago Fillipo",
-    bio: "Personal trainer focado em força, disciplina, performance e transformação real. Une estratégia, técnica e acompanhamento próximo para cada aluno evoluir com segurança.",
+    name: "Thiago Filippo",
+    bio: "Personal trainer focado em forÃ§a, disciplina, performance e transformaÃ§Ã£o real. Une estratÃ©gia, tÃ©cnica e acompanhamento prÃ³ximo para cada aluno evoluir com seguranÃ§a.",
     specialty: "Hipertrofia, emagrecimento e performance",
-    experience: "10+ anos de atuação",
-    method: "Disciplina, foco e propósito",
-    philosophy: "Treinar não é apenas cumprir exercícios. É construir uma versão mais forte, constante e confiante todos os dias.",
-    highlights: ["Treinos personalizados", "Acompanhamento de evolução", "Ajustes por performance", "Feedback inteligente", "Estratégia individual por objetivo"],
-    email: "contato@thiagofillipo.com",
-    instagram: "@personal.thiagofillipo"
+    experience: "10+ anos de atuaÃ§Ã£o",
+    method: "Disciplina, foco e propÃ³sito",
+    philosophy: "Treinar nÃ£o Ã© apenas cumprir exercÃ­cios. Ã‰ construir uma versÃ£o mais forte, constante e confiante todos os dias.",
+    highlights: ["Treinos personalizados", "Acompanhamento de evoluÃ§Ã£o", "Ajustes por performance", "Feedback inteligente", "EstratÃ©gia individual por objetivo"],
+    email: "contato@thiagofilippo.com",
+    instagram: "@personal.thiagofilippo"
   });
 
   const meta = pageMeta[activePage] || pageMeta.dashboard;
