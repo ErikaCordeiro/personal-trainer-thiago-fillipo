@@ -15,6 +15,9 @@ from app.models.video import Video
 from app.models.workout import Workout, WorkoutExercise
 
 
+DEFAULT_PERSONAL_EMAIL = "thiago.iron.filippo@gmail.com"
+
+
 def normalize_email(email: str | None) -> str | None:
     return email.strip().lower() if email else None
 
@@ -32,6 +35,13 @@ def seed() -> None:
         personal_password = normalize_password(settings.SEED_PERSONAL_PASSWORD)
         student_email = normalize_email(settings.SEED_STUDENT_EMAIL)
         student_password = normalize_password(settings.SEED_STUDENT_PASSWORD)
+
+        if personal_password and not personal_email:
+            personal_email = DEFAULT_PERSONAL_EMAIL
+            print(
+                "[seed] SEED_PERSONAL_EMAIL not found; "
+                f"using test personal email fallback: {personal_email}"
+            )
 
         print(
             "[seed] personal_email="
