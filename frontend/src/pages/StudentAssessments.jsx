@@ -21,25 +21,25 @@ import {
 } from "lucide-react";
 
 const summary = [
-  { label: "IMC", value: "25,6", status: "Sobrepeso", delta: "â†“ 1,0 desde 20/05", icon: HeartPulse },
-  { label: "Gordura corporal", value: "24,3%", status: "Moderado", delta: "â†“ 2,1% desde 20/05", icon: TrendingDown },
-  { label: "Massa magra", value: "54,1 kg", status: "Adequado", delta: "â†‘ 1,4 kg desde 20/05", icon: Trophy },
-  { label: "Massa gorda", value: "18,3 kg", status: "Moderado", delta: "â†“ 1,1 kg desde 20/05", icon: Scale },
+  { label: "IMC", value: "25,6", status: "Sobrepeso", delta: "Ã¢â€ â€œ 1,0 desde 20/05", icon: HeartPulse },
+  { label: "Gordura corporal", value: "24,3%", status: "Moderado", delta: "Ã¢â€ â€œ 2,1% desde 20/05", icon: TrendingDown },
+  { label: "Massa magra", value: "54,1 kg", status: "Adequado", delta: "Ã¢â€ â€˜ 1,4 kg desde 20/05", icon: Trophy },
+  { label: "Massa gorda", value: "18,3 kg", status: "Moderado", delta: "Ã¢â€ â€œ 1,1 kg desde 20/05", icon: Scale },
   { label: "TMB", value: "1.680 kcal", status: "por dia", delta: "Taxa metabolica basal", icon: Flame },
-  { label: "Agua corporal", value: "39,6 L", status: "Adequado", delta: "â†‘ 0,8 L desde 20/05", icon: Droplets }
+  { label: "Agua corporal", value: "39,6 L", status: "Adequado", delta: "Ã¢â€ â€˜ 0,8 L desde 20/05", icon: Droplets }
 ];
 
 const measurements = [
-  ["Pescoco", "34,2", "34,6", "â†“ 0,4"],
-  ["Ombro", "108,5", "109,2", "â†“ 0,7"],
-  ["Peito", "98,0", "98,7", "â†“ 0,7"],
-  ["Cintura", "78,2", "81,3", "â†“ 3,1"],
-  ["Abdomen", "85,4", "88,8", "â†“ 3,4"],
-  ["Quadril", "102,3", "103,8", "â†“ 1,5"],
-  ["Braco", "30,5", "30,8", "â†“ 0,3"],
-  ["Antebraco", "26,1", "26,4", "â†“ 0,3"],
-  ["Coxa", "56,1", "56,8", "â†“ 0,7"],
-  ["Panturrilha", "36,2", "36,6", "â†“ 0,4"]
+  ["Pescoco", "34,2", "34,6", "Ã¢â€ â€œ 0,4"],
+  ["Ombro", "108,5", "109,2", "Ã¢â€ â€œ 0,7"],
+  ["Peito", "98,0", "98,7", "Ã¢â€ â€œ 0,7"],
+  ["Cintura", "78,2", "81,3", "Ã¢â€ â€œ 3,1"],
+  ["Abdomen", "85,4", "88,8", "Ã¢â€ â€œ 3,4"],
+  ["Quadril", "102,3", "103,8", "Ã¢â€ â€œ 1,5"],
+  ["Braco", "30,5", "30,8", "Ã¢â€ â€œ 0,3"],
+  ["Antebraco", "26,1", "26,4", "Ã¢â€ â€œ 0,3"],
+  ["Coxa", "56,1", "56,8", "Ã¢â€ â€œ 0,7"],
+  ["Panturrilha", "36,2", "36,6", "Ã¢â€ â€œ 0,4"]
 ];
 
 const skinfolds = [
@@ -53,11 +53,11 @@ const skinfolds = [
 ];
 
 const evolution = [
-  ["Peso (kg)", "72,4 kg", "â†“ 2,8 kg"],
-  ["Gordura corporal (%)", "24,3%", "â†“ 2,1%"],
-  ["Massa magra (kg)", "54,1 kg", "â†‘ 1,4 kg"],
-  ["IMC", "25,6", "â†“ 1,0"],
-  ["Medidas (media)", "-2,3 cm", "â†“"]
+  ["Peso (kg)", "72,4 kg", "Ã¢â€ â€œ 2,8 kg"],
+  ["Gordura corporal (%)", "24,3%", "Ã¢â€ â€œ 2,1%"],
+  ["Massa magra (kg)", "54,1 kg", "Ã¢â€ â€˜ 1,4 kg"],
+  ["IMC", "25,6", "Ã¢â€ â€œ 1,0"],
+  ["Medidas (media)", "-2,3 cm", "Ã¢â€ â€œ"]
 ];
 
 const history = [
@@ -69,11 +69,11 @@ const history = [
 ];
 
 const quickActions = [
-  ["Entender minha avaliacao", Bot],
-  ["Ver evolucao completa", LineChart],
+  ["Entender minha avaliação", Bot],
+  ["Ver evolução completa", LineChart],
   ["Ver plano alimentar", Apple],
   ["Falar com Coach IA", MessageCircle],
-  ["Compartilhar evolucao", Share2]
+  ["Compartilhar evolução", Share2]
 ];
 
 export default function StudentAssessments({ student }) {
@@ -88,13 +88,13 @@ export default function StudentAssessments({ student }) {
     <section className="student-assessment-page student-assessment-premium">
       <div className="student-assessment-intro">
         <div>
-          <p className="eyebrow">Ultima avaliacao</p>
-          <h2>Voce esta evoluindo de verdade, {name.split(" ")[0]}.</h2>
-          <span>Acompanhe sua evolucao e veja o quanto voce esta avancando.</span>
+          <p className="eyebrow">Última avaliação</p>
+          <h2>Você esta evoluindo de verdade, {name.split(" ")[0]}.</h2>
+          <span>Acompanhe sua evolução e veja o quanto voce esta avancando.</span>
         </div>
         <div className="student-assessment-date">
           <CalendarDays size={20} />
-          <span>Ultima avaliacao</span>
+          <span>Última avaliação</span>
           <strong>18/06/2025</strong>
         </div>
       </div>
@@ -121,7 +121,7 @@ export default function StudentAssessments({ student }) {
             <span>cm</span>
           </div>
           <div className="student-measure-table">
-            <div><span></span><span>Atual</span><span>Anterior</span><span>Evolucao</span></div>
+            <div><span></span><span>Atual</span><span>Anterior</span><span>Evolução</span></div>
             {measurements.map(([label, current, previous, diff]) => (
               <div key={label}>
                 <strong>{label}</strong>
@@ -131,7 +131,7 @@ export default function StudentAssessments({ student }) {
               </div>
             ))}
           </div>
-          <button type="button" onClick={() => openDetail("measures", "Medidas corporais", "10 medidas", "Evolucao media de -2,3 cm")}>Ver todas as medidas</button>
+          <button type="button" onClick={() => openDetail("measures", "Medidas corporais", "10 medidas", "Evolução media de -2,3 cm")}>Ver todas as medidas</button>
         </article>
 
         <article className="student-assessment-card skinfold">
@@ -183,12 +183,12 @@ export default function StudentAssessments({ student }) {
 
       <div className="student-assessment-grid photos-row">
         <article className="student-assessment-card assessment-photos">
-          <h2>Fotos da avaliacao</h2>
+          <h2>Fotos da avaliação</h2>
           <div className="student-photo-triptych">
             {["Frontal", "Lateral", "Traseira"].map((label) => (
               <div key={label}>
                 <span>{label}</span>
-                <img src={student?.avatar || "/erika-gomes.jpeg"} alt={`${label} da avaliacao`} />
+                <img src={student?.avatar || "/erika-gomes.jpeg"} alt={`${label} da avaliação`} />
                 <small>18/06/2025</small>
               </div>
             ))}
@@ -196,18 +196,18 @@ export default function StudentAssessments({ student }) {
         </article>
 
         <article className="student-assessment-card compare-card">
-          <h2>Comparar com avaliacao anterior</h2>
+          <h2>Comparar com avaliação anterior</h2>
           <div>
             <img src={student?.avatar || "/erika-gomes.jpeg"} alt="Antes" />
-            <span>â†”</span>
+            <span>Ã¢â€ â€</span>
             <img src={student?.avatar || "/erika-gomes.jpeg"} alt="Depois" />
           </div>
-          <button type="button" onClick={() => openDetail("photos", "Fotos da avaliacao", "3 fotos", "Comparativo frontal, lateral e traseiro")}>Ver todas as fotos</button>
+          <button type="button" onClick={() => openDetail("photos", "Fotos da avaliação", "3 fotos", "Comparativo frontal, lateral e traseiro")}>Ver todas as fotos</button>
         </article>
       </div>
 
       <article className="student-assessment-card full-row">
-        <h2>Evolucao</h2>
+        <h2>Evolução</h2>
         <div className="student-evolution-grid">
           {evolution.map(([label, value, delta]) => (
             <div key={label}>
@@ -226,7 +226,7 @@ export default function StudentAssessments({ student }) {
 
       <div className="student-assessment-grid bottom">
         <article className="student-assessment-card history">
-          <h2>Historico de avaliacoes</h2>
+          <h2>Histórico de avaliações</h2>
           <table>
             <thead>
               <tr><th>Data</th><th>Peso</th><th>Gordura</th><th>IMC</th><th>Massa magra</th></tr>
@@ -237,14 +237,14 @@ export default function StudentAssessments({ student }) {
               ))}
             </tbody>
           </table>
-          <button type="button" onClick={() => openDetail("history", "Historico de avaliacoes", "5 avaliacoes", "Ultima avaliacao em 18/06/2025")}>Ver todas as avaliacoes</button>
+          <button type="button" onClick={() => openDetail("history", "Histórico de avaliações", "5 avaliações", "Última avaliação em 18/06/2025")}>Ver todas as avaliações</button>
         </article>
 
         <article className="student-assessment-card personal-notes">
           <h2>Observacoes do seu personal</h2>
           <span>Thiago Filippo - 18/06/2025</span>
           <p>
-            Excelente evolucao. Reducao significativa de gordura corporal e aumento de massa magra.
+            Excelente evolução. Reducao significativa de gordura corporal e aumento de massa magra.
             Continue mantendo consistencia nos treinos e na alimentacao. Proximo objetivo: reduzir gordura para abaixo de 20%.
           </p>
           <button type="button" onClick={() => openDetail("notes", "Observacoes do personal", "Proximo objetivo", "Reduzir gordura corporal para abaixo de 20%")}>Ver todas as observacoes</button>
@@ -268,7 +268,7 @@ export default function StudentAssessments({ student }) {
 
       <div className="student-assessment-quote">
         <Activity size={22} />
-        <span>Disciplina hoje, resultado amanha. Voce esta no caminho certo.</span>
+        <span>Disciplina hoje, resultado amanha. Você esta no caminho certo.</span>
       </div>
 
       {detailModal && (
@@ -277,7 +277,7 @@ export default function StudentAssessments({ student }) {
             <button className="modal-close" type="button" onClick={() => setDetailModal(null)} aria-label="Fechar">
               <X size={20} />
             </button>
-            <p className="eyebrow">Detalhes da avaliacao</p>
+            <p className="eyebrow">Detalhes da avaliação</p>
             <h2>{detailModal.title}</h2>
             <div className="assessment-detail-highlight">
               <strong>{detailModal.value}</strong>
@@ -291,7 +291,7 @@ export default function StudentAssessments({ student }) {
               <circle cx="302" cy="112" r="5" />
             </svg>
             <p>
-              Essa evolucao compara sua avaliacao atual com os registros anteriores. O objetivo e mostrar tendencia,
+              Essa evolução compara sua avaliação atual com os registros anteriores. O objetivo e mostrar tendencia,
               constancia e onde ajustar treino, dieta e hidratacao.
             </p>
             <button className="metal-button inline" type="button" onClick={() => setDetailModal(null)}>Entendi</button>

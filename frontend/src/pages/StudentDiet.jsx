@@ -326,7 +326,7 @@ export default function StudentDiet({ student }) {
               </div>
               <Sparkles size={22} />
             </div>
-            <p className="ai-disclaimer">A analise por foto e uma estimativa. Voce pode editar os alimentos e quantidades antes de salvar.</p>
+            <p className="ai-disclaimer">A analise por foto e uma estimativa. Você pode editar os alimentos e quantidades antes de salvar.</p>
             <div className={`ai-meal-grid compact-ai-preview ${mealPhoto ? "has-analysis" : "awaiting-photo"}`}>
               <div className="meal-photo-card empty-photo-card">
                 {mealPhoto ? (
@@ -358,7 +358,7 @@ export default function StudentDiet({ student }) {
             <article className="nutrition-card food-evolution-card">
               <div className="section-heading">
                 <div>
-                  <p className="eyebrow">Evolucao alimentar</p>
+                  <p className="eyebrow">Evolução alimentar</p>
                   <h2>Ultimos 7 dias</h2>
                 </div>
                 <span>Calorias</span>
@@ -404,7 +404,7 @@ export default function StudentDiet({ student }) {
             <p className="eyebrow">Recomendacao de agua</p>
             <h2>{waterGoal.toFixed(1).replace(".", ",")} L</h2>
             <span>por dia</span>
-            <p>Com base na sua avaliacao fisica, objetivo, frequencia de treino e peso atual, recomendamos esta meta diaria.</p>
+            <p>Com base na sua avaliação física, objetivo, frequencia de treino e peso atual, recomendamos esta meta diaria.</p>
           </article>
 
           <article className="nutrition-card food-coach-card">

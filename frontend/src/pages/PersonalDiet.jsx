@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 const nutritionStats = [
-  { label: "Planos ativos", value: "2", detail: "Erika e Jessica", icon: Apple },
+  { label: "Planos ativos", value: "1", detail: "Erika", icon: Apple },
   { label: "Aderencia media", value: "91%", detail: "+8% vs mes anterior", icon: CheckCircle2 },
   { label: "Refeicoes registradas", value: "18", detail: "ultimos 7 dias", icon: Utensils },
   { label: "Hidratacao media", value: "72%", detail: "meta diaria", icon: Droplets },
@@ -31,27 +31,16 @@ const studentRows = [
     adherence: "92%",
     avatar: "/erika-gomes.jpeg",
     status: "Em dia"
-  },
-  {
-    name: "Jessica Gomes",
-    objective: "Emagrecimento",
-    calories: "1.760 / 2.050 kcal",
-    protein: "124g",
-    water: "1,4 / 3,2 L",
-    adherence: "78%",
-    avatar: "/jessica-gomes.png",
-    status: "Ajustar agua"
   }
 ];
 
 const meals = [
   { time: "07:00", name: "Cafe da manha", student: "Erika", foods: "Aveia, whey, banana e chia", kcal: "542 kcal" },
-  { time: "13:00", name: "Almoco", student: "Jessica", foods: "Frango, arroz integral, feijao e salada", kcal: "680 kcal" },
+  { time: "13:00", name: "Almoco", student: "Erika", foods: "Frango, arroz integral, feijao e salada", kcal: "680 kcal" },
   { time: "19:30", name: "Jantar", student: "Erika", foods: "Salmao com batata doce e legumes", kcal: "610 kcal" }
 ];
 
 const alerts = [
-  "Jessica registrou pouca agua hoje",
   "Erika ficou abaixo da meta de fibras",
   "1 refeicao enviada por foto aguarda revisao"
 ];
@@ -60,8 +49,7 @@ export default function PersonalDiet({ students }) {
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
   const [aiMeals, setAiMeals] = useState([]);
   const [plans, setPlans] = useState([
-    { student: "Erika Gomes", name: "Plano definicao premium", calories: "2.200", meals: "6", status: "Ativo" },
-    { student: "Jessica Gomes", name: "Plano emagrecimento", calories: "2.050", meals: "5", status: "Ajustar agua" }
+    { student: "Erika Gomes", name: "Plano definicao premium", calories: "2.200", meals: "6", status: "Ativo" }
   ]);
 
   const generateAiDiet = () => {

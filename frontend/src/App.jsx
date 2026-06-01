@@ -22,17 +22,17 @@ import AboutPersonal from "./pages/AboutPersonal.jsx";
 import { students as mockStudents, workouts as mockWorkouts } from "./data/mockData.js";
 
 const pageMeta = {
-  dashboard: ["Dashboard", "Disciplina hoje, liberdade amanhÃ£."],
+  dashboard: ["Dashboard", "Disciplina hoje, liberdade amanha."],
   students: ["Alunos", "Visualize, encontre e edite seus atletas com rapidez."],
-  "workout-builder": ["Treinos", "Monte protocolos personalizados com vÃ­deo, carga e descanso."],
-  exercise: ["ExercÃ­cio", "ExecuÃ§Ã£o guiada com parÃ¢metros claros e vÃ­deo incorporado."],
+  "workout-builder": ["Treinos", "Monte protocolos personalizados com video, carga e descanso."],
+  exercise: ["Exercicio", "Execucao guiada com parametros claros e video incorporado."],
   "student-view": ["Treino", "Treino do dia, check-ins e registro de carga."],
   diet: ["Dietas", "Gestao alimentar, hidratacao e registros nutricionais dos alunos."],
-  assessments: ["AvaliaÃ§Ãµes", "Registre, acompanhe e analise a evoluÃ§Ã£o fÃ­sica dos seus alunos."],
-  progress: ["Progresso", "HistÃ³rico, evoluÃ§Ã£o e indicadores de consistÃªncia."],
+  assessments: ["Avaliações", "Registre, acompanhe e analise a evolução física dos seus alunos."],
+  progress: ["Progresso", "Histórico, evolução e indicadores de consistência."],
   "student-progress-detail": ["Progresso individual", "Central individual de performance do aluno."],
-  coach: ["Coach IA", "Seu assistente inteligente para treino, dieta e evoluÃ§Ã£o."],
-  "about-personal": ["Sobre o Personal", "ConheÃ§a a metodologia, experiÃªncia e filosofia do Thiago Filippo."]
+  coach: ["Coach IA", "Seu assistente inteligente para treino, dieta e evolução."],
+  "about-personal": ["Sobre o Personal", "Conheça a metodologia, experiência e filosofia do Thiago Filippo."]
 };
 
 const rolePath = {
@@ -64,12 +64,12 @@ export default function App() {
   const [selectedStudentId, setSelectedStudentId] = useState(mockStudents[0]?.id);
   const [personalProfile, setPersonalProfile] = useState({
     name: "Thiago Filippo",
-    bio: "Personal trainer focado em forÃ§a, disciplina, performance e transformaÃ§Ã£o real. Une estratÃ©gia, tÃ©cnica e acompanhamento prÃ³ximo para cada aluno evoluir com seguranÃ§a.",
+    bio: "Personal trainer focado em forÃƒÂ§a, disciplina, performance e transformaÃƒÂ§ÃƒÂ£o real. Une estratÃƒÂ©gia, tÃƒÂ©cnica e acompanhamento prÃƒÂ³ximo para cada aluno evoluir com seguranÃƒÂ§a.",
     specialty: "Hipertrofia, emagrecimento e performance",
-    experience: "10+ anos de atuaÃ§Ã£o",
-    method: "Disciplina, foco e propÃ³sito",
-    philosophy: "Treinar nÃ£o Ã© apenas cumprir exercÃ­cios. Ã‰ construir uma versÃ£o mais forte, constante e confiante todos os dias.",
-    highlights: ["Treinos personalizados", "Acompanhamento de evoluÃ§Ã£o", "Ajustes por performance", "Feedback inteligente", "EstratÃ©gia individual por objetivo"],
+    experience: "10+ anos de atuaÃƒÂ§ÃƒÂ£o",
+    method: "Disciplina, foco e propÃƒÂ³sito",
+    philosophy: "Treinar nÃƒÂ£o ÃƒÂ© apenas cumprir exercÃƒÂ­cios. Ãƒâ€° construir uma versÃƒÂ£o mais forte, constante e confiante todos os dias.",
+    highlights: ["Treinos personalizados", "Acompanhamento de evoluÃƒÂ§ÃƒÂ£o", "Ajustes por performance", "Feedback inteligente", "EstratÃƒÂ©gia individual por objetivo"],
     email: "contato@thiagofilippo.com",
     instagram: "@personal.thiagofilippo"
   });
@@ -117,11 +117,11 @@ export default function App() {
     } else if (isStudent && page === "diet") {
       window.history.replaceState(null, "", "/aluno/dieta");
     } else if (isStudent && page === "assessments") {
-      window.history.replaceState(null, "", "/aluno/avaliacao");
+      window.history.replaceState(null, "", "/aluno/avaliação");
     } else if (!isStudent && page === "diet") {
       window.history.replaceState(null, "", "/dashboard/personal/dietas");
     } else if (!isStudent && page === "assessments") {
-      window.history.replaceState(null, "", "/personal/avaliacoes");
+      window.history.replaceState(null, "", "/personal/avaliações");
     } else if (!isStudent && page === "progress") {
       window.history.replaceState(null, "", "/personal/progresso");
     } else if (!isStudent && page === "student-progress-detail") {
@@ -156,6 +156,43 @@ export default function App() {
     window.history.replaceState(null, "", `/personal/aluno/${student.id}/progresso`);
   };
 
+  const approvePendingStudent = (student) => {
+    if (!student) return;
+    setStudents((current) => [
+      {
+        ...student,
+        avatar: mockStudents[0].avatar,
+        adherence: 0,
+        workoutIds: student.workoutIds || [],
+        workoutId: student.workoutId || null,
+        accessApproved: true,
+        status: "active"
+      },
+      ...current
+    ]);
+    setPendingStudents((current) => current.filter((item) => item.id !== student.id));
+    setActivePage("students");
+    window.history.replaceState(null, "", "/dashboard/personal");
+  };
+
+  const personalNotifications = pendingStudents.map((student) => ({
+    id: `pending-${student.id}`,
+    type: "student-signup",
+    title: "Novo aluno aguardando aprovacao",
+    message: `${student.name} solicitou acesso ao app.`,
+    student,
+    actionLabel: "Ver em alunos"
+  }));
+
+  const studentNotifications = [
+    {
+      id: "student-welcome",
+      type: "info",
+      title: "App liberado",
+      message: "Seu acesso esta ativo. Você ja pode acompanhar treino, dieta, avaliações e progresso."
+    }
+  ];
+
   const commonLayoutProps = {
     activePage,
     meta,
@@ -167,7 +204,14 @@ export default function App() {
     session,
     sidebarOpen,
     setSidebarOpen,
-    student: students[0]
+    student: students[0],
+    notifications: isStudent ? studentNotifications : personalNotifications,
+    onNotificationAction: (notification) => {
+      if (notification?.type === "student-signup") {
+        navigate("students");
+      }
+    },
+    onApproveStudent: approvePendingStudent
   };
 
   const sharedPages = (
@@ -250,27 +294,14 @@ export default function App() {
           pendingStudents={pendingStudents}
           workouts={workouts}
           onOpenProgress={openStudentProgress}
-          onApproveStudent={(student) => {
-            setStudents((current) => [
-              {
-                ...student,
-                avatar: mockStudents[0].avatar,
-                adherence: 0,
-                workoutIds: student.workoutIds || [],
-                workoutId: student.workoutId || null,
-                status: "active"
-              },
-              ...current
-            ]);
-            setPendingStudents((current) => current.filter((item) => item.id !== student.id));
-          }}
+          onApproveStudent={approvePendingStudent}
           onSaveStudent={(student) => {
             setStudents((current) => {
               if (student.id) {
                 return current.map((item) => item.id === student.id ? { ...item, ...student } : item);
               }
               return [
-                { ...student, id: crypto.randomUUID(), avatar: mockStudents[0].avatar, adherence: 0, workoutIds: student.workoutIds || [] },
+                { ...student, id: crypto.randomUUID(), avatar: mockStudents[0].avatar, adherence: 0, workoutIds: student.workoutIds || [], accessApproved: student.accessApproved === true },
                 ...current
               ];
             });

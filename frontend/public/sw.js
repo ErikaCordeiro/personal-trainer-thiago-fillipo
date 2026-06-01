@@ -1,4 +1,4 @@
-const CACHE_NAME = "personal-thiago-filippo-v2";
+const CACHE_NAME = "personal-thiago-filippo-v4";
 const APP_SHELL = [
   "/",
   "/manifest.webmanifest",
@@ -37,16 +37,12 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-
-      return fetch(request).then((networkResponse) => {
+    fetch(request)
+      .then((networkResponse) => {
         const responseClone = networkResponse.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
         return networkResponse;
-      });
-    })
+      })
+      .catch(() => caches.match(request))
   );
 });

@@ -18,8 +18,8 @@ import {
 } from "lucide-react";
 
 const metricCards = [
-  { label: "Peso atual", value: "67,4 kg", diff: "-2,8 kg", note: "desde a ultima avaliacao", icon: Scale },
-  { label: "Gordura corporal", value: "18,6%", diff: "-1,2%", note: "evolucao positiva", icon: HeartPulse },
+  { label: "Peso atual", value: "67,4 kg", diff: "-2,8 kg", note: "desde a ultima avaliação", icon: Scale },
+  { label: "Gordura corporal", value: "18,6%", diff: "-1,2%", note: "evolução positiva", icon: HeartPulse },
   { label: "Massa magra", value: "54,1 kg", diff: "+1,4 kg", note: "ganho no ciclo", icon: Activity },
   { label: "IMC", value: "22,4", diff: "Normal", note: "faixa saudavel", icon: BadgeCheck },
   { label: "Agua corporal", value: "39,6 L", diff: "+0,8 L", note: "melhora hidratacao", icon: Droplets },
@@ -62,11 +62,11 @@ export default function Progress({ student, students = [] }) {
     <section className="student-progress-premium">
       <header className="student-progress-hero">
         <div>
-          <p className="eyebrow">Central de evolucao</p>
-          <h1>Voce esta evoluindo de verdade.</h1>
+          <p className="eyebrow">Central de evolução</p>
+          <h1>Você esta evoluindo de verdade.</h1>
           <span>Forca, medidas, dieta e consistencia reunidas em uma tela premium.</span>
           <div className="student-progress-hero-actions">
-            <button type="button" onClick={() => setModal("analysis")}>Ver análise completa</button>
+            <button type="button" onClick={() => setModal("analysis")}>Ver anÃ¡lise completa</button>
             <button type="button" onClick={() => setModal("coach")}>Falar com Coach IA</button>
           </div>
         </div>
@@ -94,12 +94,12 @@ export default function Progress({ student, students = [] }) {
         <article className="student-progress-card load-evolution-card">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Evolucao de carga</p>
+              <p className="eyebrow">Evolução de carga</p>
               <h2>Forca aumentando</h2>
             </div>
             <Dumbbell size={22} />
           </div>
-          <div className="strength-chart" aria-label="Grafico de evolucao de forca">
+          <div className="strength-chart" aria-label="Grafico de evolução de forca">
             <svg viewBox="0 0 520 210" role="img">
               <defs>
                 <linearGradient id="strengthFill" x1="0" x2="0" y1="0" y2="1">
@@ -165,7 +165,7 @@ export default function Progress({ student, students = [] }) {
         <article className="student-progress-card body-evolution-card">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Evolucao corporal</p>
+              <p className="eyebrow">Evolução corporal</p>
               <h2>Ultimos 6 meses</h2>
             </div>
             <span>Peso / gordura / massa magra</span>
@@ -184,7 +184,7 @@ export default function Progress({ student, students = [] }) {
         <article className="student-progress-card visual-progress-student">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Evolucao visual</p>
+              <p className="eyebrow">Evolução visual</p>
               <h2>Fotos comparativas</h2>
             </div>
             <Camera size={21} />
@@ -192,7 +192,7 @@ export default function Progress({ student, students = [] }) {
           <div className="visual-photo-grid">
             {["Frontal", "Lateral", "Traseira"].map((label) => (
               <figure key={label}>
-                <img src={avatar} alt={`${label} da avaliacao`} />
+                <img src={avatar} alt={`${label} da avaliação`} />
                 <figcaption>{label}</figcaption>
               </figure>
             ))}
@@ -240,15 +240,15 @@ export default function Progress({ student, students = [] }) {
           <div className="section-heading">
             <div>
               <p className="eyebrow">Insights da IA</p>
-              <h2>Coach IA analisou sua evolucao</h2>
+              <h2>Coach IA analisou sua evolução</h2>
             </div>
             <Sparkles size={22} />
           </div>
           <ul>
-            <li>Voce aumentou 60kg no leg press desde o inicio do ciclo.</li>
+            <li>Você aumentou 60kg no leg press desde o inicio do ciclo.</li>
             <li>Sua forca geral subiu 18% nos principais exercicios.</li>
             <li>Sua consistencia esta acima da media dos alunos premium.</li>
-            <li>Continue priorizando agua e proteina para manter a evolucao.</li>
+            <li>Continue priorizando agua e proteina para manter a evolução.</li>
           </ul>
           <button type="button" onClick={() => setModal("coach")}>Perguntar ao Coach IA</button>
         </article>
@@ -257,28 +257,28 @@ export default function Progress({ student, students = [] }) {
         <div className="progress-modal-backdrop" role="presentation" onMouseDown={() => setModal(null)}>
           <article className="progress-action-modal" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
             <button className="modal-close" type="button" onClick={() => setModal(null)}>Fechar</button>
-            <p className="eyebrow">{modal === "coach" ? "Coach IA" : modal === "evolution" ? "Evolução visual" : "Análise completa"}</p>
-            <h2>{modal === "coach" ? "Como posso te ajudar hoje?" : modal === "evolution" ? "Comparativo antes/depois" : "Resumo da sua evolução"}</h2>
+            <p className="eyebrow">{modal === "coach" ? "Coach IA" : modal === "evolution" ? "EvoluÃ§Ã£o visual" : "AnÃ¡lise completa"}</p>
+            <h2>{modal === "coach" ? "Como posso te ajudar hoje?" : modal === "evolution" ? "Comparativo antes/depois" : "Resumo da sua evoluÃ§Ã£o"}</h2>
             {modal === "coach" ? (
               <div className="coach-question-grid">
-                <button type="button">Como melhorar minha força?</button>
+                <button type="button">Como melhorar minha forÃ§a?</button>
                 <button type="button">O que ajustar na dieta?</button>
                 <button type="button">Estou evoluindo bem?</button>
-                <button type="button">Como manter a consistência?</button>
+                <button type="button">Como manter a consistÃªncia?</button>
               </div>
             ) : modal === "evolution" ? (
               <div className="progress-before-after">
                 <img src={avatar} alt="Antes" />
-                <span>→</span>
+                <span>â†’</span>
                 <img src={avatar} alt="Depois" />
-                <p>Redução de gordura, melhora de postura e aumento de massa magra no ciclo atual.</p>
+                <p>ReduÃ§Ã£o de gordura, melhora de postura e aumento de massa magra no ciclo atual.</p>
               </div>
             ) : (
               <ul className="progress-analysis-list">
-                <li>Força geral: +18% nos exercícios principais.</li>
-                <li>Carga no leg press: +60kg desde o início.</li>
-                <li>Aderência alimentar: 87%, acima da média.</li>
-                <li>Próximo foco: manter proteína e melhorar hidratação.</li>
+                <li>ForÃ§a geral: +18% nos exercÃ­cios principais.</li>
+                <li>Carga no leg press: +60kg desde o inÃ­cio.</li>
+                <li>AderÃªncia alimentar: 87%, acima da mÃ©dia.</li>
+                <li>PrÃ³ximo foco: manter proteÃ­na e melhorar hidrataÃ§Ã£o.</li>
               </ul>
             )}
           </article>

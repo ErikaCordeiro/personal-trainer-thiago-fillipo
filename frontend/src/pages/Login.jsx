@@ -18,27 +18,53 @@ export default function Login({ onLogin, onSignup }) {
     const handleBeforeInstallPrompt = (event) => {
       event.preventDefault();
       setInstallPrompt(event);
+      setInstallMessage("Instalacao disponivel. Toque em Instalar app para adicionar o app neste dispositivo.");
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
   }, []);
 
+  const getInstallFallbackMessage = () => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(userAgent);
+    const isAndroid = /android/.test(userAgent);
+    const isChrome = /chrome|crios|edg/.test(userAgent);
+    const isSafari = /safari/.test(userAgent) && !/chrome|crios|android/.test(userAgent);
+
+    if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone) {
+      return "O app ja esta instalado neste dispositivo.";
+    }
+
+    if (isIOS) {
+      return isSafari
+        ? "No iPhone, toque em Compartilhar e depois em Adicionar a Tela de Inicio."
+        : "No iPhone, abra este link no Safari para instalar: Compartilhar > Adicionar a Tela de Inicio.";
+    }
+
+    if (isAndroid) {
+      return isChrome
+        ? "No Android, toque no menu do Chrome e depois em Instalar app ou Adicionar a Tela inicial."
+        : "No Android, abra no Chrome e toque em Instalar app ou Adicionar a Tela inicial.";
+    }
+
+    return "No computador, clique no icone de instalar na barra de endereco do Chrome/Edge ou use o menu do navegador > Instalar Personal Thiago Filippo.";
+  };
+
   const installApp = async () => {
     if (!installPrompt) {
-      const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
-      setInstallMessage(
-        isIOS
-          ? "No iPhone, abra no Safari, toque em Compartilhar e depois em Adicionar a Tela de Inicio."
-          : "No celular, abra o menu do navegador e toque em Adicionar a Tela inicial."
-      );
+      setInstallMessage(getInstallFallbackMessage());
       return;
     }
 
     installPrompt.prompt();
-    await installPrompt.userChoice;
+    const choice = await installPrompt.userChoice;
     setInstallPrompt(null);
-    setInstallMessage("");
+    setInstallMessage(
+      choice.outcome === "accepted"
+        ? "Instalacao iniciada. O app deve aparecer na tela inicial ou nos aplicativos."
+        : getInstallFallbackMessage()
+    );
   };
 
   const submit = async (event) => {

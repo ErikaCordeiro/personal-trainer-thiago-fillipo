@@ -25,29 +25,29 @@ export const personalNavItems = [
   { id: "students", label: "Alunos", icon: Users },
   { id: "workout-builder", label: "Treinos", icon: Dumbbell },
   { id: "diet", label: "Dietas", icon: Apple },
-  { id: "assessments", label: "AvaliaÃ§Ãµes", icon: ClipboardCheck },
+  { id: "assessments", label: "Avaliações", icon: ClipboardCheck },
   { id: "progress", label: "Progresso", icon: LineChart },
   { id: "finance", label: "Financeiro", icon: CreditCard },
   { id: "agenda", label: "Agenda", icon: CalendarDays },
   { id: "chat", label: "Mensagens", icon: MessageCircle },
-  { id: "reports", label: "RelatÃ³rios", icon: FileText },
+  { id: "reports", label: "Relatórios", icon: FileText },
   { id: "coach", label: "Coach IA", icon: Bot },
   { id: "about-personal", label: "Sobre o Personal", icon: Info },
-  { id: "settings", label: "ConfiguraÃ§Ãµes", icon: Settings }
+  { id: "settings", label: "Configurações", icon: Settings }
 ];
 
 export const studentNavItems = [
   { id: "dashboard", label: "Dashboard", icon: Home },
   { id: "student-view", label: "Treino", icon: Dumbbell },
   { id: "diet", label: "Dieta", icon: Apple },
-  { id: "assessments", label: "AvaliaÃ§Ãµes", icon: ClipboardCheck },
+  { id: "assessments", label: "Avaliações", icon: ClipboardCheck },
   { id: "progress", label: "Progresso", icon: BarChart3 },
   { id: "messages", label: "Mensagens", icon: MessageCircle },
   { id: "files", label: "Arquivos", icon: FileText },
-  { id: "calendar", label: "CalendÃ¡rio", icon: CalendarDays },
+  { id: "calendar", label: "Calendário", icon: CalendarDays },
   { id: "coach", label: "Coach IA", icon: Bot },
   { id: "about-personal", label: "Sobre o Personal", icon: Info },
-  { id: "settings", label: "ConfiguraÃ§Ãµes", icon: Settings }
+  { id: "settings", label: "Configurações", icon: Settings }
 ];
 
 export default function Sidebar({
@@ -131,7 +131,7 @@ export default function Sidebar({
             <Bot size={20} />
             <div>
               <strong>Coach IA</strong>
-              <span>Pergunte sobre treinos, dieta, evoluÃ§Ã£o e mais.</span>
+              <span>Pergunte sobre treinos, dieta, evolução e mais.</span>
             </div>
             <button type="button" onClick={() => onNavigate("coach")}>Conversar</button>
           </div>

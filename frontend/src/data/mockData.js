@@ -2,27 +2,16 @@ export const students = [
   {
     id: "stu-erika",
     name: "Erika Gomes Cordeiro",
-    email: "erika@email.com",
+    email: "erikagcordeiro18@gmail.com",
     age: 32,
     weight: 68,
     height: 1.65,
     objective: "Reducao de gordura e hipertrofia",
     notes: "Rotina: treino 4x na semana, nivel intermediario.",
     avatar: "/erika-gomes.jpeg",
-    adherence: 94
-  },
-  {
-    id: "stu-jessica",
-    name: "Jessica Gomes",
-    email: "jessicagms3@gmail.com",
-    age: 28,
-    weight: 105,
-    height: 1.67,
-    objective: "Emagrecimento, fortalecimento e condicionamento",
-    notes: "Treino cadastrado a partir do Plano De Treino. Cardio no fim de semana e suplementacao conforme orientacao.",
-    avatar: "/jessica-gomes.png",
-    adherence: 0,
-    workoutId: "wrk-jessica-01"
+    adherence: 94,
+    accessApproved: true,
+    status: "active"
   }
 ];
 
@@ -151,111 +140,6 @@ export const workouts = [
       makeExercise("ex-029", "Mesa Flexora", 4, "12", "90s", "25kg"),
       makeExercise("ex-030", "Stiff", 3, "15", "60s", "10kg"),
       makeExercise("ex-031", "Panturrilhas em Pe e Sentado", 4, "12", "90s", "40kg")
-    ]
-  },
-  {
-    id: "wrk-jessica-01",
-    name: "Costas, Ombros e Biceps",
-    studentId: "stu-jessica",
-    status: "Ativo",
-    focus: "Costas, ombros e biceps",
-    duration: "60 min",
-    date: "Segunda",
-    notes: "Rest pause: descanso de 10 a 15 segundos seguido de repeticoes do mesmo exercicio.",
-    exercises: [
-      makeExercise("ex-jessica-001", "Puxada Frontal", 4, "1x20 leve + 3x15", "60-90s", "Ajustavel"),
-      makeExercise("ex-jessica-002", "Puxada frontal com triangulo", 3, "1x15 + rest pause 10 reps", "10-15s rest pause", "Ajustavel"),
-      makeExercise("ex-jessica-003", "Remada Baixa com triangulo", 3, "1x20 + 1x15 + 1x12 progressao", "60-90s", "Progressao de carga"),
-      makeExercise("ex-jessica-004", "Pull Down", 3, "15", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-005", "Elevacao Lateral", 4, "10", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-006", "Rosca alternada no banco", 3, "12", "60s", "Ajustavel")
-    ]
-  },
-  {
-    id: "wrk-jessica-02",
-    name: "Peito, Ombros e Triceps",
-    studentId: "stu-jessica",
-    status: "Historico",
-    focus: "Peito, ombros e triceps",
-    duration: "60 min",
-    date: "Terca",
-    exercises: [
-      makeExercise("ex-jessica-007", "Supino Inclinado no banco", 4, "12", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-008", "Cross Over", 4, "12", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-009", "Peck Deck", 4, "12", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-010", "Elevacao Frontal com corda", 3, "15", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-011", "Elevacao Lateral no banco", 4, "12", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-012", "Triceps Corda", 3, "15", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-013", "Triceps Martelo", 3, "15", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-014", "Abdominal infra e supra", 3, "15 cada", "45s", "Peso corporal")
-    ]
-  },
-  {
-    id: "wrk-jessica-03",
-    name: "Posteriores e Gluteos",
-    studentId: "stu-jessica",
-    status: "Historico",
-    focus: "Posteriores e gluteos",
-    duration: "65 min",
-    date: "Quarta",
-    exercises: [
-      makeExercise("ex-jessica-015", "Flexor em Pe", 5, "1x20 leve + 4x15", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-016", "Flexor sentado", 4, "10", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-017", "Flexor deitado", 4, "12", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-018", "Gluteos polia baixa", 3, "20", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-019", "Cadeira adutora", 5, "10", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-020", "Cadeira Abdutora", 5, "10", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-021", "Stiff", 3, "15", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-022", "Panturrilhas em Pe e Sentado", 4, "15", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-023", "Bike", 1, "10 minutos antes do treino", "Continuo", "Cardio")
-    ]
-  },
-  {
-    id: "wrk-jessica-04",
-    name: "Biceps e Triceps",
-    studentId: "stu-jessica",
-    status: "Historico",
-    focus: "Biceps e triceps",
-    duration: "55 min",
-    date: "Quinta",
-    exercises: [
-      makeExercise("ex-jessica-024", "Rosca direta com barra", 3, "12", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-025", "Rosca alternada no banco", 3, "12", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-026", "Rosca martelo", 4, "10", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-027", "Triceps Testa", 4, "12", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-028", "Triceps Corda", 4, "12", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-029", "Triceps martelo unilateral", 3, "15", "60s", "Ajustavel")
-    ]
-  },
-  {
-    id: "wrk-jessica-05",
-    name: "Quadriceps e Gluteos",
-    studentId: "stu-jessica",
-    status: "Historico",
-    focus: "Quadriceps, gluteos e panturrilhas",
-    duration: "65 min",
-    date: "Sexta",
-    exercises: [
-      makeExercise("ex-jessica-030", "Cadeira Extensora", 4, "1x20 leve + 3x15", "60-90s", "Ajustavel"),
-      makeExercise("ex-jessica-031", "Agachamento Articulado", 4, "12", "60-90s", "Ajustavel"),
-      makeExercise("ex-jessica-032", "Leg Press", 4, "12", "60-90s", "Ajustavel"),
-      makeExercise("ex-jessica-033", "Afundo", 3, "12", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-034", "Agachamento Sumo", 3, "12", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-035", "Panturrilhas em Pe e Sentado", 4, "15", "60s", "Ajustavel"),
-      makeExercise("ex-jessica-036", "Bike", 1, "10 minutos antes do treino", "Continuo", "Cardio")
-    ]
-  },
-  {
-    id: "wrk-jessica-06",
-    name: "Cardio Final de Semana",
-    studentId: "stu-jessica",
-    status: "Historico",
-    focus: "Cardio e condicionamento",
-    duration: "60 min",
-    date: "Sabado e Domingo",
-    exercises: [
-      makeExercise("ex-jessica-037", "Caminhada", 1, "01 hora", "Continuo", "Cardio"),
-      makeExercise("ex-jessica-038", "Esteira intervalada", 1, "15 minutos 1 por 1 apos treinos superiores", "1/1", "Cardio")
     ]
   }
 ];

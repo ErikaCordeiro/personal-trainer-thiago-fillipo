@@ -11,7 +11,9 @@ export default function StudentLayout({
   session,
   sidebarOpen,
   setSidebarOpen,
-  student
+  student,
+  notifications,
+  onNotificationAction
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -49,6 +51,8 @@ export default function StudentLayout({
           onMenuClick={() => setSidebarOpen(true)}
           onLogout={onLogout}
           onCoachClick={() => onNavigate("coach")}
+          notifications={notifications}
+          onNotificationAction={onNotificationAction}
         />
         {children}
         <nav className="bottom-nav student-bottom-nav" aria-label="Navegação principal do aluno">

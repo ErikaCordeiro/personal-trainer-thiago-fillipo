@@ -1,10 +1,33 @@
-import React from "react";
-import { Bell, CalendarDays, LogOut, Menu, Search, Sparkles } from "lucide-react";
+import React, { useState } from "react";
+import { Bell, CalendarDays, CheckCircle2, LogOut, Menu, Search, Sparkles, UserPlus } from "lucide-react";
 
-export default function Header({ title, subtitle, user, student, variant = "personal", onMenuClick, onLogout, onCoachClick }) {
+export default function Header({
+  title,
+  subtitle,
+  user,
+  student,
+  variant = "personal",
+  onMenuClick,
+  onLogout,
+  onCoachClick,
+  notifications = [],
+  onNotificationAction,
+  onApproveStudent
+}) {
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const firstName = user?.name?.split(" ")[0] || "Thiago";
   const studentHeading = title?.startsWith("Dieta") || title?.startsWith("Avaliac") ? "Bom dia," : "Bora treinar,";
   const heading = variant === "student" ? studentHeading : "Central de controle,";
+  const visibleNotifications = notifications.length
+    ? notifications
+    : [
+        {
+          id: "empty",
+          title: variant === "student" ? "Tudo certo por aqui" : "Nenhuma pendencia agora",
+          message: variant === "student" ? "Quando houver novidades do personal, elas aparecem aqui." : "Novos cadastros e alertas importantes aparecem aqui.",
+          type: "info"
+        }
+      ];
 
   return (
     <header className="topbar">
@@ -21,20 +44,79 @@ export default function Header({ title, subtitle, user, student, variant = "pers
         </button>
         <label className="search-shell compact-search">
           <Search size={18} />
-          <input placeholder="Buscar aluno, treino ou exercício" />
+          <input placeholder="Buscar aluno, treino ou exercicio" />
         </label>
         <button className="icon-button glow-button" type="button" aria-label="Coach IA" onClick={onCoachClick}>
           <Sparkles size={19} />
         </button>
-        <button className="icon-button" type="button" aria-label="Notificações">
-          <Bell size={19} />
-          <span className="notification-dot">3</span>
-        </button>
+        <div className="notification-shell">
+          <button
+            className="icon-button"
+            type="button"
+            aria-label="Notificacoes"
+            aria-expanded={notificationsOpen}
+            onClick={() => setNotificationsOpen((value) => !value)}
+          >
+            <Bell size={19} />
+            {notifications.length > 0 ? <span className="notification-dot">{notifications.length}</span> : null}
+          </button>
+          {notificationsOpen && (
+            <div className="notification-popover" role="dialog" aria-label="Notificacoes">
+              <div className="notification-popover-header">
+                <div>
+                  <p className="eyebrow">Notificacoes</p>
+                  <strong>{variant === "student" ? "Avisos do aluno" : "Central de aprovacao"}</strong>
+                </div>
+                <button type="button" onClick={() => setNotificationsOpen(false)}>Fechar</button>
+              </div>
+              <div className="notification-list">
+                {visibleNotifications.map((item) => (
+                  <article key={item.id} className={`notification-item ${item.type || "info"}`}>
+                    <span className="notification-icon">
+                      {item.type === "student-signup" ? <UserPlus size={17} /> : <CheckCircle2 size={17} />}
+                    </span>
+                    <div>
+                      <strong>{item.title}</strong>
+                      <p>{item.message}</p>
+                      {item.student ? (
+                        <small>{item.student.email} - {item.student.objective || "Objetivo nao informado"}</small>
+                      ) : null}
+                      <div className="notification-actions">
+                        {item.type === "student-signup" ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onApproveStudent?.(item.student);
+                              setNotificationsOpen(false);
+                            }}
+                          >
+                            Aceitar aluno
+                          </button>
+                        ) : null}
+                        {item.actionLabel ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onNotificationAction?.(item);
+                              setNotificationsOpen(false);
+                            }}
+                          >
+                            {item.actionLabel}
+                          </button>
+                        ) : null}
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
         <div className="header-date">
           <CalendarDays size={19} />
           <div>
             <strong>21 de Junho, 2025</strong>
-            <small>Sábado</small>
+            <small>Sabado</small>
           </div>
         </div>
         <div className="profile-chip">
@@ -58,7 +140,7 @@ export default function Header({ title, subtitle, user, student, variant = "pers
 
 function activeSentence(title, subtitle) {
   if (title === "Dashboard do Personal") {
-    return "Disciplina hoje, liberdade amanhã.";
+    return "Disciplina hoje, liberdade amanha.";
   }
   return subtitle;
 }

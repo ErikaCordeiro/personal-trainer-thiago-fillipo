@@ -24,6 +24,8 @@ export default function Students({ students, pendingStudents = [], workouts, onS
       height: Number(form.get("height")),
       objective: form.get("objective"),
       notes: form.get("notes"),
+      accessApproved: form.get("accessApproved") === "on",
+      status: form.get("accessApproved") === "on" ? "active" : "pending",
       workoutId: form.getAll("workoutIds")[0] || null,
       workoutIds: form.getAll("workoutIds")
     });
@@ -140,6 +142,17 @@ export default function Students({ students, pendingStudents = [], workouts, onS
                   ))}
                 </div>
               </div>
+              <label className="wide access-toggle-card">
+                <input
+                  type="checkbox"
+                  name="accessApproved"
+                  defaultChecked={editingStudent ? editingStudent.accessApproved !== false && editingStudent.status !== "pending" : false}
+                />
+                <span>
+                  <strong>Liberar acesso ao app do aluno</strong>
+                  <small>Quando ativo, o aluno consegue entrar na area dele. Cadastros novos podem ficar aguardando aprovacao.</small>
+                </span>
+              </label>
               <label className="wide">
                 <span>Observacoes</span>
                 <textarea name="notes" rows="4" placeholder="Lesoes, limitacoes, rotina, preferencias e estrategia." defaultValue={editingStudent?.notes || ""} />

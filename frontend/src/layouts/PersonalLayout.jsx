@@ -11,7 +11,10 @@ export default function PersonalLayout({
   session,
   sidebarOpen,
   setSidebarOpen,
-  student
+  student,
+  notifications,
+  onNotificationAction,
+  onApproveStudent
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -49,6 +52,9 @@ export default function PersonalLayout({
           onMenuClick={() => setSidebarOpen(true)}
           onLogout={onLogout}
           onCoachClick={() => onNavigate("coach")}
+          notifications={notifications}
+          onNotificationAction={onNotificationAction}
+          onApproveStudent={onApproveStudent}
         />
         {children}
         <nav className="personal-mobile-nav" aria-label="NavegaÃ§Ã£o mobile do personal">

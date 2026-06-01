@@ -283,7 +283,7 @@ export default function PersonalAssessments({ students }) {
             {["Frontal", "Lateral", "Traseira"].map((label) => (
               <div key={label}>
                 <span>{label}</span>
-                <img src={assessmentStudent.avatar || "/erika-gomes.jpeg"} alt={`${label} avaliacao`} />
+                <img src={assessmentStudent.avatar || "/erika-gomes.jpeg"} alt={`${label} avaliação`} />
               </div>
             ))}
           </div>
@@ -340,5 +340,4 @@ export default function PersonalAssessments({ students }) {
     </section>
   );
 }
-
 

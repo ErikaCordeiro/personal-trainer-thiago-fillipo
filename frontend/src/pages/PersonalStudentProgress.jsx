@@ -21,29 +21,29 @@ import {
 } from "lucide-react";
 
 const kpis = [
-  ["Peso atual", "72,4 kg", "↓ 2,8 kg vs mes anterior"],
-  ["Gordura corporal", "24,3%", "↓ 2,1% vs mes anterior"],
-  ["Massa magra", "54,1 kg", "↑ 1,4 kg vs mes anterior"],
-  ["IMC", "25,6", "↓ 1,0 vs mes anterior"],
-  ["Agua corporal", "39,6 L", "↑ 0,8 L vs mes anterior"],
-  ["Aderencia geral", "78%", "↑ 6% vs mes anterior"],
-  ["Treinos concluidos", "87%", "↑ 12% vs mes anterior"]
+  ["Peso atual", "72,4 kg", "â†“ 2,8 kg vs mes anterior"],
+  ["Gordura corporal", "24,3%", "â†“ 2,1% vs mes anterior"],
+  ["Massa magra", "54,1 kg", "â†‘ 1,4 kg vs mes anterior"],
+  ["IMC", "25,6", "â†“ 1,0 vs mes anterior"],
+  ["Agua corporal", "39,6 L", "â†‘ 0,8 L vs mes anterior"],
+  ["Aderencia geral", "78%", "â†‘ 6% vs mes anterior"],
+  ["Treinos concluidos", "87%", "â†‘ 12% vs mes anterior"]
 ];
 
-const tabs = ["Visao geral", "Treinos", "Dietas", "Avaliacoes", "Evolucao visual", "Check-ins", "Anotacoes", "Chat"];
+const tabs = ["Visao geral", "Treinos", "Dietas", "Avaliações", "Evolução visual", "Check-ins", "Anotacoes", "Chat"];
 
 const measures = [
-  ["Cintura", "78,2 cm", "81,1 cm", "-2,9 cm ↓"],
-  ["Abdomen", "85,4 cm", "88,7 cm", "-3,3 cm ↓"],
-  ["Peito", "98,0 cm", "96,2 cm", "+1,8 cm ↑"],
-  ["Quadril", "102,3 cm", "104,1 cm", "-1,8 cm ↓"],
-  ["Braco", "30,5 cm", "30,0 cm", "+0,5 cm ↑"],
-  ["Coxa", "56,1 cm", "56,9 cm", "-0,8 cm ↓"],
-  ["Panturrilha", "36,2 cm", "36,6 cm", "-0,4 cm ↓"]
+  ["Cintura", "78,2 cm", "81,1 cm", "-2,9 cm â†“"],
+  ["Abdomen", "85,4 cm", "88,7 cm", "-3,3 cm â†“"],
+  ["Peito", "98,0 cm", "96,2 cm", "+1,8 cm â†‘"],
+  ["Quadril", "102,3 cm", "104,1 cm", "-1,8 cm â†“"],
+  ["Braco", "30,5 cm", "30,0 cm", "+0,5 cm â†‘"],
+  ["Coxa", "56,1 cm", "56,9 cm", "-0,8 cm â†“"],
+  ["Panturrilha", "36,2 cm", "36,6 cm", "-0,4 cm â†“"]
 ];
 
 const insights = [
-  "Erika esta entre os alunos com maior evolucao do mes.",
+  "Erika esta entre os alunos com maior evolução do mes.",
   "Aderencia alimentar aumentou 8% em relacao ao mes anterior.",
   "Sugestao: aumentar carga nos exercicios de membros inferiores."
 ];
@@ -51,7 +51,7 @@ const insights = [
 const alerts = [
   ["Baixa ingestao proteica", "3 dias abaixo da meta"],
   ["Hidratacao abaixo do ideal", "Media dos ultimos 3 dias"],
-  ["Excelente evolucao", "Massa magra aumentando"]
+  ["Excelente evolução", "Massa magra aumentando"]
 ];
 
 export default function PersonalStudentProgress({ student, onBack }) {
@@ -61,7 +61,7 @@ export default function PersonalStudentProgress({ student, onBack }) {
   return (
     <section className="student-performance-page">
       <div className="student-performance-topbar">
-        <button type="button" onClick={onBack}>← Voltar para alunos</button>
+        <button type="button" onClick={onBack}>â† Voltar para alunos</button>
         <div>
           <button type="button"><FileText size={17} /> Enviar relatorio</button>
           <button type="button"><MoreVertical size={17} /> Mais acoes</button>
@@ -113,7 +113,7 @@ export default function PersonalStudentProgress({ student, onBack }) {
         <article className="athlete-panel body-evolution">
           <div className="section-heading">
             <div>
-              <h2>Evolucao corporal</h2>
+              <h2>Evolução corporal</h2>
               <div className="athlete-mini-tabs">
                 {["Peso", "Gordura", "Massa magra", "IMC", "Medidas"].map((item) => <button type="button" key={item}>{item}</button>)}
               </div>
@@ -133,7 +133,7 @@ export default function PersonalStudentProgress({ student, onBack }) {
             <strong>-2,8 kg</strong>
             <span>Periodo anterior</span>
             <strong>-0,9 kg</strong>
-            <em>-1,9 kg • 211% melhor</em>
+            <em>-1,9 kg â€¢ 211% melhor</em>
           </aside>
         </article>
 
@@ -142,7 +142,7 @@ export default function PersonalStudentProgress({ student, onBack }) {
           <div className="training-kpis">
             <div><span>Treinos concluidos</span><strong>21 / 24</strong><small>87%</small></div>
             <div><span>Frequencia semanal</span><strong>5,2</strong><small>Otimo</small></div>
-            <div><span>Volume total</span><strong>18.450 kg</strong><small>↑ 15%</small></div>
+            <div><span>Volume total</span><strong>18.450 kg</strong><small>â†‘ 15%</small></div>
           </div>
           <div className="training-details">
             <div>
@@ -191,12 +191,12 @@ export default function PersonalStudentProgress({ student, onBack }) {
 
       <div className="athlete-tertiary-grid">
         <article className="athlete-panel visual-evolution">
-          <div className="section-heading"><h2>Evolucao visual</h2><button type="button">Comparar avaliacoes</button></div>
+          <div className="section-heading"><h2>Evolução visual</h2><button type="button">Comparar avaliações</button></div>
           <div className="athlete-photo-sets">
             {["Frontal", "Lateral", "Traseira"].map((label) => (
               <div key={label}>
                 <span>{label}</span>
-                <div><img src={athlete.avatar || "/erika-gomes.jpeg"} alt={`${label} antes`} /><b>›</b><img src={athlete.avatar || "/erika-gomes.jpeg"} alt={`${label} depois`} /></div>
+                <div><img src={athlete.avatar || "/erika-gomes.jpeg"} alt={`${label} antes`} /><b>â€º</b><img src={athlete.avatar || "/erika-gomes.jpeg"} alt={`${label} depois`} /></div>
               </div>
             ))}
           </div>
@@ -204,7 +204,7 @@ export default function PersonalStudentProgress({ student, onBack }) {
         </article>
 
         <article className="athlete-panel measure-table-panel">
-          <div className="section-heading"><h2>Evolucao das medidas</h2><select defaultValue="month"><option value="month">Este mes</option></select></div>
+          <div className="section-heading"><h2>Evolução das medidas</h2><select defaultValue="month"><option value="month">Este mes</option></select></div>
           {measures.map(([label, current, previous, diff]) => (
             <div className="athlete-measure-row" key={label}><span>{label}</span><strong>{current}</strong><small>{previous}</small><em className={diff.includes("+") ? "up" : ""}>{diff}</em></div>
           ))}
@@ -212,8 +212,8 @@ export default function PersonalStudentProgress({ student, onBack }) {
 
         <article className="athlete-panel private-notes">
           <div className="section-heading"><h2>Anotacoes do personal</h2><button type="button">Ver todas</button></div>
-          <span>18/06/2025 • Hoje</span>
-          <p>Excelente evolucao. Reducao significativa de gordura corporal e aumento de massa magra. Manter foco na dieta e treinos de forca.</p>
+          <span>18/06/2025 â€¢ Hoje</span>
+          <p>Excelente evolução. Reducao significativa de gordura corporal e aumento de massa magra. Manter foco na dieta e treinos de forca.</p>
           <strong>Pontos fortes:</strong>
           <ul><li>Alta consistencia</li><li>Boa execucao dos treinos</li><li>Excelente disciplina alimentar</li></ul>
           <strong>Pontos de atencao:</strong>
@@ -225,16 +225,16 @@ export default function PersonalStudentProgress({ student, onBack }) {
       <div className="athlete-bottom-grid">
         <article className="athlete-panel athlete-ranking">
           <h2>Ranking do aluno</h2>
-          <strong>1º</strong>
+          <strong>1Âº</strong>
           <span>Posicao geral entre todos os alunos</span>
-          {["Aderencia 92%", "Evolucao 90%", "Frequencia 95%", "Dieta 88%", "Hidratacao 78%", "Avaliacoes 100%"].map((item) => <div key={item}>{item}<i /></div>)}
+          {["Aderencia 92%", "Evolução 90%", "Frequencia 95%", "Dieta 88%", "Hidratacao 78%", "Avaliações 100%"].map((item) => <div key={item}>{item}<i /></div>)}
           <p>Score geral <b>92/100</b></p>
         </article>
 
         <article className="athlete-panel student-distribution">
           <h2>Distribuicao dos alunos</h2>
           <div className="distribution-donut" />
-          <ul><li>Em evolucao <strong>78 (61%)</strong></li><li>Em manutencao <strong>32 (25%)</strong></li><li>Atencao necessaria <strong>10 (8%)</strong></li><li>Sem progresso <strong>8 (6%)</strong></li></ul>
+          <ul><li>Em evolução <strong>78 (61%)</strong></li><li>Em manutencao <strong>32 (25%)</strong></li><li>Atencao necessaria <strong>10 (8%)</strong></li><li>Sem progresso <strong>8 (6%)</strong></li></ul>
         </article>
 
         <article className="athlete-panel ai-insights">
@@ -246,8 +246,8 @@ export default function PersonalStudentProgress({ student, onBack }) {
 
       <footer className="athlete-progress-footer">
         <CalendarDays size={18} />
-        <span>Ultima avaliacao fisica: 18/06/2025</span>
-        <span>Proxima avaliacao: 18/07/2025</span>
+        <span>Última avaliação física: 18/06/2025</span>
+        <span>Proxima avaliação: 18/07/2025</span>
         <span>Ultimo check-in: Hoje as 10:30</span>
         <button type="button"><Shield size={17} /> Ver historico completo</button>
       </footer>
