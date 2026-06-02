@@ -63,7 +63,7 @@ export default function Sidebar({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const effectiveCollapsed = collapsed && !mobileOpen;
-  const inactive = new Set(["finance", "agenda", "chat", "reports", "settings", "profile", "messages", "files", "calendar"]);
+  const inactive = new Set(["agenda", "chat", "reports", "settings", "profile", "messages", "files", "calendar"]);
 
   const handleNavigate = (item) => {
     onNavigate(inactive.has(item.id) ? "dashboard" : item.id);

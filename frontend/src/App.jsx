@@ -15,6 +15,7 @@ import StudentDiet from "./pages/StudentDiet.jsx";
 import StudentAssessments from "./pages/StudentAssessments.jsx";
 import PersonalDiet from "./pages/PersonalDiet.jsx";
 import PersonalAssessments from "./pages/PersonalAssessments.jsx";
+import PersonalFinance from "./pages/PersonalFinance.jsx";
 import PersonalProgress from "./pages/PersonalProgress.jsx";
 import PersonalStudentProgress from "./pages/PersonalStudentProgress.jsx";
 import CoachIA from "./pages/CoachIA.jsx";
@@ -28,11 +29,12 @@ const pageMeta = {
   exercise: ["Exercicio", "Execucao guiada com parametros claros e video incorporado."],
   "student-view": ["Treino", "Treino do dia, check-ins e registro de carga."],
   diet: ["Dietas", "Gestao alimentar, hidratacao e registros nutricionais dos alunos."],
-  assessments: ["Avaliações", "Registre, acompanhe e analise a evolução física dos seus alunos."],
-  progress: ["Progresso", "Histórico, evolução e indicadores de consistência."],
+  finance: ["Financeiro", "Visao geral da saude financeira do seu negocio."],
+  assessments: ["AvaliaÃ§Ãµes", "Registre, acompanhe e analise a evoluÃ§Ã£o fÃ­sica dos seus alunos."],
+  progress: ["Progresso", "HistÃ³rico, evoluÃ§Ã£o e indicadores de consistÃªncia."],
   "student-progress-detail": ["Progresso individual", "Central individual de performance do aluno."],
-  coach: ["Coach IA", "Seu assistente inteligente para treino, dieta e evolução."],
-  "about-personal": ["Sobre o Personal", "Conheça a metodologia, experiência e filosofia do Thiago Filippo."]
+  coach: ["Coach IA", "Seu assistente inteligente para treino, dieta e evoluÃ§Ã£o."],
+  "about-personal": ["Sobre o Personal", "ConheÃ§a a metodologia, experiÃªncia e filosofia do Thiago Filippo."]
 };
 
 const rolePath = {
@@ -65,12 +67,12 @@ export default function App() {
   const [focusedPendingStudentId, setFocusedPendingStudentId] = useState(null);
   const [personalProfile, setPersonalProfile] = useState({
     name: "Thiago Filippo",
-    bio: "Personal trainer focado em forÃƒÂ§a, disciplina, performance e transformaÃƒÂ§ÃƒÂ£o real. Une estratÃƒÂ©gia, tÃƒÂ©cnica e acompanhamento prÃƒÂ³ximo para cada aluno evoluir com seguranÃƒÂ§a.",
+    bio: "Personal trainer focado em forÃƒÆ’Ã‚Â§a, disciplina, performance e transformaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o real. Une estratÃƒÆ’Ã‚Â©gia, tÃƒÆ’Ã‚Â©cnica e acompanhamento prÃƒÆ’Ã‚Â³ximo para cada aluno evoluir com seguranÃƒÆ’Ã‚Â§a.",
     specialty: "Hipertrofia, emagrecimento e performance",
-    experience: "10+ anos de atuaÃƒÂ§ÃƒÂ£o",
-    method: "Disciplina, foco e propÃƒÂ³sito",
-    philosophy: "Treinar nÃƒÂ£o ÃƒÂ© apenas cumprir exercÃƒÂ­cios. Ãƒâ€° construir uma versÃƒÂ£o mais forte, constante e confiante todos os dias.",
-    highlights: ["Treinos personalizados", "Acompanhamento de evoluÃƒÂ§ÃƒÂ£o", "Ajustes por performance", "Feedback inteligente", "EstratÃƒÂ©gia individual por objetivo"],
+    experience: "10+ anos de atuaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o",
+    method: "Disciplina, foco e propÃƒÆ’Ã‚Â³sito",
+    philosophy: "Treinar nÃƒÆ’Ã‚Â£o ÃƒÆ’Ã‚Â© apenas cumprir exercÃƒÆ’Ã‚Â­cios. ÃƒÆ’Ã¢â‚¬Â° construir uma versÃƒÆ’Ã‚Â£o mais forte, constante e confiante todos os dias.",
+    highlights: ["Treinos personalizados", "Acompanhamento de evoluÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", "Ajustes por performance", "Feedback inteligente", "EstratÃƒÆ’Ã‚Â©gia individual por objetivo"],
     email: "contato@thiagofilippo.com",
     instagram: "@personal.thiagofilippo"
   });
@@ -118,13 +120,15 @@ export default function App() {
     } else if (isStudent && page === "diet") {
       window.history.replaceState(null, "", "/aluno/dieta");
     } else if (isStudent && page === "assessments") {
-      window.history.replaceState(null, "", "/aluno/avaliação");
+      window.history.replaceState(null, "", "/aluno/avaliaÃ§Ã£o");
     } else if (!isStudent && page === "diet") {
       window.history.replaceState(null, "", "/dashboard/personal/dietas");
     } else if (!isStudent && page === "assessments") {
-      window.history.replaceState(null, "", "/personal/avaliações");
+      window.history.replaceState(null, "", "/personal/avaliaÃ§Ãµes");
     } else if (!isStudent && page === "progress") {
       window.history.replaceState(null, "", "/personal/progresso");
+    } else if (!isStudent && page === "finance") {
+      window.history.replaceState(null, "", "/personal/financeiro");
     } else if (!isStudent && page === "student-progress-detail") {
       window.history.replaceState(null, "", `/personal/aluno/${selectedStudentId || "aluno"}/progresso`);
     } else {
@@ -201,7 +205,7 @@ export default function App() {
       id: "student-welcome",
       type: "info",
       title: "App liberado",
-      message: "Seu acesso esta ativo. Você ja pode acompanhar treino, dieta, avaliações e progresso."
+      message: "Seu acesso esta ativo. VocÃª ja pode acompanhar treino, dieta, avaliaÃ§Ãµes e progresso."
     }
   ];
 
@@ -295,6 +299,7 @@ export default function App() {
     <PersonalLayout {...commonLayoutProps}>
       {activePage === "dashboard" && <PersonalDashboard students={students} workouts={workouts} onNavigate={navigate} />}
       {activePage === "diet" && <PersonalDiet students={students} />}
+      {activePage === "finance" && <PersonalFinance />}
       {activePage === "assessments" && <PersonalAssessments students={students} />}
       {activePage === "progress" && <PersonalProgress students={students} onOpenStudentProgress={openStudentProgress} />}
       {activePage === "student-progress-detail" && (
