@@ -62,6 +62,7 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [executionWorkoutId, setExecutionWorkoutId] = useState(null);
   const [selectedStudentId, setSelectedStudentId] = useState(mockStudents[0]?.id);
+  const [focusedPendingStudentId, setFocusedPendingStudentId] = useState(null);
   const [personalProfile, setPersonalProfile] = useState({
     name: "Thiago Filippo",
     bio: "Personal trainer focado em forÃƒÂ§a, disciplina, performance e transformaÃƒÂ§ÃƒÂ£o real. Une estratÃƒÂ©gia, tÃƒÂ©cnica e acompanhamento prÃƒÂ³ximo para cada aluno evoluir com seguranÃƒÂ§a.",
@@ -171,8 +172,19 @@ export default function App() {
       ...current
     ]);
     setPendingStudents((current) => current.filter((item) => item.id !== student.id));
+    setFocusedPendingStudentId(null);
     setActivePage("students");
     window.history.replaceState(null, "", "/dashboard/personal");
+  };
+
+  const deleteStudent = (student) => {
+    if (!student) return;
+    const confirmed = window.confirm(`Excluir ${student.name}? Essa acao remove o aluno da lista deste ambiente de teste.`);
+    if (!confirmed) return;
+    setStudents((current) => current.filter((item) => item.id !== student.id));
+    if (selectedStudentId === student.id) {
+      setSelectedStudentId(mockStudents[0]?.id);
+    }
   };
 
   const personalNotifications = pendingStudents.map((student) => ({
@@ -181,7 +193,7 @@ export default function App() {
     title: "Novo aluno aguardando aprovacao",
     message: `${student.name} solicitou acesso ao app.`,
     student,
-    actionLabel: "Ver em alunos"
+    actionLabel: "Ver aluno"
   }));
 
   const studentNotifications = [
@@ -208,7 +220,10 @@ export default function App() {
     notifications: isStudent ? studentNotifications : personalNotifications,
     onNotificationAction: (notification) => {
       if (notification?.type === "student-signup") {
-        navigate("students");
+        setActivePage("students");
+        setFocusedPendingStudentId(notification.student?.id || null);
+        setSidebarOpen(false);
+        window.history.replaceState(null, "", "/dashboard/personal");
       }
     },
     onApproveStudent: approvePendingStudent
@@ -295,6 +310,9 @@ export default function App() {
           workouts={workouts}
           onOpenProgress={openStudentProgress}
           onApproveStudent={approvePendingStudent}
+          onDeleteStudent={deleteStudent}
+          focusedPendingStudentId={focusedPendingStudentId}
+          onPendingStudentViewed={() => setFocusedPendingStudentId(null)}
           onSaveStudent={(student) => {
             setStudents((current) => {
               if (student.id) {

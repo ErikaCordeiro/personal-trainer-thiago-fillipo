@@ -1,7 +1,7 @@
 import React from "react";
-import { LineChart, Mail, Target } from "lucide-react";
+import { LineChart, Mail, Target, Trash2 } from "lucide-react";
 
-export default function StudentCard({ student, onOpen, onOpenProgress }) {
+export default function StudentCard({ student, onOpen, onOpenProgress, onDelete }) {
   const hasAccess = student.accessApproved !== false && student.status !== "pending";
 
   return (
@@ -31,6 +31,19 @@ export default function StudentCard({ student, onOpen, onOpenProgress }) {
           >
             <LineChart size={15} />
             Ver progresso
+          </button>
+        )}
+        {onDelete && (
+          <button
+            className="student-delete-link"
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              onDelete(student);
+            }}
+          >
+            <Trash2 size={15} />
+            Excluir aluno
           </button>
         )}
       </div>

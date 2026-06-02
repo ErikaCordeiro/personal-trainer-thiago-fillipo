@@ -1410,7 +1410,8 @@ select {
   }
 }
 
-.student-progress-link {
+.student-progress-link,
+.student-delete-link {
   min-height: 38px;
   display: inline-flex;
   align-items: center;
@@ -1421,6 +1422,17 @@ select {
   border-radius: 12px;
   background: var(--metal);
   font-weight: 900;
+}
+
+.student-delete-link {
+  color: #f5f5f5;
+  border: 1px solid rgba(255, 120, 120, 0.24);
+  background: rgba(120, 24, 24, 0.26);
+}
+
+.student-delete-link:hover {
+  border-color: rgba(255, 150, 150, 0.5);
+  box-shadow: 0 0 20px rgba(255, 80, 80, 0.12);
 }
 
 .multi-workout-picker {
@@ -10230,6 +10242,60 @@ body,
 .pending-student-card dd {
   color: #fff;
   font-weight: 900;
+}
+
+.pending-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pending-approval-modal {
+  width: min(94vw, 720px);
+}
+
+.pending-review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pending-review-grid > div {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgba(245, 245, 245, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.pending-review-grid span {
+  display: block;
+  margin-bottom: 5px;
+  color: rgba(245, 245, 245, 0.62);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.pending-review-grid strong,
+.pending-review-grid p {
+  margin: 0;
+}
+
+.pending-review-grid p {
+  color: rgba(245, 245, 245, 0.74);
+}
+
+.approval-check-card {
+  margin-top: 4px;
+}
+
+.metal-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  transform: none;
 }
 
 .student-access-badge {
