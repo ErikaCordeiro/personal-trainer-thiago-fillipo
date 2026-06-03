@@ -11210,3 +11210,463 @@ body,
     scroll-margin-top: 14px;
   }
 }
+
+/* Student payments premium */
+.student-payments-page {
+  display: grid;
+  gap: 22px;
+  padding-bottom: 108px;
+}
+
+.payments-hero-header,
+.payment-main-card,
+.payments-card {
+  border: 1px solid rgba(229, 229, 229, 0.12);
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.12), transparent 30%),
+    linear-gradient(135deg, rgba(21, 21, 21, 0.94), rgba(5, 5, 5, 0.98));
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.52), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border-radius: 28px;
+}
+
+.payments-hero-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 24px 28px;
+}
+
+.payments-hero-header h2 {
+  margin: 2px 0 4px;
+  color: #f5f5f5;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  line-height: 1;
+}
+
+.payments-hero-header p,
+.payments-card p,
+.payment-main-card small,
+.payment-main-card span,
+.payment-history-row span,
+.payment-history-row strong,
+.payment-method-list small,
+.payment-plan-card li,
+.payment-help-card span {
+  color: rgba(245, 245, 245, 0.72);
+}
+
+.payments-hero-header button,
+.payment-actions button,
+.payments-card button,
+.payment-modal button {
+  border: 1px solid rgba(229, 229, 229, 0.16);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02));
+  color: #f5f5f5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 18px;
+  font-weight: 800;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.payments-hero-header button:hover,
+.payment-actions button:hover,
+.payments-card button:hover,
+.payment-modal button:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 245, 245, 0.36);
+  box-shadow: 0 16px 38px rgba(255, 255, 255, 0.08);
+}
+
+.payment-main-card {
+  padding: 28px;
+  overflow: hidden;
+  position: relative;
+}
+
+.payment-main-card::before {
+  content: "";
+  position: absolute;
+  inset: auto -18% -42% 42%;
+  height: 280px;
+  background: radial-gradient(circle, rgba(229, 229, 229, 0.22), transparent 62%);
+  pointer-events: none;
+}
+
+.payment-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(210px, 0.8fr) 230px;
+  align-items: center;
+  gap: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.payment-charge,
+.payment-due {
+  display: grid;
+  gap: 16px;
+}
+
+.payment-charge > span,
+.payment-due > span,
+.payments-card-title h3 {
+  color: #f5f5f5;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-weight: 800;
+}
+
+.payment-charge > strong {
+  color: #f5f5f5;
+  font-size: clamp(2.8rem, 7vw, 5.2rem);
+  line-height: 1;
+}
+
+.payment-due > strong {
+  color: #f5f5f5;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+.payment-plan-pill,
+.payment-due mark {
+  border: 1px solid rgba(229, 229, 229, 0.10);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #f5f5f5;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  width: fit-content;
+}
+
+.payment-plan-pill svg,
+.payment-brand svg,
+.payment-support-card > svg {
+  filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.26));
+}
+
+.payment-due mark {
+  background: rgba(56, 220, 106, 0.12);
+  border-color: rgba(111, 255, 139, 0.16);
+}
+
+.payment-due mark svg,
+.payment-due mark b,
+.paid-icon {
+  color: #76ff67;
+}
+
+.payment-lion {
+  display: grid;
+  place-items: center;
+}
+
+.payment-lion img {
+  width: min(220px, 100%);
+  filter: drop-shadow(0 0 34px rgba(255, 255, 255, 0.22));
+}
+
+.payment-actions {
+  border-top: 1px solid rgba(229, 229, 229, 0.12);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 26px;
+  padding-top: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.payment-actions .metal-button,
+.payment-modal .metal-button {
+  background: linear-gradient(135deg, #f8f8f8, #9f9f9f 52%, #f4f4f4);
+  color: #050505;
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.payments-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.75fr);
+  gap: 22px;
+}
+
+.payments-card {
+  padding: 24px;
+}
+
+.payments-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.payments-card-title h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  text-transform: none;
+}
+
+.payments-card-title button {
+  background: transparent;
+  min-height: 38px;
+  padding: 0 10px;
+  border-color: transparent;
+}
+
+.payment-method-list {
+  display: grid;
+  gap: 10px;
+}
+
+.payment-method-list button {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr) auto;
+  justify-content: stretch;
+  text-align: left;
+  min-height: 86px;
+  padding: 14px;
+}
+
+.payment-method-list button > span:nth-child(2),
+.plan-price,
+.payment-help-card {
+  display: grid;
+  gap: 6px;
+}
+
+.payment-brand {
+  width: 64px;
+  height: 58px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
+}
+
+.payment-plan-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 0;
+  display: grid;
+  gap: 11px;
+}
+
+.payment-plan-card li,
+.payment-support-card span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plan-price {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  border: 1px solid rgba(229, 229, 229, 0.10);
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.plan-price strong {
+  color: #f5f5f5;
+  font-size: 1.35rem;
+}
+
+.payment-history-list {
+  display: grid;
+}
+
+.payment-history-row {
+  display: grid;
+  grid-template-columns: 34px minmax(92px, 0.4fr) minmax(0, 1fr) minmax(105px, auto) 42px;
+  align-items: center;
+  gap: 14px;
+  min-height: 72px;
+  border-bottom: 1px solid rgba(229, 229, 229, 0.08);
+}
+
+.payment-history-row:last-child {
+  border-bottom: 0;
+}
+
+.payment-history-row div {
+  text-align: right;
+}
+
+.payment-history-row b,
+.payment-method-list b,
+.payment-support-card h3 {
+  color: #f5f5f5;
+}
+
+.payment-history-row small {
+  display: block;
+  color: #76ff67;
+  font-weight: 800;
+}
+
+.payment-history-row button {
+  width: 42px;
+  min-height: 42px;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+}
+
+.payment-support-card {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+}
+
+.payment-support-card h3 {
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  margin: 0 0 8px;
+}
+
+.payment-support-card div div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  margin-top: 18px;
+}
+
+.payment-help-card button {
+  justify-content: flex-start;
+}
+
+.payment-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(12px);
+}
+
+.payment-modal {
+  position: relative;
+  width: min(440px, 100%);
+  border: 1px solid rgba(229, 229, 229, 0.18);
+  border-radius: 28px;
+  padding: 28px;
+  background:
+    radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.14), transparent 30%),
+    linear-gradient(145deg, rgba(21, 21, 21, 0.98), rgba(5, 5, 5, 0.98));
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.72);
+}
+
+.payment-modal img {
+  width: 98px;
+  display: block;
+  margin: 0 auto 14px;
+  filter: drop-shadow(0 0 24px rgba(255, 255, 255, 0.22));
+}
+
+.payment-modal h3 {
+  color: #f5f5f5;
+  font-size: 1.8rem;
+  margin: 6px 0 10px;
+}
+
+.payment-modal p {
+  color: rgba(245, 245, 245, 0.74);
+  line-height: 1.65;
+}
+
+.payment-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 42px;
+  min-height: 42px !important;
+  padding: 0 !important;
+}
+
+@media (max-width: 1100px) {
+  .payment-main-grid,
+  .payments-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-lion {
+    position: absolute;
+    right: 12px;
+    top: 28px;
+    opacity: 0.28;
+  }
+
+  .payment-lion img {
+    width: 180px;
+  }
+}
+
+@media (max-width: 720px) {
+  .student-payments-page {
+    gap: 16px;
+  }
+
+  .payments-hero-header,
+  .payment-main-card,
+  .payments-card {
+    border-radius: 22px;
+    padding: 18px;
+  }
+
+  .payments-hero-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .payments-hero-header button {
+    width: 100%;
+  }
+
+  .payment-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-method-list button {
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+    min-height: 78px;
+  }
+
+  .payment-brand {
+    width: 46px;
+    height: 46px;
+  }
+
+  .payment-history-row {
+    grid-template-columns: 28px 1fr auto;
+    gap: 10px;
+    padding: 12px 0;
+  }
+
+  .payment-history-row strong {
+    grid-column: 2 / -1;
+  }
+
+  .payment-history-row div {
+    text-align: left;
+    grid-column: 2;
+  }
+
+  .payment-history-row button {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+
+  .payment-support-card {
+    grid-template-columns: 1fr;
+  }
+}
