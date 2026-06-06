@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
   AlertTriangle,
   Brain,
@@ -7,12 +7,14 @@ import {
   CircleDollarSign,
   Download,
   MessageCircle,
+  MoreHorizontal,
   RefreshCw,
   Send,
   ShieldCheck,
   TrendingUp,
   Users,
-  Wallet
+  Wallet,
+  X
 } from "lucide-react";
 
 const months = [
@@ -30,10 +32,10 @@ const months = [
 ];
 
 const kpis = [
-  { label: "Receita do mês", value: "R$ 24.870,00", delta: "+18% vs mês anterior", icon: CircleDollarSign, trend: [18, 26, 21, 31, 25, 35, 29, 42] },
-  { label: "Alunos pagantes", value: "128", delta: "+12% vs mês anterior", icon: Users, trend: [20, 29, 24, 34, 30, 39, 35, 44] },
-  { label: "Inadimplentes", value: "7", delta: "-23% vs mês anterior", icon: AlertTriangle, danger: true, trend: [17, 25, 18, 22, 19, 24, 21, 31] },
-  { label: "Taxa de renovação", value: "92%", delta: "+5% vs mês anterior", icon: RefreshCw, trend: [18, 23, 28, 25, 33, 37, 30, 41] }
+  { label: "Receita do mes", value: "R$ 24.870", delta: "+18%", hint: "vs mes anterior", icon: CircleDollarSign, trend: [18, 26, 21, 31, 25, 35, 29, 42] },
+  { label: "Alunos pagantes", value: "128", delta: "+12%", hint: "vs mes anterior", icon: Users, trend: [20, 29, 24, 34, 30, 39, 35, 44] },
+  { label: "Inadimplentes", value: "7", delta: "-23%", hint: "vs mes anterior", icon: AlertTriangle, danger: true, trend: [17, 25, 18, 22, 19, 24, 21, 31] },
+  { label: "Renovacao", value: "92%", delta: "+5%", hint: "vs mes anterior", icon: RefreshCw, trend: [18, 23, 28, 25, 33, 37, 30, 41] }
 ];
 
 const pendingCharges = [
@@ -43,38 +45,60 @@ const pendingCharges = [
 ];
 
 const dueGroups = [
-  { label: "Hoje", total: "R$ 398,00", items: [["Juliana Costa", "Plano Premium", "R$ 199,00"], ["Lucas Martins", "Plano Básico", "R$ 199,00"]] },
+  { label: "Hoje", total: "R$ 398,00", items: [["Juliana Costa", "Plano Premium", "R$ 199,00"], ["Lucas Martins", "Plano Basico", "R$ 199,00"]] },
   { label: "Esta semana", total: "R$ 597,00", items: [["Amanda Lima", "Plano Elite", "R$ 249,00"], ["+ 2 alunos", "Vencimentos futuros", "R$ 348,00"]] },
-  { label: "Este mês", total: "R$ 1.892,00", items: [["8 alunos", "Renovações previstas", "R$ 1.892,00"]] }
+  { label: "Este mes", total: "R$ 1.892,00", items: [["8 alunos", "Renovacoes previstas", "R$ 1.892,00"]] }
 ];
 
 const cashFlow = [
-  { label: "Receitas", value: "R$ 24.870,00", delta: "+18% vs mês anterior", type: "positive" },
-  { label: "Despesas", value: "R$ 6.430,00", delta: "+8% vs mês anterior", type: "warning" },
-  { label: "Lucro líquido", value: "R$ 18.440,00", delta: "+22% vs mês anterior", type: "neutral" }
+  { label: "Receitas", value: "R$ 24.870,00", delta: "+18% vs mes anterior", type: "positive" },
+  { label: "Despesas", value: "R$ 6.430,00", delta: "+8% vs mes anterior", type: "warning" },
+  { label: "Lucro liquido", value: "R$ 18.440,00", delta: "+22% vs mes anterior", type: "neutral" }
 ];
 
 export default function PersonalFinance() {
+  const [modal, setModal] = useState(null);
+
+  const modalContent = useMemo(() => {
+    const content = {
+      period: ["Periodo financeiro", "Aqui voce podera trocar o intervalo do relatorio. A estrutura ja esta pronta para receber filtros reais."],
+      export: ["Exportar relatorio", "O PDF financeiro sera gerado quando o modulo de relatorios estiver conectado ao backend."],
+      analysis: ["Analise da IA", "Seu negocio esta saudavel: receita crescendo, boa renovacao e margem alta. Prioridade: reduzir os 7 inadimplentes."],
+      allCharges: ["Cobrancas pendentes", "Lista completa de inadimplentes preparada para filtro por plano, atraso e ultima tentativa de contato."],
+      charge: ["Cobrar aluno", "Mensagem de cobranca preparada para WhatsApp/e-mail com link de pagamento."],
+      chargeAll: ["Cobrar todos", "Acoes em lote serao enviadas para alunos inadimplentes com tom profissional e nao agressivo."],
+      due: ["Vencimentos", "Detalhes do vencimento selecionado com plano, valor, historico e acoes rapidas."],
+      coach: ["Coach IA Financeiro", "A IA sugeriu recuperar R$ 4.200 reduzindo inadimplencia e migrando 12 alunos para o Plano Premium."],
+      flow: ["Fluxo financeiro", "Comparativo do mes atual com receitas, despesas, lucro e previsao de fechamento."]
+    };
+    return content[modal] || null;
+  }, [modal]);
+
   return (
     <section className="finance-page">
-      <div className="finance-toolbar">
-        <button type="button"><CalendarDays size={18} /> 01/06/2025 - 30/06/2025</button>
-        <button type="button"><Download size={18} /> Exportar relatório</button>
+      <div className="finance-header-card">
+        <div>
+          <span className="eyebrow">Painel administrativo</span>
+          <h2>Financeiro</h2>
+          <p>Visao geral da saude financeira do seu negocio.</p>
+        </div>
+        <div className="finance-toolbar">
+          <button type="button" onClick={() => setModal("period")}><CalendarDays size={18} /> 01/06/2025 - 30/06/2025</button>
+          <button type="button" onClick={() => setModal("export")}><Download size={18} /> Exportar relatorio</button>
+        </div>
       </div>
 
       <div className="finance-kpi-grid">
         <article className="finance-health-card">
-          <div>
-            <p className="eyebrow">Saúde financeira</p>
-            <div className="finance-score-ring">
-              <strong>87</strong>
-              <span>/100</span>
-            </div>
+          <div className="finance-score-ring">
+            <strong>87</strong>
+            <span>/100</span>
           </div>
           <div>
-            <strong>Excelente!</strong>
-            <p>Seu negócio está em ótima saúde financeira.</p>
-            <button type="button"><Brain size={15} /> Ver análise da IA</button>
+            <p className="eyebrow">Saude financeira</p>
+            <h3>Excelente!</h3>
+            <span>Seu negocio esta em otima saude financeira.</span>
+            <button type="button" onClick={() => setModal("analysis")}><Brain size={15} /> Ver analise da IA</button>
           </div>
         </article>
 
@@ -82,10 +106,13 @@ export default function PersonalFinance() {
           const Icon = item.icon;
           return (
             <article key={item.label} className="finance-kpi-card">
-              <span className="finance-kpi-icon"><Icon size={24} /></span>
+              <div className="finance-kpi-top">
+                <span className="finance-kpi-icon"><Icon size={22} /></span>
+                <small className={item.danger ? "danger" : "positive"}>{item.delta}</small>
+              </div>
               <p>{item.label}</p>
               <strong>{item.value}</strong>
-              <small className={item.danger ? "danger" : "positive"}>{item.delta}</small>
+              <span>{item.hint}</span>
               <MiniLine values={item.trend} danger={item.danger} />
             </article>
           );
@@ -95,12 +122,13 @@ export default function PersonalFinance() {
       <article className="finance-chart-card">
         <div className="section-heading">
           <div>
-            <h2>Receita dos últimos 12 meses</h2>
+            <span className="eyebrow">Receita</span>
+            <h2>Ultimos 12 meses</h2>
           </div>
-          <button type="button">Mensal</button>
+          <button type="button" onClick={() => setModal("flow")}>Mensal</button>
         </div>
         <div className="finance-chart-layout">
-          <div className="finance-bars" aria-label="Gráfico de receita mensal">
+          <div className="finance-bars" aria-label="Grafico de receita mensal">
             <div className="finance-axis">
               <span>R$ 40k</span>
               <span>R$ 30k</span>
@@ -111,7 +139,7 @@ export default function PersonalFinance() {
             <div className="finance-bar-grid">
               {months.map(([month, value]) => (
                 <div key={month} className="finance-bar-item">
-                  <i style={{ height: `${value * 6}px` }} />
+                  <i style={{ height: `${value * 5.4}px` }} />
                   <span>{month}</span>
                 </div>
               ))}
@@ -124,11 +152,11 @@ export default function PersonalFinance() {
             </div>
           </div>
           <aside className="finance-period-summary">
-            <p>Resumo do período</p>
+            <p>Resumo do periodo</p>
             <strong>Receita total <span>R$ 24.870,00</span></strong>
-            <strong>Receita média/mês <span>R$ 20.725,00</span></strong>
+            <strong>Receita media/mes <span>R$ 20.725,00</span></strong>
             <strong>Maior receita <span>R$ 28.430,00</span><small>Maio/2025</small></strong>
-            <strong className="forecast">Previsão próximo mês <span>R$ 26.300,00</span></strong>
+            <strong className="forecast">Previsao proximo mes <span>R$ 26.300,00</span></strong>
           </aside>
         </div>
       </article>
@@ -136,8 +164,8 @@ export default function PersonalFinance() {
       <div className="finance-two-columns">
         <article className="finance-card">
           <div className="section-heading">
-            <h2>Cobranças pendentes</h2>
-            <button type="button">Ver todas</button>
+            <h2>Cobrancas pendentes</h2>
+            <button type="button" onClick={() => setModal("allCharges")}>Ver todas</button>
           </div>
           <div className="finance-charge-list">
             {pendingCharges.map((charge) => (
@@ -147,28 +175,28 @@ export default function PersonalFinance() {
                   <strong>{charge.name}</strong>
                   <span>{charge.plan}</span>
                 </div>
-                <div>
+                <div className="finance-charge-value">
                   <strong>{charge.value}</strong>
                   <small>{charge.delay}</small>
                 </div>
-                <button type="button" aria-label={`Cobrar ${charge.name}`}><MessageCircle size={18} /></button>
+                <button type="button" aria-label={`Cobrar ${charge.name}`} onClick={() => setModal("charge")}><MessageCircle size={18} /></button>
               </div>
             ))}
           </div>
-          <button className="finance-wide-button" type="button"><Send size={18} /> Cobrar todos inadimplentes</button>
+          <button className="finance-wide-button" type="button" onClick={() => setModal("chargeAll")}><Send size={18} /> Cobrar todos inadimplentes</button>
         </article>
 
         <article className="finance-card">
           <div className="section-heading">
-            <h2>Próximos vencimentos</h2>
-            <button type="button">Ver todas</button>
+            <h2>Proximos vencimentos</h2>
+            <button type="button" onClick={() => setModal("due")}>Ver todas</button>
           </div>
           <div className="finance-due-list">
             {dueGroups.map((group) => (
               <div key={group.label} className="finance-due-group">
                 <header><span>{group.label}</span><strong>{group.total}</strong></header>
                 {group.items.map(([name, plan, value]) => (
-                  <button type="button" key={`${group.label}-${name}`}>
+                  <button type="button" key={`${group.label}-${name}`} onClick={() => setModal("due")}>
                     <span>{name}</span>
                     <small>{plan}</small>
                     <strong>{value}</strong>
@@ -182,21 +210,21 @@ export default function PersonalFinance() {
       </div>
 
       <article className="finance-ai-card">
-        <div className="finance-ai-orb"><Brain size={46} /></div>
+        <div className="finance-ai-orb"><Brain size={44} /></div>
         <div className="finance-ai-insights">
           <h2>Coach IA Financeiro</h2>
-          <p><TrendingUp size={16} /> Seu faturamento cresceu 18% este mês.</p>
-          <p><AlertTriangle size={16} /> 7 alunos estão inadimplentes.</p>
-          <p><ShieldCheck size={16} /> Plano Premium é o mais lucrativo.</p>
-          <p><Wallet size={16} /> Você pode aumentar o faturamento em R$ 4.200 reduzindo a inadimplência.</p>
+          <p><TrendingUp size={16} /> Faturamento cresceu 18% este mes.</p>
+          <p><AlertTriangle size={16} /> 7 alunos estao inadimplentes.</p>
+          <p><ShieldCheck size={16} /> Plano Premium e o mais lucrativo.</p>
+          <p><Wallet size={16} /> Potencial de recuperar R$ 4.200 este mes.</p>
         </div>
-        <button type="button"><SparkleIcon /> Analisar meu negócio</button>
+        <button type="button" onClick={() => setModal("coach")}><Brain size={18} /> Analisar negocio</button>
       </article>
 
       <article className="finance-flow-card">
         <div className="section-heading">
           <h2>Fluxo financeiro</h2>
-          <button type="button">Este mês</button>
+          <button type="button" onClick={() => setModal("flow")}>Este mes</button>
         </div>
         <div className="finance-flow-grid">
           {cashFlow.map((item) => (
@@ -216,15 +244,28 @@ export default function PersonalFinance() {
       <article className="finance-risk-card">
         <div>
           <p className="eyebrow">Risco de cancelamento</p>
-          <h2>Retenção sob controle</h2>
-          <span>A IA cruza frequência, pagamentos, aderência e interação para indicar risco de churn.</span>
+          <h2>Retencao sob controle</h2>
+          <span>A IA cruza frequencia, pagamentos, aderencia e interacao para indicar risco de churn.</span>
         </div>
         <div className="finance-risk-grid">
           <div><strong>96</strong><span>baixo risco</span></div>
-          <div><strong>21</strong><span>médio risco</span></div>
+          <div><strong>21</strong><span>medio risco</span></div>
           <div><strong>7</strong><span>alto risco</span></div>
         </div>
       </article>
+
+      {modalContent && (
+        <div className="finance-modal-backdrop" role="presentation" onClick={() => setModal(null)}>
+          <div className="finance-modal" role="dialog" aria-modal="true" aria-label={modalContent[0]} onClick={(event) => event.stopPropagation()}>
+            <button type="button" className="finance-modal-close" aria-label="Fechar" onClick={() => setModal(null)}><X size={18} /></button>
+            <img src="/lion-juda-logo.png" alt="" />
+            <span className="eyebrow">Personal Thiago Filippo</span>
+            <h3>{modalContent[0]}</h3>
+            <p>{modalContent[1]}</p>
+            <button type="button" className="finance-wide-button" onClick={() => setModal(null)}>Entendi</button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
@@ -237,8 +278,4 @@ function MiniLine({ values, danger = false }) {
       <polyline points={points} />
     </svg>
   );
-}
-
-function SparkleIcon() {
-  return <Brain size={18} />;
 }

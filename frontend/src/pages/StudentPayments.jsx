@@ -25,7 +25,7 @@ const paymentHistory = [
 ];
 
 const paymentMethods = [
-  { id: "card", title: "Cartao de credito", detail: "•••• 4242", icon: CreditCard, status: "Padrao" },
+  { id: "card", title: "Cartao de credito", detail: "Final 4242", icon: CreditCard, status: "Padrao" },
   { id: "pix", title: "PIX", detail: "Chave aleatoria cadastrada", icon: QrCode, status: "Disponivel" },
   { id: "boleto", title: "Boleto bancario", detail: "Disponivel", icon: Barcode, status: "Alternativo" }
 ];
@@ -68,6 +68,11 @@ export default function StudentPayments({ student }) {
         title: "Comprovante",
         text: "O comprovante em PDF sera liberado quando a integracao financeira estiver conectada ao gateway escolhido.",
         action: "Ok"
+      },
+      history: {
+        title: "Historico completo",
+        text: "Aqui ficara a lista completa de pagamentos, faturas, comprovantes e reenvio por e-mail.",
+        action: "Fechar"
       }
     };
     return content[modal] || null;
@@ -178,7 +183,7 @@ export default function StudentPayments({ student }) {
       <article className="payments-card payment-history-card">
         <div className="payments-card-title">
           <h3>Historico de pagamentos</h3>
-          <button type="button">Ver todos</button>
+          <button type="button" onClick={() => setModal("history")}>Ver todos</button>
         </div>
         <div className="payment-history-list">
           {paymentHistory.map((item) => (
