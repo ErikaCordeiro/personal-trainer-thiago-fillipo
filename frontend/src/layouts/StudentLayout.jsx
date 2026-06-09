@@ -22,7 +22,7 @@ export default function StudentLayout({
     if (!button) return;
     const text = button.textContent || "";
     const coachArea = button.closest?.(".coach-card, .student-coach-panel, .food-coach-card, .assessment-coach-card, .student-coach-question, .ai-insights-student");
-    if (coachArea || /coach ia|conversar|perguntar/i.test(text)) {
+    if (coachArea || /coach ia|assistente fitness|conversar|perguntar/i.test(text)) {
       event.preventDefault();
       onNavigate("coach");
     }
@@ -55,18 +55,14 @@ export default function StudentLayout({
           onNotificationAction={onNotificationAction}
         />
         {children}
-        <nav className="bottom-nav student-bottom-nav" aria-label="Navegação principal do aluno">
-          <button type="button" onClick={() => onNavigate("dashboard")}>Home</button>
-          <button type="button" onClick={() => onNavigate("student-view")}>Treino</button>
-          <button className="bottom-coach" type="button" onClick={() => onNavigate("coach")}>
-            <img src="/lion-juda-logo.png" alt="" />
-            Coach IA
-          </button>
+        <nav className="bottom-nav student-bottom-nav" aria-label="Navegacao principal do aluno">
+          <button type="button" onClick={() => onNavigate("dashboard")}>Inicio</button>
+          <button type="button" onClick={() => onNavigate("student-view")}>Treinos</button>
           <button type="button" onClick={() => onNavigate("diet")}>Dieta</button>
-          <button type="button" onClick={() => onNavigate("progress")}>Perfil</button>
+          <button type="button" onClick={() => onNavigate("calendar")}>Calendario</button>
+          <button type="button" onClick={() => onNavigate("messages")}>Mensagens</button>
         </nav>
       </main>
     </div>
   );
 }
-

@@ -25,30 +25,30 @@ export const personalNavItems = [
   { id: "students", label: "Alunos", icon: Users },
   { id: "workout-builder", label: "Treinos", icon: Dumbbell },
   { id: "diet", label: "Dietas", icon: Apple },
-  { id: "assessments", label: "AvaliaÃ§Ãµes", icon: ClipboardCheck },
+  { id: "assessments", label: "Avaliacoes", icon: ClipboardCheck },
   { id: "progress", label: "Progresso", icon: LineChart },
   { id: "finance", label: "Financeiro", icon: CreditCard },
   { id: "agenda", label: "Agenda", icon: CalendarDays },
   { id: "chat", label: "Mensagens", icon: MessageCircle },
-  { id: "reports", label: "RelatÃ³rios", icon: FileText },
+  { id: "reports", label: "Relatorios", icon: FileText },
   { id: "coach", label: "Coach IA", icon: Bot },
   { id: "about-personal", label: "Sobre o Personal", icon: Info },
-  { id: "settings", label: "ConfiguraÃ§Ãµes", icon: Settings }
+  { id: "settings", label: "Configuracoes", icon: Settings }
 ];
 
 export const studentNavItems = [
-  { id: "dashboard", label: "Dashboard", icon: Home },
-  { id: "student-view", label: "Treino", icon: Dumbbell },
+  { id: "dashboard", label: "Inicio", icon: Home },
+  { id: "student-view", label: "Treinos", icon: Dumbbell },
   { id: "diet", label: "Dieta", icon: Apple },
-  { id: "assessments", label: "AvaliaÃ§Ãµes", icon: ClipboardCheck },
+  { id: "assessments", label: "Avaliacoes", icon: ClipboardCheck },
   { id: "progress", label: "Progresso", icon: BarChart3 },
   { id: "payments", label: "Pagamentos", icon: CreditCard },
+  { id: "calendar", label: "Calendario", icon: CalendarDays },
   { id: "messages", label: "Mensagens", icon: MessageCircle },
+  { id: "coach", label: "Assistente Fitness", icon: Bot },
   { id: "files", label: "Arquivos", icon: FileText },
-  { id: "calendar", label: "CalendÃ¡rio", icon: CalendarDays },
-  { id: "coach", label: "Coach IA", icon: Bot },
   { id: "about-personal", label: "Sobre o Personal", icon: Info },
-  { id: "settings", label: "ConfiguraÃ§Ãµes", icon: Settings }
+  { id: "settings", label: "Configuracoes", icon: Settings }
 ];
 
 export default function Sidebar({
@@ -64,8 +64,12 @@ export default function Sidebar({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const effectiveCollapsed = collapsed && !mobileOpen;
-  const inactive = new Set(["chat", "reports", "settings", "profile", "messages", "files", "calendar"]);
-
+  const inactive = new Set(["reports", "settings", "profile", "files"]);
+  const isStudentMenu = navItems.some((item) => item.id === "payments");
+  const assistantName = isStudentMenu ? "Assistente Fitness" : "Coach IA";
+  const assistantText = isStudentMenu
+    ? "Tire duvidas sobre execucao, musculos, dieta e avaliacao."
+    : "Pergunte sobre treinos, dieta, evolucao e mais.";
   const handleNavigate = (item) => {
     onNavigate(inactive.has(item.id) ? "dashboard" : item.id);
   };
@@ -131,8 +135,8 @@ export default function Sidebar({
           <div className="coach-card">
             <Bot size={20} />
             <div>
-              <strong>Coach IA</strong>
-              <span>Pergunte sobre treinos, dieta, evoluÃ§Ã£o e mais.</span>
+              <strong>{assistantName}</strong>
+              <span>{assistantText}</span>
             </div>
             <button type="button" onClick={() => onNavigate("coach")}>Conversar</button>
           </div>

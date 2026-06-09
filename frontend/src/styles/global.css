@@ -12680,3 +12680,1963 @@ body,
     border-radius: 14px;
   }
 }
+/* Student calendar premium */
+.assistant-priority-note {
+  border: 1px solid rgba(245, 245, 245, 0.1);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(245, 245, 245, 0.7);
+  line-height: 1.55;
+}
+
+.student-calendar-page {
+  display: grid;
+  gap: 18px;
+  color: #f5f5f5;
+  padding-bottom: calc(112px + env(safe-area-inset-bottom));
+}
+
+.student-calendar-header,
+.calendar-card-title,
+.calendar-return-actions,
+.student-calendar-modal-close {
+  display: flex;
+  align-items: center;
+}
+
+.student-calendar-header,
+.calendar-card-title {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.student-calendar-header h2 {
+  margin: 0 0 5px;
+  font-size: clamp(2.1rem, 6vw, 3.3rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.student-calendar-header p,
+.calendar-month-card p,
+.calendar-return-card p,
+.calendar-mini-card p,
+.student-calendar-modal p,
+.schedule-summary span,
+.calendar-streak-card small,
+.calendar-streak-card span {
+  color: rgba(245, 245, 245, 0.68);
+}
+
+.student-calendar-header button,
+.calendar-card-title button,
+.calendar-return-actions button,
+.calendar-mini-card button,
+.student-calendar-modal button,
+.schedule-type-toggle button,
+.schedule-day-list button,
+.schedule-time-list button {
+  color: #f5f5f5;
+}
+
+.student-calendar-header > button,
+.calendar-card-title button,
+.student-calendar-modal-close {
+  border: 1px solid rgba(245, 245, 245, 0.13);
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.student-calendar-header > button {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+}
+
+.calendar-streak-card,
+.calendar-month-card,
+.calendar-return-card,
+.calendar-mini-card,
+.student-calendar-modal,
+.schedule-personal-card,
+.schedule-summary,
+.schedule-note {
+  border: 1px solid rgba(229, 229, 229, 0.13);
+  background:
+    radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.08), transparent 34%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.018));
+  border-radius: 24px;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.calendar-streak-card {
+  display: grid;
+  grid-template-columns: auto 1fr minmax(180px, 0.8fr);
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.calendar-lion-ring {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle, rgba(255,255,255,.22), rgba(255,255,255,.03) 62%, rgba(255,255,255,.09));
+  border: 3px solid rgba(245, 245, 245, 0.85);
+  box-shadow: 0 0 34px rgba(245,245,245,.22);
+}
+
+.calendar-lion-ring img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.calendar-streak-card strong {
+  display: block;
+  font-size: clamp(3rem, 8vw, 5rem);
+  line-height: 0.95;
+}
+
+.calendar-streak-card p {
+  margin: 4px 0 0;
+  font-size: 1.15rem;
+}
+
+.calendar-streak-side {
+  display: grid;
+  gap: 14px;
+  border-left: 1px solid rgba(245,245,245,.12);
+  padding-left: 18px;
+}
+
+.calendar-streak-side p,
+.calendar-return-body p,
+.calendar-day-detail p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.calendar-streak-side strong {
+  display: inline;
+  font-size: 1.25rem;
+}
+
+.calendar-month-card,
+.calendar-return-card,
+.calendar-mini-card {
+  padding: 18px;
+}
+
+.calendar-card-title h3,
+.calendar-mini-card h3,
+.student-calendar-modal h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.calendar-card-title button {
+  min-height: 38px;
+  border-radius: 13px;
+  padding: 0 12px;
+}
+
+.calendar-week-labels,
+.calendar-contribution-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.calendar-week-labels {
+  margin: 20px 0 10px;
+  color: rgba(245,245,245,.78);
+  font-weight: 800;
+  font-size: .82rem;
+  text-align: center;
+}
+
+.calendar-day {
+  min-height: 58px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: rgba(245,245,245,.9);
+  display: grid;
+  place-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.calendar-day span {
+  font-size: 1.12rem;
+  font-weight: 800;
+}
+
+.calendar-day i,
+.calendar-legend i,
+.calendar-mini-card.events i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+  background: rgba(245,245,245,.28);
+}
+
+.calendar-day.workout i,
+.calendar-legend .workout,
+.calendar-mini-card.events .workout { background: #6fd261; }
+.calendar-day.assessment i,
+.calendar-legend .assessment,
+.calendar-mini-card.events .assessment { background: #6bb6ff; }
+.calendar-day.diet i,
+.calendar-legend .diet,
+.calendar-mini-card.events .diet { background: #9b5cff; }
+.calendar-day.checkin i,
+.calendar-legend .checkin,
+.calendar-mini-card.events .checkin { background: #ff9e3d; }
+.calendar-day.none i,
+.calendar-legend .none { background: rgba(245,245,245,.28); }
+
+.calendar-day.selected,
+.calendar-day:hover {
+  outline: 1px solid rgba(245,245,245,.8);
+  background: rgba(255,255,255,.08);
+  box-shadow: 0 0 20px rgba(245,245,245,.18);
+}
+
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 18px;
+  color: rgba(245,245,245,.74);
+  font-size: .88rem;
+}
+
+.calendar-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.calendar-return-body {
+  display: grid;
+  grid-template-columns: 96px 1fr 110px;
+  gap: 16px;
+  align-items: center;
+  margin: 18px 0;
+}
+
+.calendar-personal-photo {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid rgba(245,245,245,.55);
+}
+
+.calendar-return-body strong {
+  display: block;
+  font-size: 1.35rem;
+  margin: 2px 0 8px;
+}
+
+.calendar-return-lion {
+  width: 104px;
+  height: 104px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 18px rgba(245,245,245,.2));
+}
+
+.calendar-metal-button,
+.calendar-ghost-button {
+  width: 100%;
+  min-height: 54px;
+  border-radius: 16px;
+  font-weight: 900;
+}
+
+.calendar-metal-button {
+  border: 1px solid rgba(245,245,245,.7);
+  color: #050505 !important;
+  background: linear-gradient(135deg, #f8f8f8, #8f949a 45%, #ffffff 72%, #b8bdc2);
+  box-shadow: 0 14px 30px rgba(245,245,245,.16);
+}
+
+.calendar-return-actions {
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.calendar-return-actions button,
+.calendar-ghost-button,
+.calendar-mini-card button {
+  border: 1px solid rgba(245,245,245,.14);
+  background: rgba(255,255,255,.04);
+  border-radius: 15px;
+  min-height: 48px;
+}
+
+.calendar-return-actions button {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.student-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.calendar-mini-card {
+  min-height: 170px;
+}
+
+.calendar-progress-ring {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin: 16px 0 10px;
+  background: conic-gradient(#f8f8f8 0 87%, rgba(255,255,255,.15) 87% 100%);
+  position: relative;
+}
+
+.calendar-progress-ring::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  background: #080808;
+}
+
+.calendar-progress-ring strong {
+  position: relative;
+  z-index: 1;
+  font-size: 1.55rem;
+}
+
+.calendar-goal-line {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.calendar-goal-line span {
+  display: flex;
+  justify-content: space-between;
+}
+
+.calendar-goal-line i {
+  display: block;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.12);
+  overflow: hidden;
+}
+
+.calendar-goal-line b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #78e06e;
+}
+
+.calendar-goal-line b.water { background: #7bc6ff; }
+.calendar-goal-line b.diet { background: #a869ff; }
+
+.calendar-mini-card.events button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.calendar-mini-card.events strong,
+.calendar-mini-card.events small,
+.calendar-mini-card.message small {
+  display: block;
+}
+
+.calendar-mini-card.message > div {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.calendar-mini-card.message img {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.calendar-mini-card.message button {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.student-calendar-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(12px);
+}
+
+.student-calendar-modal {
+  position: relative;
+  width: min(620px, 100%);
+  max-height: min(86vh, 880px);
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.student-calendar-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 42px;
+  height: 42px;
+  justify-content: center;
+  border-radius: 14px;
+}
+
+.student-calendar-modal h3 {
+  padding-right: 52px;
+  font-size: 1.8rem;
+}
+
+.calendar-day-detail {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.calendar-dumbbell-dot {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff, #8b8b8b);
+  display: inline-block;
+}
+
+.schedule-personal-card {
+  display: grid;
+  grid-template-columns: 76px 1fr 96px;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  margin: 18px 0;
+}
+
+.schedule-personal-card img:first-child {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.schedule-personal-card img:last-child {
+  width: 86px;
+  height: 86px;
+  object-fit: contain;
+}
+
+.schedule-personal-card strong {
+  display: block;
+  font-size: 1.25rem;
+}
+
+.schedule-type-toggle,
+.schedule-day-list,
+.schedule-time-list {
+  display: grid;
+  gap: 10px;
+}
+
+.schedule-type-toggle {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.schedule-type-toggle button,
+.schedule-day-list button,
+.schedule-time-list button {
+  border: 1px solid rgba(245,245,245,.14);
+  background: rgba(255,255,255,.035);
+  border-radius: 15px;
+}
+
+.schedule-type-toggle button {
+  min-height: 58px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.schedule-day-list {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.schedule-day-list button {
+  min-height: 86px;
+}
+
+.schedule-day-list span,
+.schedule-day-list small {
+  display: block;
+  color: rgba(245,245,245,.68);
+}
+
+.schedule-day-list strong {
+  display: block;
+  font-size: 1.55rem;
+}
+
+.schedule-type-toggle button.active,
+.schedule-day-list button.active,
+.schedule-time-list button.active {
+  color: #050505;
+  background: linear-gradient(135deg, #fff, #9ca0a5 46%, #fff);
+  border-color: rgba(255,255,255,.85);
+}
+
+.schedule-time-list button {
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  text-align: left;
+}
+
+.schedule-summary {
+  padding: 14px;
+  margin: 18px 0;
+}
+
+.schedule-summary p {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.schedule-note {
+  padding: 13px;
+  margin: 12px 0 0;
+}
+
+@media (max-width: 860px) {
+  .calendar-streak-card,
+  .calendar-return-body,
+  .student-calendar-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-streak-side {
+    border-left: 0;
+    border-top: 1px solid rgba(245,245,245,.12);
+    padding: 14px 0 0;
+  }
+
+  .calendar-return-lion {
+    justify-self: center;
+  }
+
+  .schedule-day-list {
+    grid-template-columns: repeat(4, minmax(72px, 1fr));
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .student-calendar-page {
+    gap: 14px;
+  }
+
+  .calendar-month-card,
+  .calendar-return-card,
+  .calendar-mini-card,
+  .calendar-streak-card,
+  .student-calendar-modal {
+    border-radius: 20px;
+    padding: 14px;
+  }
+
+  .calendar-day {
+    min-height: 48px;
+    border-radius: 13px;
+  }
+
+  .calendar-day span {
+    font-size: .98rem;
+  }
+
+  .calendar-return-actions,
+  .schedule-type-toggle,
+  .schedule-personal-card {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .schedule-personal-card img:last-child {
+    display: none;
+  }
+
+  .schedule-day-list {
+    grid-template-columns: repeat(7, 76px);
+  }
+
+  .student-calendar-modal-backdrop {
+    align-items: end;
+    padding: 0;
+  }
+
+  .student-calendar-modal {
+    width: 100%;
+    max-height: 88vh;
+    border-radius: 24px 24px 0 0;
+  }
+}
+/* Personal messages premium */
+.messages-admin-page {
+  display: grid;
+  gap: 22px;
+  color: #f5f5f5;
+  min-height: calc(100vh - 48px);
+}
+
+.messages-admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.messages-admin-header h2 {
+  margin: 0 0 6px;
+  font-size: clamp(2.3rem, 5vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.messages-admin-header p,
+.messages-panel-title p,
+.message-conversation-card small,
+.messages-chat-header p,
+.messages-student-summary-inline p,
+.messages-profile-panel p,
+.messages-notification-card p,
+.messages-schedule-modal p {
+  color: rgba(245, 245, 245, 0.68);
+}
+
+.messages-admin-tools {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.messages-admin-tools label,
+.messages-side-search,
+.messages-composer,
+.messages-admin-tools button,
+.messages-filter-tabs button,
+.messages-new-button,
+.messages-chat-actions button,
+.messages-profile-details,
+.messages-metric-grid span,
+.messages-quick-actions button,
+.messages-notification-card,
+.messages-student-summary-inline,
+.messages-schedule-modal label,
+.messages-schedule-summary,
+.schedule-choice-grid button {
+  border: 1px solid rgba(229, 229, 229, 0.13);
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.messages-admin-tools label,
+.messages-side-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 18px;
+  min-height: 54px;
+  padding: 0 14px;
+}
+
+.messages-admin-tools input,
+.messages-side-search input,
+.messages-composer textarea,
+.messages-schedule-modal input,
+.messages-schedule-modal textarea {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #f5f5f5;
+  font: inherit;
+}
+
+.messages-admin-tools input::placeholder,
+.messages-side-search input::placeholder,
+.messages-composer textarea::placeholder,
+.messages-schedule-modal textarea::placeholder {
+  color: rgba(245,245,245,.5);
+}
+
+.messages-admin-tools button {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  color: #f5f5f5;
+}
+
+.messages-admin-shell {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.95fr) minmax(420px, 1.75fr) minmax(260px, 0.9fr);
+  min-height: 720px;
+  overflow: hidden;
+  border: 1px solid rgba(229, 229, 229, 0.14);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 72% 0%, rgba(255,255,255,.08), transparent 34%),
+    linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.016));
+  box-shadow: 0 28px 90px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(18px);
+}
+
+.messages-conversations-panel,
+.messages-chat-panel,
+.messages-profile-panel {
+  min-width: 0;
+}
+
+.messages-conversations-panel,
+.messages-profile-panel {
+  padding: 20px;
+  background: rgba(0,0,0,.18);
+}
+
+.messages-conversations-panel {
+  border-right: 1px solid rgba(245,245,245,.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.messages-profile-panel {
+  border-left: 1px solid rgba(245,245,245,.1);
+  overflow-y: auto;
+}
+
+.messages-panel-title,
+.messages-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.messages-panel-title h3,
+.messages-chat-header h3,
+.messages-profile-panel h3,
+.messages-student-summary-inline h4,
+.messages-quick-actions h4,
+.messages-notification-card h4 {
+  margin: 0;
+}
+
+.messages-panel-title h3 span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  margin-left: 6px;
+  font-size: .78rem;
+  color: #050505;
+  background: linear-gradient(135deg, #fff, #9fa3a8, #fff);
+}
+
+.messages-panel-title > button {
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+  color: #f5f5f5;
+  border: 1px solid rgba(245,245,245,.14);
+  background: rgba(255,255,255,.05);
+}
+
+.messages-filter-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.messages-filter-tabs button {
+  min-height: 42px;
+  border-radius: 14px;
+  color: rgba(245,245,245,.72);
+}
+
+.messages-filter-tabs button.active {
+  color: #050505;
+  background: linear-gradient(135deg, #fff, #93979d 48%, #fff);
+}
+
+.messages-conversation-list {
+  display: grid;
+  gap: 8px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.message-conversation-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 54px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  min-height: 86px;
+  padding: 12px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background: transparent;
+  color: #f5f5f5;
+  text-align: left;
+}
+
+.message-conversation-card.active,
+.message-conversation-card:hover {
+  border-color: rgba(245,245,245,.55);
+  background: rgba(255,255,255,.075);
+  box-shadow: 0 0 28px rgba(245,245,245,.12);
+}
+
+.message-conversation-card img,
+.messages-chat-header img,
+.message-bubble-row > img,
+.messages-profile-avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(245,245,245,.32);
+}
+
+.message-conversation-card img {
+  width: 54px;
+  height: 54px;
+}
+
+.message-conversation-card span,
+.message-conversation-card strong,
+.message-conversation-card small {
+  display: block;
+  min-width: 0;
+}
+
+.message-conversation-card small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 4px;
+}
+
+.message-conversation-card em {
+  align-self: start;
+  font-style: normal;
+  color: rgba(245,245,245,.68);
+  font-size: .82rem;
+}
+
+.conversation-actions {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(245,245,245,.72);
+}
+
+.conversation-actions b {
+  min-width: 22px;
+  height: 22px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #050505;
+  background: linear-gradient(135deg, #fff, #9ea2a7, #fff);
+  font-size: .78rem;
+}
+
+.messages-new-button {
+  width: 100%;
+  min-height: 54px;
+  border-radius: 18px;
+  color: #f5f5f5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.messages-chat-panel {
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+  min-height: 720px;
+}
+
+.messages-chat-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(245,245,245,.1);
+}
+
+.messages-chat-header img {
+  width: 64px;
+  height: 64px;
+}
+
+.messages-chat-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.35rem;
+}
+
+.messages-chat-header p {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 4px 0 0;
+}
+
+.messages-chat-header p i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(245,245,245,.4);
+}
+
+.messages-chat-header p i.online {
+  background: #6ee36c;
+  box-shadow: 0 0 12px rgba(110,227,108,.5);
+}
+
+.messages-chat-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.messages-chat-actions button,
+.messages-mobile-back {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  border: 1px solid rgba(245,245,245,.14);
+  background: rgba(255,255,255,.05);
+  color: #f5f5f5;
+}
+
+.messages-mobile-back {
+  display: none;
+  width: auto;
+  padding: 0 14px;
+}
+
+.messages-student-summary-inline {
+  margin: 16px;
+  padding: 16px;
+  border-radius: 22px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.messages-student-summary-inline p {
+  margin: 6px 0;
+}
+
+.messages-student-summary-inline button,
+.messages-adherence-chip,
+.messages-send-button,
+.messages-modal-close {
+  border: 1px solid rgba(245,245,245,.18);
+  border-radius: 16px;
+}
+
+.messages-student-summary-inline button {
+  min-height: 44px;
+  padding: 0 16px;
+  color: #f5f5f5;
+  background: rgba(255,255,255,.05);
+}
+
+.messages-adherence-chip {
+  padding: 12px 16px;
+  min-width: 126px;
+  background: rgba(255,255,255,.05);
+}
+
+.messages-adherence-chip span,
+.messages-adherence-chip strong {
+  display: block;
+}
+
+.messages-adherence-chip strong {
+  font-size: 1.9rem;
+}
+
+.messages-day-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(245,245,245,.7);
+  padding: 0 20px;
+}
+
+.messages-day-divider::before,
+.messages-day-divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: rgba(245,245,245,.12);
+}
+
+.messages-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.message-bubble-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.message-bubble-row.own {
+  justify-content: flex-end;
+}
+
+.message-bubble-row > img {
+  width: 36px;
+  height: 36px;
+}
+
+.message-bubble {
+  max-width: min(72%, 520px);
+  border: 1px solid rgba(245,245,245,.13);
+  border-radius: 20px 20px 20px 6px;
+  padding: 14px;
+  background: rgba(255,255,255,.065);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.message-bubble-row.own .message-bubble {
+  border-radius: 20px 20px 6px 20px;
+  color: #050505;
+  background: linear-gradient(135deg, #fff, #a2a6ab 50%, #f8f8f8);
+}
+
+.message-bubble p {
+  margin: 0;
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+.message-bubble time {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-top: 8px;
+  color: rgba(5,5,5,.62);
+  font-size: .78rem;
+}
+
+.message-bubble-row:not(.own) .message-bubble time {
+  color: rgba(245,245,245,.55);
+}
+
+.message-video-card,
+.message-file-card {
+  min-width: min(320px, 65vw);
+}
+
+.message-video-card > div {
+  height: 168px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,.34), transparent 22%),
+    linear-gradient(135deg, rgba(255,255,255,.16), rgba(0,0,0,.35)),
+    url('/erika-gomes.jpeg') center / cover;
+  overflow: hidden;
+}
+
+.message-video-card span,
+.message-video-card small,
+.message-file-card span,
+.message-file-card small {
+  display: block;
+  margin-top: 8px;
+}
+
+.message-video-card button,
+.message-file-card button {
+  margin-top: 10px;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  color: #f5f5f5;
+  background: rgba(0,0,0,.32);
+  border: 1px solid rgba(245,245,245,.15);
+}
+
+.messages-composer {
+  margin: 0 20px 20px;
+  border-radius: 22px;
+  padding: 14px;
+}
+
+.messages-composer textarea {
+  min-height: 66px;
+  resize: none;
+}
+
+.messages-composer > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.messages-composer button {
+  color: #f5f5f5;
+}
+
+.messages-send-button {
+  margin-left: auto;
+  min-height: 48px;
+  padding: 0 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #050505 !important;
+  font-weight: 900;
+  background: linear-gradient(135deg, #fff, #9da1a6 48%, #fff);
+}
+
+.messages-send-button.full {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.messages-profile-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.messages-profile-avatar {
+  width: 104px;
+  height: 104px;
+  align-self: center;
+  box-shadow: 0 0 34px rgba(245,245,245,.18);
+}
+
+.messages-profile-panel h3,
+.messages-profile-panel > p {
+  text-align: center;
+}
+
+.messages-profile-details,
+.messages-metric-grid {
+  display: grid;
+  gap: 10px;
+  border-radius: 20px;
+  padding: 14px;
+}
+
+.messages-profile-details span,
+.messages-metric-grid span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: rgba(245,245,245,.66);
+}
+
+.messages-profile-details strong,
+.messages-metric-grid strong {
+  color: #f5f5f5;
+  text-align: right;
+}
+
+.messages-metric-grid {
+  grid-template-columns: 1fr;
+}
+
+.messages-quick-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.messages-quick-actions button {
+  min-height: 48px;
+  border-radius: 16px;
+  color: #f5f5f5;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+.messages-notification-card {
+  border-radius: 20px;
+  padding: 16px;
+}
+
+.messages-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(14px);
+}
+
+.messages-schedule-modal {
+  position: relative;
+  width: min(560px, 100%);
+  border: 1px solid rgba(245,245,245,.14);
+  border-radius: 26px;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(255,255,255,.12), transparent 34%),
+    linear-gradient(145deg, rgba(20,20,20,.96), rgba(5,5,5,.98));
+  box-shadow: 0 30px 100px rgba(0,0,0,.6);
+}
+
+.messages-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  color: #f5f5f5;
+  background: rgba(255,255,255,.05);
+}
+
+.schedule-choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.schedule-choice-grid button {
+  min-height: 52px;
+  border-radius: 16px;
+  color: #f5f5f5;
+}
+
+.schedule-choice-grid button.active {
+  color: #050505;
+  background: linear-gradient(135deg, #fff, #999da2, #fff);
+}
+
+.messages-schedule-modal label {
+  display: grid;
+  gap: 8px;
+  border-radius: 16px;
+  padding: 12px;
+  margin-top: 10px;
+  color: rgba(245,245,245,.7);
+}
+
+.messages-schedule-modal textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.messages-schedule-summary {
+  display: grid;
+  gap: 9px;
+  border-radius: 18px;
+  padding: 14px;
+  margin-top: 14px;
+}
+
+.messages-schedule-summary span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+@media (max-width: 1180px) {
+  .messages-admin-shell {
+    grid-template-columns: minmax(250px, .9fr) minmax(430px, 1.7fr);
+  }
+
+  .messages-profile-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .messages-admin-page {
+    gap: 16px;
+  }
+
+  .messages-admin-header {
+    display: grid;
+  }
+
+  .messages-admin-tools {
+    width: 100%;
+  }
+
+  .messages-admin-tools label {
+    flex: 1;
+  }
+
+  .messages-admin-shell {
+    display: block;
+    min-height: auto;
+    border-radius: 24px;
+  }
+
+  .messages-conversations-panel,
+  .messages-chat-panel,
+  .messages-profile-panel {
+    min-height: calc(100vh - 210px);
+  }
+
+  .messages-chat-panel,
+  .messages-profile-panel {
+    display: none;
+  }
+
+  .messages-admin-shell.view-chat .messages-conversations-panel,
+  .messages-admin-shell.view-profile .messages-conversations-panel {
+    display: none;
+  }
+
+  .messages-admin-shell.view-chat .messages-chat-panel {
+    display: grid;
+  }
+
+  .messages-admin-shell.view-profile .messages-profile-panel {
+    display: flex;
+  }
+
+  .messages-mobile-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .messages-student-summary-inline {
+    grid-template-columns: 1fr;
+  }
+
+  .messages-chat-actions {
+    gap: 5px;
+  }
+
+  .messages-chat-actions button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .message-bubble {
+    max-width: 86%;
+  }
+
+  .messages-composer > div {
+    flex-wrap: wrap;
+  }
+
+  .messages-send-button {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .messages-profile-panel {
+    border-left: 0;
+  }
+}
+/* Student exclusive messages */
+.student-messages-page {
+  display: grid;
+  gap: 18px;
+  color: #f5f5f5;
+  padding-bottom: calc(112px + env(safe-area-inset-bottom));
+}
+
+.student-messages-header,
+.student-messages-header > div:last-child,
+.student-personal-card,
+.student-message-shortcuts,
+.student-message-composer > div,
+.student-schedule-personal,
+.student-schedule-summary span {
+  display: flex;
+  align-items: center;
+}
+
+.student-messages-header {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.student-messages-header h2 {
+  margin: 0 0 5px;
+  font-size: clamp(2.25rem, 6vw, 3.35rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.student-messages-header p,
+.student-personal-card p,
+.student-personal-card small,
+.student-message-shortcuts small,
+.student-message-schedule p,
+.student-schedule-personal small {
+  color: rgba(245, 245, 245, 0.68);
+}
+
+.student-messages-header > div:last-child {
+  gap: 9px;
+}
+
+.student-messages-header button,
+.student-message-shortcuts button,
+.student-message-composer,
+.student-message-modal-close,
+.student-schedule-type button,
+.student-schedule-days button,
+.student-schedule-times button,
+.student-schedule-summary,
+.student-schedule-personal {
+  border: 1px solid rgba(229, 229, 229, 0.13);
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.student-messages-header button {
+  width: 50px;
+  height: 50px;
+  border-radius: 17px;
+  color: #f5f5f5;
+}
+
+.student-personal-card,
+.student-chat-card,
+.student-message-schedule {
+  border: 1px solid rgba(229, 229, 229, 0.14);
+  background:
+    radial-gradient(circle at 82% 0%, rgba(255,255,255,.08), transparent 32%),
+    linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.018));
+  border-radius: 26px;
+  box-shadow: 0 26px 78px rgba(0,0,0,.44), inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(18px);
+}
+
+.student-personal-card {
+  gap: 18px;
+  padding: 18px;
+  min-height: 150px;
+}
+
+.student-personal-avatar-wrap {
+  position: relative;
+  width: 104px;
+  height: 104px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(245,245,245,.5);
+  background: radial-gradient(circle, rgba(255,255,255,.14), rgba(255,255,255,.02));
+  box-shadow: 0 0 34px rgba(245,245,245,.16);
+}
+
+.student-personal-avatar-wrap img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.student-personal-avatar-wrap i {
+  position: absolute;
+  right: 8px;
+  bottom: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #77df55;
+  box-shadow: 0 0 18px rgba(119,223,85,.7);
+}
+
+.student-personal-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 3px 0 6px;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.student-personal-card p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+}
+
+.student-personal-card p i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #77df55;
+  box-shadow: 0 0 12px rgba(119,223,85,.65);
+}
+
+.student-personal-lion {
+  margin-left: auto;
+  width: 136px;
+  height: 136px;
+  object-fit: contain;
+  opacity: .9;
+  filter: drop-shadow(0 0 22px rgba(245,245,245,.14));
+}
+
+.student-message-shortcuts {
+  gap: 12px;
+}
+
+.student-message-shortcuts button {
+  flex: 1;
+  min-width: 0;
+  min-height: 82px;
+  border-radius: 20px;
+  color: #f5f5f5;
+  justify-content: center;
+  gap: 14px;
+  padding: 14px;
+  text-align: left;
+}
+
+.student-message-shortcuts button:hover {
+  border-color: rgba(245,245,245,.55);
+  background: rgba(255,255,255,.08);
+  box-shadow: 0 0 26px rgba(245,245,245,.12);
+}
+
+.student-message-shortcuts span,
+.student-message-shortcuts strong,
+.student-message-shortcuts small {
+  display: block;
+}
+
+.student-chat-card {
+  overflow: hidden;
+  min-height: 620px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background:
+    linear-gradient(rgba(5,5,5,.88), rgba(5,5,5,.88)),
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.08), transparent 28%);
+}
+
+.student-chat-day {
+  display: flex;
+  justify-content: center;
+  padding: 16px 16px 0;
+}
+
+.student-chat-day span {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 8px 16px;
+  background: rgba(255,255,255,.08);
+  color: rgba(245,245,245,.82);
+  font-size: .86rem;
+}
+
+.student-chat-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  padding: 22px;
+}
+
+.student-message-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.student-message-row.own {
+  justify-content: flex-end;
+}
+
+.student-message-row > img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: contain;
+  border: 1px solid rgba(245,245,245,.18);
+  background: rgba(255,255,255,.05);
+}
+
+.student-message-bubble {
+  max-width: min(65%, 560px);
+  border: 1px solid rgba(245,245,245,.13);
+  border-radius: 21px 21px 21px 7px;
+  padding: 14px;
+  background: rgba(255,255,255,.062);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.student-message-row.own .student-message-bubble {
+  border-radius: 21px 21px 7px 21px;
+  background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
+}
+
+.student-message-bubble p {
+  margin: 0;
+  white-space: pre-line;
+  line-height: 1.58;
+}
+
+.student-message-bubble time {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  color: rgba(245,245,245,.55);
+  font-size: .78rem;
+}
+
+.student-message-video {
+  min-width: min(340px, 70vw);
+}
+
+.student-message-video > div {
+  height: 170px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at center, rgba(255,255,255,.32), transparent 22%),
+    linear-gradient(135deg, rgba(255,255,255,.13), rgba(0,0,0,.42)),
+    url('/erika-gomes.jpeg') center / cover;
+  border: 1px solid rgba(245,245,245,.12);
+}
+
+.student-message-video span,
+.student-message-video small,
+.student-message-file span {
+  display: block;
+  margin-top: 8px;
+}
+
+.student-message-composer {
+  margin: 0 14px 14px;
+  border-radius: 22px;
+  padding: 14px;
+}
+
+.student-message-composer textarea {
+  width: 100%;
+  min-height: 58px;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  color: #f5f5f5;
+  font: inherit;
+}
+
+.student-message-composer textarea::placeholder {
+  color: rgba(245,245,245,.48);
+}
+
+.student-message-composer > div {
+  gap: 8px;
+}
+
+.student-message-composer button {
+  color: #f5f5f5;
+}
+
+.student-message-send,
+.student-message-confirm {
+  margin-left: auto;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: 16px;
+  color: #050505 !important;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #fff, #a1a5aa 48%, #fff);
+  box-shadow: 0 14px 34px rgba(245,245,245,.16);
+}
+
+.student-message-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(14px);
+}
+
+.student-message-schedule {
+  position: relative;
+  width: min(620px, 100%);
+  max-height: min(88vh, 860px);
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.student-message-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+  color: #f5f5f5;
+}
+
+.student-message-schedule h3 {
+  margin: 0;
+  padding-right: 50px;
+  font-size: 1.9rem;
+}
+
+.student-schedule-personal {
+  gap: 12px;
+  border-radius: 20px;
+  padding: 14px;
+  margin: 18px 0;
+}
+
+.student-schedule-personal img {
+  width: 66px;
+  height: 66px;
+  object-fit: contain;
+}
+
+.student-schedule-personal strong,
+.student-schedule-personal small,
+.student-schedule-personal span {
+  display: block;
+}
+
+.student-schedule-personal svg {
+  margin-left: auto;
+}
+
+.student-schedule-type,
+.student-schedule-days,
+.student-schedule-times {
+  display: grid;
+  gap: 10px;
+}
+
+.student-schedule-type {
+  grid-template-columns: 1fr 1fr;
+}
+
+.student-schedule-days {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.student-schedule-times {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.student-schedule-type button,
+.student-schedule-days button,
+.student-schedule-times button {
+  min-height: 52px;
+  border-radius: 16px;
+  color: #f5f5f5;
+}
+
+.student-schedule-days button {
+  min-height: 86px;
+}
+
+.student-schedule-days span,
+.student-schedule-days small {
+  display: block;
+  color: rgba(245,245,245,.66);
+}
+
+.student-schedule-days strong {
+  display: block;
+  font-size: 1.5rem;
+}
+
+.student-schedule-type button.active,
+.student-schedule-days button.active,
+.student-schedule-times button.active {
+  color: #050505;
+  background: linear-gradient(135deg, #fff, #9ca0a5 46%, #fff);
+  border-color: rgba(255,255,255,.8);
+}
+
+.student-schedule-times button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+}
+
+.student-schedule-summary {
+  display: grid;
+  gap: 10px;
+  border-radius: 18px;
+  padding: 14px;
+  margin: 18px 0;
+}
+
+.student-schedule-summary span {
+  justify-content: space-between;
+  color: rgba(245,245,245,.7);
+}
+
+.student-schedule-summary strong {
+  color: #f5f5f5;
+}
+
+.student-message-confirm {
+  width: 100%;
+  margin-left: 0;
+}
+
+@media (max-width: 920px) {
+  .student-personal-card,
+  .student-message-shortcuts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .student-personal-card {
+    grid-template-columns: auto 1fr;
+  }
+
+  .student-personal-lion {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .student-messages-page {
+    gap: 14px;
+  }
+
+  .student-messages-header h2 {
+    font-size: 2.25rem;
+  }
+
+  .student-personal-card,
+  .student-message-shortcuts,
+  .student-schedule-type,
+  .student-schedule-times {
+    grid-template-columns: 1fr;
+  }
+
+  .student-personal-card,
+  .student-chat-card,
+  .student-message-schedule {
+    border-radius: 22px;
+  }
+
+  .student-message-shortcuts button {
+    justify-content: flex-start;
+  }
+
+  .student-chat-card {
+    min-height: calc(100vh - 320px);
+  }
+
+  .student-chat-thread {
+    padding: 16px 12px;
+  }
+
+  .student-message-bubble {
+    max-width: 88%;
+  }
+
+  .student-message-composer > div {
+    flex-wrap: wrap;
+  }
+
+  .student-message-send {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .student-schedule-days {
+    grid-template-columns: repeat(5, 78px);
+    overflow-x: auto;
+  }
+
+  .student-message-modal-backdrop {
+    align-items: end;
+    padding: 0;
+  }
+
+  .student-message-schedule {
+    width: 100%;
+    max-height: 90vh;
+    border-radius: 24px 24px 0 0;
+  }
+}
