@@ -21,6 +21,7 @@ import PersonalAssessments from "./pages/PersonalAssessments.jsx";
 import PersonalFinance from "./pages/PersonalFinance.jsx";
 import PersonalAgenda from "./pages/PersonalAgenda.jsx";
 import PersonalMessages from "./pages/PersonalMessages.jsx";
+import PersonalReports from "./pages/PersonalReports.jsx";
 import PersonalProgress from "./pages/PersonalProgress.jsx";
 import PersonalStudentProgress from "./pages/PersonalStudentProgress.jsx";
 import CoachIA from "./pages/CoachIA.jsx";
@@ -37,6 +38,7 @@ const pageMeta = {
   finance: ["Financeiro", "Visao geral da saude financeira do seu negocio."],
   agenda: ["Agenda", "Organize seus alunos e compromissos."],
   chat: ["Mensagens", "Converse com seus alunos e acompanhe todas as mensagens."],
+  reports: ["Relatorios", "Visao geral dos resultados do seu negocio e dos seus alunos."],
   assessments: ["Avaliacoes", "Registre, acompanhe e analise a evolucao fisica dos seus alunos."],
   payments: ["Pagamentos", "Acompanhe suas cobrancas, faturas e historico."],
   calendar: ["Calendario", "Sua consistencia e compromissos."],
@@ -52,6 +54,34 @@ const rolePath = {
   student: "/dashboard/aluno"
 };
 
+function pageFromPath(pathname, role) {
+  const path = (pathname || "").toLowerCase();
+  const studentRoutes = {
+    "/dashboard/aluno": "dashboard",
+    "/aluno/progresso": "progress",
+    "/aluno/dieta": "diet",
+    "/aluno/avaliacao": "assessments",
+    "/aluno/pagamentos": "payments",
+    "/aluno/calendario": "calendar",
+    "/aluno/mensagens": "messages",
+    "/aluno/coach-ia": "coach",
+    "/aluno/sobre-o-personal": "about-personal"
+  };
+  const personalRoutes = {
+    "/dashboard/personal": "dashboard",
+    "/dashboard/personal/dietas": "diet",
+    "/personal/avaliacoes": "assessments",
+    "/personal/progresso": "progress",
+    "/personal/financeiro": "finance",
+    "/personal/agenda": "agenda",
+    "/admin/mensagens": "chat",
+    "/admin/relatorios": "reports",
+    "/personal/coach-ia": "coach",
+    "/personal/sobre-o-personal": "about-personal"
+  };
+  if (role === "student") return studentRoutes[path] || "dashboard";
+  return personalRoutes[path] || "dashboard";
+}
 function pushRoute(role) {
   const path = rolePath[role] || rolePath.personal;
   window.history.replaceState(null, "", path);
@@ -107,8 +137,11 @@ export default function App() {
           const normalizedRole = user.role === "student" || user.role === "aluno" ? "student" : "personal";
           const normalizedUser = { ...user, role: normalizedRole };
           setSession(normalizedUser);
-          setActivePage("dashboard");
-          pushRoute(normalizedRole);
+          const requestedPage = pageFromPath(window.location.pathname, normalizedRole);
+          setActivePage(requestedPage);
+          if (requestedPage === "dashboard") {
+            pushRoute(normalizedRole);
+          }
         }}
       />
     );
@@ -149,6 +182,8 @@ export default function App() {
       window.history.replaceState(null, "", "/personal/agenda");
     } else if (!isStudent && page === "chat") {
       window.history.replaceState(null, "", "/admin/mensagens");
+    } else if (!isStudent && page === "reports") {
+      window.history.replaceState(null, "", "/admin/relatorios");
     } else if (!isStudent && page === "student-progress-detail") {
       window.history.replaceState(null, "", `/personal/aluno/${selectedStudentId || "aluno"}/progresso`);
     } else {
@@ -325,6 +360,7 @@ export default function App() {
       {activePage === "finance" && <PersonalFinance />}
       {activePage === "agenda" && <PersonalAgenda students={students} />}
       {activePage === "chat" && <PersonalMessages students={students} />}
+      {activePage === "reports" && <PersonalReports students={students} />}
       {activePage === "assessments" && <PersonalAssessments students={students} />}
       {activePage === "progress" && <PersonalProgress students={students} onOpenStudentProgress={openStudentProgress} />}
       {activePage === "student-progress-detail" && (
