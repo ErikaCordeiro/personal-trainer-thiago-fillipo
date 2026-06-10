@@ -64,8 +64,8 @@ export default function Sidebar({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const effectiveCollapsed = collapsed && !mobileOpen;
-  const inactive = new Set(["settings", "profile", "files"]);
   const isStudentMenu = navItems.some((item) => item.id === "payments");
+  const inactive = new Set(["profile"]);
   const assistantName = isStudentMenu ? "Assistente Fitness" : "Coach IA";
   const assistantText = isStudentMenu
     ? "Tire duvidas sobre execucao, musculos, dieta e avaliacao."

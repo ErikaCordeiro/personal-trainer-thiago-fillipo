@@ -16,12 +16,15 @@ import StudentAssessments from "./pages/StudentAssessments.jsx";
 import StudentPayments from "./pages/StudentPayments.jsx";
 import StudentCalendar from "./pages/StudentCalendar.jsx";
 import StudentMessages from "./pages/StudentMessages.jsx";
+import StudentFiles from "./pages/StudentFiles.jsx";
+import StudentSettings from "./pages/StudentSettings.jsx";
 import PersonalDiet from "./pages/PersonalDiet.jsx";
 import PersonalAssessments from "./pages/PersonalAssessments.jsx";
 import PersonalFinance from "./pages/PersonalFinance.jsx";
 import PersonalAgenda from "./pages/PersonalAgenda.jsx";
 import PersonalMessages from "./pages/PersonalMessages.jsx";
 import PersonalReports from "./pages/PersonalReports.jsx";
+import PersonalSettings from "./pages/PersonalSettings.jsx";
 import PersonalProgress from "./pages/PersonalProgress.jsx";
 import PersonalStudentProgress from "./pages/PersonalStudentProgress.jsx";
 import CoachIA from "./pages/CoachIA.jsx";
@@ -43,6 +46,8 @@ const pageMeta = {
   payments: ["Pagamentos", "Acompanhe suas cobrancas, faturas e historico."],
   calendar: ["Calendario", "Sua consistencia e compromissos."],
   messages: ["Mensagens", "Converse diretamente com seu personal."],
+  files: ["Arquivos", "Envie e organize seus arquivos para acompanhamento do seu personal."],
+  settings: ["Configuracoes", "Gerencie sua conta e preferencias."],
   progress: ["Progresso", "Historico, evolucao e indicadores de consistencia."],
   "student-progress-detail": ["Progresso individual", "Central individual de performance do aluno."],
   coach: ["Coach IA", "Seu assistente inteligente para treino, dieta e evolucao."],
@@ -64,6 +69,8 @@ function pageFromPath(pathname, role) {
     "/aluno/pagamentos": "payments",
     "/aluno/calendario": "calendar",
     "/aluno/mensagens": "messages",
+    "/aluno/arquivos": "files",
+    "/aluno/configuracoes": "settings",
     "/aluno/coach-ia": "coach",
     "/aluno/sobre-o-personal": "about-personal"
   };
@@ -76,6 +83,7 @@ function pageFromPath(pathname, role) {
     "/personal/agenda": "agenda",
     "/admin/mensagens": "chat",
     "/admin/relatorios": "reports",
+    "/admin/configuracoes": "settings",
     "/personal/coach-ia": "coach",
     "/personal/sobre-o-personal": "about-personal"
   };
@@ -170,6 +178,10 @@ export default function App() {
       window.history.replaceState(null, "", "/aluno/calendario");
     } else if (isStudent && page === "messages") {
       window.history.replaceState(null, "", "/aluno/mensagens");
+    } else if (isStudent && page === "files") {
+      window.history.replaceState(null, "", "/aluno/arquivos");
+    } else if (isStudent && page === "settings") {
+      window.history.replaceState(null, "", "/aluno/configuracoes");
     } else if (!isStudent && page === "diet") {
       window.history.replaceState(null, "", "/dashboard/personal/dietas");
     } else if (!isStudent && page === "assessments") {
@@ -184,6 +196,8 @@ export default function App() {
       window.history.replaceState(null, "", "/admin/mensagens");
     } else if (!isStudent && page === "reports") {
       window.history.replaceState(null, "", "/admin/relatorios");
+    } else if (!isStudent && page === "settings") {
+      window.history.replaceState(null, "", "/admin/configuracoes");
     } else if (!isStudent && page === "student-progress-detail") {
       window.history.replaceState(null, "", `/personal/aluno/${selectedStudentId || "aluno"}/progresso`);
     } else {
@@ -348,6 +362,8 @@ export default function App() {
         {activePage === "payments" && <StudentPayments student={students[0]} />}
         {activePage === "calendar" && <StudentCalendar student={students[0]} />}
         {activePage === "messages" && <StudentMessages student={students[0]} />}
+        {activePage === "files" && <StudentFiles student={students[0]} />}
+        {activePage === "settings" && <StudentSettings student={students[0]} />}
         {sharedPages}
       </StudentLayout>
     );
@@ -361,6 +377,7 @@ export default function App() {
       {activePage === "agenda" && <PersonalAgenda students={students} />}
       {activePage === "chat" && <PersonalMessages students={students} />}
       {activePage === "reports" && <PersonalReports students={students} />}
+      {activePage === "settings" && <PersonalSettings />}
       {activePage === "assessments" && <PersonalAssessments students={students} />}
       {activePage === "progress" && <PersonalProgress students={students} onOpenStudentProgress={openStudentProgress} />}
       {activePage === "student-progress-detail" && (
