@@ -1,11 +1,12 @@
 {
-  "name": "Personal Thiago Filippo",
+  "name": "Thiago Filippo",
   "short_name": "Thiago Filippo",
   "id": "/",
-  "description": "App premium para treinos, dieta, avaliações e progresso físico.",
-  "start_url": "/",
+  "description": "App premium para treinos, dieta, avaliacoes e progresso fisico.",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait-primary",
   "background_color": "#050505",
   "theme_color": "#050505",
@@ -23,11 +24,17 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
   "shortcuts": [
     {
-      "name": "Área do aluno",
+      "name": "Area do aluno",
       "short_name": "Aluno",
       "url": "/dashboard/aluno",
       "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192", "type": "image/png" }]

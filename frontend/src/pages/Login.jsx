@@ -18,7 +18,7 @@ export default function Login({ onLogin, onSignup }) {
     const handleBeforeInstallPrompt = (event) => {
       event.preventDefault();
       setInstallPrompt(event);
-      setInstallMessage("Instalacao disponivel. Toque em Instalar app para adicionar o app neste dispositivo.");
+      setInstallMessage("Instalacao disponivel no Android/Chrome. Toque em Instalar app para adicionar na tela inicial.");
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -38,17 +38,17 @@ export default function Login({ onLogin, onSignup }) {
 
     if (isIOS) {
       return isSafari
-        ? "No iPhone, toque em Compartilhar e depois em Adicionar a Tela de Inicio."
-        : "No iPhone, abra este link no Safari para instalar: Compartilhar > Adicionar a Tela de Inicio.";
+        ? "No iPhone/iPad: abra no Safari, toque no icone Compartilhar e escolha Adicionar a Tela de Inicio. O iOS nao permite instalar por botao direto."
+        : "No iPhone/iPad: copie/abra este link no Safari, toque em Compartilhar e depois em Adicionar a Tela de Inicio.";
     }
 
     if (isAndroid) {
       return isChrome
-        ? "No Android, toque no menu do Chrome e depois em Instalar app ou Adicionar a Tela inicial."
-        : "No Android, abra no Chrome e toque em Instalar app ou Adicionar a Tela inicial.";
+        ? "No Android/Chrome: toque em Instalar app. Se nao aparecer, abra o menu do Chrome e escolha Instalar app ou Adicionar a Tela inicial."
+        : "No Android: abra este link no Chrome e toque em Instalar app ou Adicionar a Tela inicial.";
     }
 
-    return "No computador, clique no icone de instalar na barra de endereco do Chrome/Edge ou use o menu do navegador > Instalar Personal Thiago Filippo.";
+    return "No computador: use Chrome/Edge e clique no icone de instalar na barra de endereco ou no menu do navegador > Instalar Thiago Filippo.";
   };
 
   const installApp = async () => {
@@ -62,7 +62,7 @@ export default function Login({ onLogin, onSignup }) {
     setInstallPrompt(null);
     setInstallMessage(
       choice.outcome === "accepted"
-        ? "Instalacao iniciada. O app deve aparecer na tela inicial ou nos aplicativos."
+        ? "Instalacao iniciada. O app Thiago Filippo deve aparecer na tela inicial ou na lista de aplicativos."
         : getInstallFallbackMessage()
     );
   };
@@ -154,7 +154,7 @@ export default function Login({ onLogin, onSignup }) {
             <button type="button" aria-label="Entrar com Apple"><Apple size={23} /></button>
           </div>
           <small>
-            Não tem uma conta?{" "}
+            Nao tem uma conta?{" "}
             <button className="signup-link-button" type="button" onClick={() => setSignupOpen(true)}>
               Cadastre-se
             </button>
