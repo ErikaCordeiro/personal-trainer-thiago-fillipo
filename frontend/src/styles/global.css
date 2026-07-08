@@ -17000,3 +17000,409 @@ body,
     width: 220px;
   }
 }
+
+/* Student responsive polish - keeps routes/access untouched and matches the premium personal shell */
+.student-layout-shell {
+  width: min(100%, 1440px) !important;
+  overflow-x: hidden;
+}
+
+.student-layout-shell,
+.student-layout-shell .student-main,
+.student-layout-shell .student-main > * {
+  min-width: 0;
+}
+
+.student-layout-shell .student-main {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(245, 245, 245, 0.12), transparent 24%),
+    radial-gradient(circle at 8% 20%, rgba(255, 255, 255, 0.055), transparent 28%),
+    linear-gradient(145deg, rgba(13, 13, 13, 0.94), rgba(3, 3, 3, 0.98)) !important;
+}
+
+.student-layout-shell .accent-name {
+  color: #f5f5f5;
+  text-shadow: 0 0 18px rgba(245, 245, 245, 0.34);
+}
+
+.student-layout-shell .xp-bar span,
+.student-layout-shell .compact-xp span,
+.student-layout-shell .score-line span {
+  background: linear-gradient(90deg, #777, #f7f7f7, #b8b8b8) !important;
+  box-shadow: 0 0 18px rgba(245, 245, 245, 0.28);
+}
+
+.student-layout-shell .neon-ring,
+.student-layout-shell .progress-ring {
+  background:
+    radial-gradient(circle at center, #101010 57%, transparent 58%),
+    conic-gradient(#f7f7f7 var(--value), rgba(255, 255, 255, 0.12) 0) !important;
+  box-shadow: inset 0 0 28px rgba(255, 255, 255, 0.08), 0 0 30px rgba(245, 245, 245, 0.18);
+}
+
+.student-layout-shell .student-premium-dashboard,
+.student-layout-shell .student-training-page,
+.student-layout-shell .student-diet-page,
+.student-layout-shell .student-assessments-page,
+.student-layout-shell .student-progress-page,
+.student-layout-shell .student-payments-page,
+.student-layout-shell .student-calendar-page,
+.student-layout-shell .student-messages-page,
+.student-layout-shell .student-files-page,
+.student-layout-shell .student-settings-page,
+.student-layout-shell .about-personal-page,
+.student-layout-shell .coach-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 1180px) {
+  .student-layout-shell {
+    grid-template-columns: 92px minmax(0, 1fr) !important;
+    gap: 16px;
+    padding: 14px;
+  }
+
+  .student-layout-shell .student-main {
+    padding: 20px;
+    border-radius: 24px;
+  }
+
+  .student-layout-shell .topbar h1 {
+    font-size: clamp(1.8rem, 4.8vw, 3rem);
+  }
+
+  .student-premium-dashboard {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .student-score-hero,
+  .student-workout-hero {
+    min-height: 250px;
+    grid-template-columns: minmax(0, 0.9fr) minmax(190px, 0.7fr);
+    padding: 24px;
+  }
+
+  .student-score-hero img {
+    width: min(100%, 260px);
+  }
+
+  .student-workout-hero img {
+    width: min(100%, 210px);
+  }
+}
+
+@media (max-width: 980px) {
+  .student-layout-shell {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 100dvh !important;
+    padding: 0 !important;
+  }
+
+  .student-layout-shell .student-main {
+    width: 100% !important;
+    min-height: 100dvh;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    padding: 22px 18px calc(112px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .student-layout-shell .sidebar,
+  .student-layout-shell .sidebar.collapsed {
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    z-index: 120 !important;
+    width: min(86vw, 330px) !important;
+    max-width: min(86vw, 330px) !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    display: flex !important;
+    padding: 18px !important;
+    border-radius: 0 26px 26px 0 !important;
+    transform: translateX(-110%) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .student-layout-shell .sidebar.mobile-open,
+  .student-layout-shell .sidebar.collapsed.mobile-open {
+    transform: translateX(0) !important;
+  }
+
+  .student-layout-shell .sidebar .brand-lockup,
+  .student-layout-shell .sidebar .nav-item span,
+  .student-layout-shell .sidebar .sidebar-footer,
+  .student-layout-shell .sidebar .sidebar-profile,
+  .student-layout-shell .sidebar .coach-card,
+  .student-layout-shell .sidebar .collapse-toggle span {
+    display: initial !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .student-layout-shell .sidebar .brand-lockup {
+    display: grid !important;
+  }
+
+  .student-layout-shell .sidebar .nav-item span,
+  .student-layout-shell .sidebar .collapse-toggle span {
+    display: inline !important;
+  }
+
+  .student-layout-shell .sidebar .sidebar-footer,
+  .student-layout-shell .sidebar .coach-card {
+    display: grid !important;
+  }
+
+  .student-layout-shell .sidebar .sidebar-profile {
+    display: flex !important;
+  }
+
+  .student-layout-shell .sidebar .sidebar-header {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) !important;
+    gap: 12px;
+  }
+
+  .student-layout-shell .sidebar .nav-list {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    margin-top: 22px !important;
+  }
+
+  .student-layout-shell .sidebar .nav-item,
+  .student-layout-shell .sidebar .sidebar-toggle {
+    width: 100% !important;
+    min-height: 48px !important;
+    justify-content: flex-start !important;
+    padding: 0 14px !important;
+  }
+
+  .student-layout-shell .sidebar .lion-mark {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  .student-layout-shell .sidebar-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 119 !important;
+    background: rgba(0, 0, 0, 0.68) !important;
+    backdrop-filter: blur(8px) !important;
+  }
+
+  .student-layout-shell .bottom-nav,
+  .student-layout-shell .student-bottom-nav {
+    position: fixed !important;
+    left: max(12px, env(safe-area-inset-left)) !important;
+    right: max(12px, env(safe-area-inset-right)) !important;
+    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 74px !important;
+    padding: 8px !important;
+    border-radius: 28px !important;
+    transform: none !important;
+    z-index: 95 !important;
+  }
+
+  .student-layout-shell .bottom-nav button {
+    min-width: 0;
+    padding: 0 4px;
+    font-size: 0.75rem;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 760px) {
+  .student-layout-shell .topbar {
+    position: relative;
+    display: grid !important;
+    min-height: 170px;
+    margin-bottom: 18px;
+    padding: 20px 82px 16px;
+    place-items: start center;
+    text-align: center;
+  }
+
+  .student-layout-shell .topbar > div:first-child {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .student-layout-shell .topbar h1 {
+    margin-top: 0;
+    font-size: clamp(1.65rem, 7vw, 2.35rem);
+    line-height: 1.06;
+  }
+
+  .student-layout-shell .topbar > div:first-child > span {
+    display: block;
+    max-width: 280px;
+    margin: 0 auto;
+    color: rgba(245, 245, 245, 0.68);
+  }
+
+  .student-layout-shell .topbar-actions {
+    position: absolute;
+    inset: 18px 16px auto;
+    display: flex !important;
+    width: auto !important;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .student-layout-shell .topbar-actions .mobile-menu-trigger,
+  .student-layout-shell .notification-shell,
+  .student-layout-shell .notification-shell .icon-button {
+    display: inline-grid !important;
+  }
+
+  .student-layout-shell .topbar-actions > .icon-button:not(.mobile-menu-trigger),
+  .student-layout-shell .compact-search,
+  .student-layout-shell .glow-button,
+  .student-layout-shell .header-date,
+  .student-layout-shell .profile-chip {
+    display: none !important;
+  }
+
+  .student-layout-shell .icon-button {
+    width: 62px;
+    height: 62px;
+    border-radius: 20px;
+  }
+
+  .student-layout-shell .notification-popover {
+    position: fixed;
+    top: 84px;
+    left: 14px;
+    right: 14px;
+    width: auto;
+  }
+
+  .student-premium-dashboard {
+    gap: 14px;
+    padding-bottom: 24px;
+  }
+
+  .student-score-hero,
+  .student-workout-hero,
+  .student-coach-panel {
+    grid-template-columns: 1fr !important;
+  }
+
+  .student-score-hero {
+    position: relative;
+    min-height: 390px;
+    align-content: start;
+    padding: 26px;
+  }
+
+  .student-score-hero > div {
+    position: relative;
+    z-index: 2;
+  }
+
+  .student-score-hero img {
+    position: absolute;
+    right: -18px;
+    bottom: -76px;
+    z-index: 1;
+    width: min(78vw, 300px);
+    opacity: 0.82;
+    pointer-events: none;
+  }
+
+  .student-score-number strong {
+    font-size: clamp(3.4rem, 17vw, 5.3rem);
+  }
+
+  .student-workout-hero {
+    min-height: 0;
+  }
+
+  .student-workout-hero img,
+  .student-coach-panel img {
+    width: min(58vw, 210px);
+    justify-self: center;
+  }
+
+  .student-metrics-grid,
+  .student-quick-access > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px;
+  }
+
+  .student-metric-card {
+    min-height: 132px;
+    padding: 16px;
+  }
+
+  .student-metric-card strong {
+    font-size: 1.65rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .student-layout-shell .student-main {
+    padding: 16px 12px calc(104px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .student-layout-shell .topbar {
+    min-height: 156px;
+    padding: 18px 68px 12px;
+  }
+
+  .student-layout-shell .icon-button {
+    width: 54px;
+    height: 54px;
+    border-radius: 18px;
+  }
+
+  .student-score-hero,
+  .student-streak-card,
+  .student-mini-evolution,
+  .student-workout-hero,
+  .student-progress-card,
+  .student-metric-card,
+  .student-physical-chart,
+  .student-diet-card,
+  .student-coach-panel,
+  .student-quick-access,
+  .student-next-assessment {
+    border-radius: 22px !important;
+    padding: 18px !important;
+  }
+
+  .student-score-hero {
+    min-height: 350px;
+  }
+
+  .student-layout-shell .student-bottom-nav {
+    min-height: 66px !important;
+    border-radius: 24px !important;
+  }
+
+  .student-layout-shell .student-bottom-nav button {
+    font-size: 0.66rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .student-metrics-grid,
+  .student-quick-access > div {
+    grid-template-columns: 1fr !important;
+  }
+
+  .student-layout-shell .student-bottom-nav button {
+    font-size: 0.6rem;
+  }
+}
