@@ -24,4 +24,5 @@ COPY --from=frontend /app/frontend/dist ./frontend/dist
 WORKDIR /app/backend
 COPY start.sh ./start.sh
 
-CMD ["sh", "-c", "python -m app.db.seed && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "python -m app.db.seed || echo '[startup] seed failed; starting API anyway'; exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+

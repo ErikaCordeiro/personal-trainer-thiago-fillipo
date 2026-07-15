@@ -9,5 +9,5 @@ else
   cd "$SCRIPT_DIR"
 fi
 
-python -m app.db.seed
-uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}"
+python -m app.db.seed || echo "[startup] seed failed; starting API anyway"
+exec uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}"
