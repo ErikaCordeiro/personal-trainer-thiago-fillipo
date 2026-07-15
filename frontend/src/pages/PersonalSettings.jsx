@@ -31,7 +31,7 @@ import {
   Users
 } from "lucide-react";
 
-const studentConfig = ["Aprovacao automatica de alunos", "Exigir avaliacao inicial", "Exigir foto de evolucao", "Permitir agendamento online", "Permitir remarcacao"];
+const studentConfig = ["Aprovacao automatica de alunos", "Exigir avaliação inicial", "Exigir foto de evolução", "Permitir agendamento online", "Permitir remarcacao"];
 const adminNotifications = ["Novo aluno", "Consulta agendada", "Consulta remarcada", "Novo pagamento", "Novo arquivo enviado", "Nova mensagem"];
 const aiSettings = ["Habilitar Coach IA", "Analise de progresso", "Analise financeira", "Recomendacoes inteligentes", "Insights de alunos"];
 const privacySettings = ["Consentimento obrigatorio (LGPD)", "Compartilhamento de dados", "Armazenamento de exames"];
@@ -73,8 +73,8 @@ export default function PersonalSettings() {
     <section className="admin-settings-page">
       <header className="admin-settings-header">
         <div>
-          <h2>Configuracoes</h2>
-          <p>Gerencie todas as configuracoes do seu negocio.</p>
+          <h2>Configurações</h2>
+          <p>Gerencie todas as configurações do seu neg?cio.</p>
         </div>
         <div className="admin-settings-header-actions">
           <button type="button" aria-label="Notificacoes"><Bell size={21} /><i>3</i></button>
@@ -89,11 +89,11 @@ export default function PersonalSettings() {
           <small>Personal</small>
           <h3>Thiago Filippo</h3>
           <span className="admin-plan-chip"><Trophy size={16} /> Plano Premium</span>
-          <p>Disciplina - Foco - Proposito</p>
+          <p>Disciplina - Foco - Propósito</p>
         </div>
-        <HeroMetric icon={Users} value="128" label="Alunos ativos" trend="+12% este mes" />
-        <HeroMetric icon={Dumbbell} value="482" label="Treinos concluidos" trend="+18% este mes" />
-        <HeroMetric icon={DollarSign} value="R$ 24.580" label="Faturados este mes" trend="+15% este mes" />
+        <HeroMetric icon={Users} value="128" label="Alunos ativos" trend="+12% este mês" />
+        <HeroMetric icon={Dumbbell} value="482" label="Treinos concluidos" trend="+18% este mês" />
+        <HeroMetric icon={DollarSign} value="R$ 24.580" label="Faturados este mês" trend="+15% este mês" />
         <img src="/lion-juda-logo.png" alt="Leao de Juda" />
       </article>
 
@@ -127,14 +127,14 @@ export default function PersonalSettings() {
           <button className="admin-settings-wide" type="button" onClick={() => notify("Central de marca aberta para personalizacao.")}>Personalizar marca</button>
         </SettingsCard>
 
-        <SettingsCard number="3" title="Configuracao de Alunos" icon={Users}>
+        <SettingsCard number="3" title="Configuração de Alunos" icon={Users}>
           <ToggleList labels={studentConfig} keys={["automaticApproval", "initialAssessment", "progressPhoto", "onlineSchedule", "reschedule"]} toggles={toggles} onToggle={toggle} />
           <label className="admin-settings-inline-select"><span>Limite de remarcacoes</span><select value={remakeLimit} onChange={(event) => setRemakeLimit(event.target.value)}><option>1</option><option>2</option><option>3</option><option>Sem limite</option></select></label>
-          <button className="admin-settings-wide" type="button" onClick={() => notify("Configuracoes de alunos salvas.")}>Salvar configuracoes</button>
+          <button className="admin-settings-wide" type="button" onClick={() => notify("Configurações de alunos salvas.")}>Salvar configurações</button>
         </SettingsCard>
 
         <SettingsCard number="4" title="Agenda" icon={CalendarDays}>
-          <AdminLine label="Dias de atendimento" action="Configurar horarios" onClick={() => notify("Configuracao de horarios aberta.")} />
+          <AdminLine label="Dias de atendimento" action="Configurar horários" onClick={() => notify("Configuração de horários aberta.")} />
           <label className="admin-settings-inline-select"><span>Intervalo entre consultas</span><select defaultValue="60"><option value="30">30 minutos</option><option value="45">45 minutos</option><option value="60">60 minutos</option></select></label>
           <AdminLine label="Feriados" action="Gerenciar" onClick={() => notify("Gerenciamento de feriados aberto.")} />
           <AdminLine label="Bloqueios" action="Gerenciar" onClick={() => notify("Bloqueios de agenda abertos.")} />
@@ -149,17 +149,17 @@ export default function PersonalSettings() {
             <span><small>Plano mensal</small><strong>R$ 149,90</strong></span>
             <span><small>Plano trimestral</small><strong>R$ 399,90</strong></span>
           </div>
-          <button className="admin-settings-wide" type="button" onClick={() => notify("Configuracao de pagamentos aberta.")}>Configurar pagamentos</button>
+          <button className="admin-settings-wide" type="button" onClick={() => notify("Configuração de pagamentos aberta.")}>Configurar pagamentos</button>
         </SettingsCard>
 
         <SettingsCard number="6" title="Notificacoes" icon={Bell}>
           <ToggleList labels={adminNotifications} keys={["newStudent", "appointment", "rescheduled", "payment", "file", "message"]} toggles={toggles} onToggle={toggle} />
-          <button className="admin-settings-wide" type="button" onClick={() => notify("Preferencias de notificacao atualizadas.")}>Gerenciar notificacoes</button>
+          <button className="admin-settings-wide" type="button" onClick={() => notify("Preferencias de notifica??o atualizadas.")}>Gerenciar notifica??es</button>
         </SettingsCard>
 
         <SettingsCard number="7" title="Coach IA" icon={Bot}>
           <ToggleList labels={aiSettings} keys={["coach", "progressAi", "financeAi", "smartRecommendations", "studentInsights"]} toggles={toggles} onToggle={toggle} />
-          <button className="admin-settings-wide" type="button" onClick={() => notify("Configuracoes do Coach IA abertas.")}>Configurar IA</button>
+          <button className="admin-settings-wide" type="button" onClick={() => notify("Configurações do Coach IA abertas.")}>Configurar IA</button>
         </SettingsCard>
 
         <SettingsCard number="8" title="Aplicativo" icon={Smartphone}>
@@ -180,7 +180,7 @@ export default function PersonalSettings() {
 
         <SettingsCard number="10" title="Backup e Exportacao" icon={Database}>
           <AdminLine label="Exportar alunos" action="Exportar" onClick={() => notify("Exportacao de alunos iniciada.")} />
-          <AdminLine label="Exportar avaliacoes" action="Exportar" onClick={() => notify("Exportacao de avaliacoes iniciada.")} />
+          <AdminLine label="Exportar avaliações" action="Exportar" onClick={() => notify("Exportacao de avaliações iniciada.")} />
           <AdminLine label="Exportar financeiro" action="Exportar" onClick={() => notify("Exportacao financeira iniciada.")} />
           <AdminLine label="Backup completo" action="Realizar backup" onClick={() => notify("Backup completo iniciado.")} />
           <p>Ultimo backup: 24/05/2026 as 03:15</p>
@@ -195,13 +195,13 @@ export default function PersonalSettings() {
         <SettingsCard number="12" title="Estatisticas da Conta" icon={FileText}>
           <div className="admin-stats-lines">
             <span><small>Alunos ativos</small><strong>128</strong></span>
-            <span><small>Avaliacoes realizadas</small><strong>342</strong></span>
+            <span><small>Avaliações realizadas</small><strong>342</strong></span>
             <span><small>Treinos cadastrados</small><strong>1.248</strong></span>
             <span><small>Dietas cadastradas</small><strong>892</strong></span>
             <span><small>Receita total</small><strong>R$ 24.580</strong></span>
             <span><small>Dias utilizando o sistema</small><strong>187 dias</strong></span>
           </div>
-          <button className="admin-settings-wide" type="button">Ver relatorios completos</button>
+          <button className="admin-settings-wide" type="button">Ver relatórios completos</button>
         </SettingsCard>
 
         <article className="admin-settings-danger-zone">
@@ -214,7 +214,7 @@ export default function PersonalSettings() {
 
         <article className="admin-settings-footer">
           <img src="/lion-juda-logo.png" alt="Thiago Filippo" />
-          <div><p>Voce esta no controle do seu negocio. Cada configuracao e um passo para transformar vidas e gerar resultados.</p><strong>Thiago Filippo</strong><small>Personal Trainer</small></div>
+          <div><p>Voce esta no controle do seu neg?cio. Cada configuração e um passo para transformar vidas e gerar resultados.</p><strong>Thiago Filippo</strong><small>Personal Trainer</small></div>
           <img src="/lion-juda-logo.png" alt="" />
         </article>
       </div>

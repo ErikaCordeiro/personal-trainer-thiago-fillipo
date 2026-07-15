@@ -59,7 +59,7 @@ export default function StudentLayout({
           <button type="button" onClick={() => onNavigate("dashboard")}>Inicio</button>
           <button type="button" onClick={() => onNavigate("student-view")}>Treinos</button>
           <button type="button" onClick={() => onNavigate("diet")}>Dieta</button>
-          <button type="button" onClick={() => onNavigate("calendar")}>Calendario</button>
+          <button type="button" onClick={() => onNavigate("calendar")}>Calendário</button>
           <button type="button" onClick={() => onNavigate("messages")}>Mensagens</button>
         </nav>
       </main>

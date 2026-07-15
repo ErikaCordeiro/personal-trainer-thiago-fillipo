@@ -37,7 +37,7 @@ const availableDays = [
 const availableTimes = ["08:00", "09:00", "10:00", "14:00", "15:00", "16:00", "18:00", "19:00", "20:00"];
 
 const events = [
-  ["Avaliacao Fisica", "28/06", "Sabado - 09:00", "assessment"],
+  ["Avaliação Física", "28/06", "Sábado - 09:00", "assessment"],
   ["Atualizacao da Dieta", "30/06", "Segunda - 10:00", "diet"],
   ["Treino Inferior B", "01/07", "Terca - 18:00", "workout"]
 ];
@@ -57,7 +57,7 @@ export default function StudentCalendar({ student }) {
     <section className="student-calendar-page">
       <div className="student-calendar-header">
         <div>
-          <h2>Calendario</h2>
+          <h2>Calendário</h2>
           <p>Sua consistencia e compromissos.</p>
         </div>
         <button type="button" aria-label="Notificacoes"><Bell size={22} /></button>
@@ -71,7 +71,7 @@ export default function StudentCalendar({ student }) {
           <span>Sequencia atual</span>
           <strong>18</strong>
           <p>dias seguidos</p>
-          <small><CalendarDays size={14} /> Este mes</small>
+          <small><CalendarDays size={14} /> Este mês</small>
         </div>
         <div className="calendar-streak-side">
           <p><Trophy size={16} /> Melhor sequencia <strong>42 dias</strong></p>
@@ -105,7 +105,7 @@ export default function StudentCalendar({ student }) {
         </div>
         <div className="calendar-legend">
           <span><i className="workout" /> Treino</span>
-          <span><i className="assessment" /> Avaliacao</span>
+          <span><i className="assessment" /> Avaliação</span>
           <span><i className="diet" /> Dieta</span>
           <span><i className="checkin" /> Check-in</span>
           <span><i className="none" /> Sem atividade</span>
@@ -140,7 +140,7 @@ export default function StudentCalendar({ student }) {
 
       <div className="student-calendar-grid">
         <article className="calendar-mini-card adherence">
-          <h3>Aderencia geral</h3>
+          <h3>Aderência geral</h3>
           <div className="calendar-progress-ring"><strong>87%</strong></div>
           <p>Muito consistente. Continue assim para alcancar seus objetivos.</p>
         </article>
@@ -179,7 +179,7 @@ export default function StudentCalendar({ student }) {
           <div className="calendar-day-detail">
             <p><DumbbellDot /> Treino realizado: Costas, ombros e gluteos</p>
             <p><Droplets size={17} /> Agua consumida: 2,1 L</p>
-            <p><Target size={17} /> Aderencia alimentar: 92%</p>
+            <p><Target size={17} /> Aderência alimentar: 92%</p>
             <p><Check size={17} /> Check-in concluido</p>
             <p>Observacao do personal: mantenha o ritmo e priorize descanso.</p>
           </div>
@@ -187,7 +187,7 @@ export default function StudentCalendar({ student }) {
       )}
 
       {scheduleOpen && (
-        <CalendarModal title="Agendar consulta" subtitle="Escolha o melhor dia e horario para seu retorno." onClose={() => setScheduleOpen(false)}>
+        <CalendarModal title="Agendar consulta" subtitle="Escolha o melhor dia e horário para seu retorno." onClose={() => setScheduleOpen(false)}>
           <div className="schedule-personal-card">
             <img src="/erika-gomes.jpeg" alt="" />
             <div><span>Personal</span><strong>Thiago Filippo</strong></div>
@@ -220,7 +220,7 @@ export default function StudentCalendar({ student }) {
                 {time}
                 {selectedTime === time && <Check size={18} />}
               </button>
-            )) : <p>Nenhum horario disponivel no momento. Entre em contato com seu personal.</p>}
+            )) : <p>Nenhum horário disponivel no momento. Entre em contato com seu personal.</p>}
           </div>
 
           <div className="schedule-summary">
@@ -233,7 +233,7 @@ export default function StudentCalendar({ student }) {
 
           <button className="calendar-metal-button" type="button" onClick={() => setScheduleOpen(false)}>Confirmar agendamento</button>
           <button className="calendar-ghost-button" type="button" onClick={() => setScheduleOpen(false)}>Cancelar</button>
-          <p className="schedule-note">Ao confirmar, seu horario sera reservado e voce recebera uma notificacao com todos os detalhes.</p>
+          <p className="schedule-note">Ao confirmar, seu horário ser? reservado e voc? receber? uma notifica??o com todos os detalhes.</p>
         </CalendarModal>
       )}
     </section>

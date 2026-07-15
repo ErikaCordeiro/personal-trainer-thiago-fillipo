@@ -116,7 +116,7 @@ export default function Header({
           <CalendarDays size={19} />
           <div>
             <strong>21 de Junho, 2025</strong>
-            <small>Sabado</small>
+            <small>Sábado</small>
           </div>
         </div>
         <div className="profile-chip">
@@ -140,7 +140,7 @@ export default function Header({
 
 function activeSentence(title, subtitle) {
   if (title === "Dashboard do Personal") {
-    return "Disciplina hoje, liberdade amanha.";
+    return "Disciplina hoje, liberdade amanh?.";
   }
   return subtitle;
 }

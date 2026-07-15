@@ -25,30 +25,30 @@ export const personalNavItems = [
   { id: "students", label: "Alunos", icon: Users },
   { id: "workout-builder", label: "Treinos", icon: Dumbbell },
   { id: "diet", label: "Dietas", icon: Apple },
-  { id: "assessments", label: "Avaliacoes", icon: ClipboardCheck },
+  { id: "assessments", label: "Avaliações", icon: ClipboardCheck },
   { id: "progress", label: "Progresso", icon: LineChart },
   { id: "finance", label: "Financeiro", icon: CreditCard },
   { id: "agenda", label: "Agenda", icon: CalendarDays },
   { id: "chat", label: "Mensagens", icon: MessageCircle },
-  { id: "reports", label: "Relatorios", icon: FileText },
+  { id: "reports", label: "Relatórios", icon: FileText },
   { id: "coach", label: "Coach IA", icon: Bot },
   { id: "about-personal", label: "Sobre o Personal", icon: Info },
-  { id: "settings", label: "Configuracoes", icon: Settings }
+  { id: "settings", label: "Configurações", icon: Settings }
 ];
 
 export const studentNavItems = [
   { id: "dashboard", label: "Inicio", icon: Home },
   { id: "student-view", label: "Treinos", icon: Dumbbell },
   { id: "diet", label: "Dieta", icon: Apple },
-  { id: "assessments", label: "Avaliacoes", icon: ClipboardCheck },
+  { id: "assessments", label: "Avaliações", icon: ClipboardCheck },
   { id: "progress", label: "Progresso", icon: BarChart3 },
   { id: "payments", label: "Pagamentos", icon: CreditCard },
-  { id: "calendar", label: "Calendario", icon: CalendarDays },
+  { id: "calendar", label: "Calendário", icon: CalendarDays },
   { id: "messages", label: "Mensagens", icon: MessageCircle },
   { id: "coach", label: "Assistente Fitness", icon: Bot },
   { id: "files", label: "Arquivos", icon: FileText },
   { id: "about-personal", label: "Sobre o Personal", icon: Info },
-  { id: "settings", label: "Configuracoes", icon: Settings }
+  { id: "settings", label: "Configurações", icon: Settings }
 ];
 
 export default function Sidebar({
@@ -68,8 +68,8 @@ export default function Sidebar({
   const inactive = new Set(["profile"]);
   const assistantName = isStudentMenu ? "Assistente Fitness" : "Coach IA";
   const assistantText = isStudentMenu
-    ? "Tire duvidas sobre execucao, musculos, dieta e avaliacao."
-    : "Pergunte sobre treinos, dieta, evolucao e mais.";
+    ? "Tire duvidas sobre execu??o, musculos, dieta e avaliação."
+    : "Pergunte sobre treinos, dieta, evolução e mais.";
   const handleNavigate = (item) => {
     onNavigate(inactive.has(item.id) ? "dashboard" : item.id);
   };

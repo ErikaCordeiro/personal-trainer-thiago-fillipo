@@ -21,36 +21,36 @@ import {
 } from "lucide-react";
 
 const kpis = [
-  ["Peso atual", "72,4 kg", "â†“ 2,8 kg vs mes anterior"],
-  ["Gordura corporal", "24,3%", "â†“ 2,1% vs mes anterior"],
-  ["Massa magra", "54,1 kg", "â†‘ 1,4 kg vs mes anterior"],
-  ["IMC", "25,6", "â†“ 1,0 vs mes anterior"],
-  ["Agua corporal", "39,6 L", "â†‘ 0,8 L vs mes anterior"],
-  ["Aderencia geral", "78%", "â†‘ 6% vs mes anterior"],
-  ["Treinos concluidos", "87%", "â†‘ 12% vs mes anterior"]
+  ["Peso atual", "72,4 kg", "↓ 2,8 kg vs mês anterior"],
+  ["Gordura corporal", "24,3%", "↓ 2,1% vs mês anterior"],
+  ["Massa magra", "54,1 kg", "↑ 1,4 kg vs mês anterior"],
+  ["IMC", "25,6", "↓ 1,0 vs mês anterior"],
+  ["Agua corporal", "39,6 L", "↑ 0,8 L vs mês anterior"],
+  ["Aderência geral", "78%", "↑ 6% vs mês anterior"],
+  ["Treinos concluidos", "87%", "↑ 12% vs mês anterior"]
 ];
 
-const tabs = ["Visao geral", "Treinos", "Dietas", "Avaliações", "Evolução visual", "Check-ins", "Anotacoes", "Chat"];
+const tabs = ["Visão geral", "Treinos", "Dietas", "Avaliações", "Evolução visual", "Check-ins", "Anotacoes", "Chat"];
 
 const measures = [
-  ["Cintura", "78,2 cm", "81,1 cm", "-2,9 cm â†“"],
-  ["Abdomen", "85,4 cm", "88,7 cm", "-3,3 cm â†“"],
-  ["Peito", "98,0 cm", "96,2 cm", "+1,8 cm â†‘"],
-  ["Quadril", "102,3 cm", "104,1 cm", "-1,8 cm â†“"],
-  ["Braco", "30,5 cm", "30,0 cm", "+0,5 cm â†‘"],
-  ["Coxa", "56,1 cm", "56,9 cm", "-0,8 cm â†“"],
-  ["Panturrilha", "36,2 cm", "36,6 cm", "-0,4 cm â†“"]
+  ["Cintura", "78,2 cm", "81,1 cm", "-2,9 cm ↓"],
+  ["Abdômen", "85,4 cm", "88,7 cm", "-3,3 cm ↓"],
+  ["Peito", "98,0 cm", "96,2 cm", "+1,8 cm ↑"],
+  ["Quadril", "102,3 cm", "104,1 cm", "-1,8 cm ↓"],
+  ["Braço", "30,5 cm", "30,0 cm", "+0,5 cm ↑"],
+  ["Coxa", "56,1 cm", "56,9 cm", "-0,8 cm ↓"],
+  ["Panturrilha", "36,2 cm", "36,6 cm", "-0,4 cm ↓"]
 ];
 
 const insights = [
   "Erika esta entre os alunos com maior evolução do mes.",
-  "Aderencia alimentar aumentou 8% em relacao ao mes anterior.",
+  "Aderência alimentar aumentou 8% em relacao ao mês anterior.",
   "Sugestao: aumentar carga nos exercicios de membros inferiores."
 ];
 
 const alerts = [
   ["Baixa ingestao proteica", "3 dias abaixo da meta"],
-  ["Hidratacao abaixo do ideal", "Media dos ultimos 3 dias"],
+  ["Hidratação abaixo do ideal", "Media dos ultimos 3 dias"],
   ["Excelente evolução", "Massa magra aumentando"]
 ];
 
@@ -61,9 +61,9 @@ export default function PersonalStudentProgress({ student, onBack }) {
   return (
     <section className="student-performance-page">
       <div className="student-performance-topbar">
-        <button type="button" onClick={onBack}>â† Voltar para alunos</button>
+        <button type="button" onClick={onBack}>← Voltar para alunos</button>
         <div>
-          <button type="button"><FileText size={17} /> Enviar relatorio</button>
+          <button type="button"><FileText size={17} /> Enviar relatório</button>
           <button type="button"><MoreVertical size={17} /> Mais acoes</button>
         </div>
       </div>
@@ -133,16 +133,16 @@ export default function PersonalStudentProgress({ student, onBack }) {
             <strong>-2,8 kg</strong>
             <span>Periodo anterior</span>
             <strong>-0,9 kg</strong>
-            <em>-1,9 kg â€¢ 211% melhor</em>
+            <em>-1,9 kg • 211% melhor</em>
           </aside>
         </article>
 
         <article className="athlete-panel workout-performance">
-          <div className="section-heading"><h2>Performance de treino</h2><select defaultValue="month"><option value="month">Este mes</option></select></div>
+          <div className="section-heading"><h2>Performance de treino</h2><select defaultValue="month"><option value="month">Este mês</option></select></div>
           <div className="training-kpis">
             <div><span>Treinos concluidos</span><strong>21 / 24</strong><small>87%</small></div>
-            <div><span>Frequencia semanal</span><strong>5,2</strong><small>Otimo</small></div>
-            <div><span>Volume total</span><strong>18.450 kg</strong><small>â†‘ 15%</small></div>
+            <div><span>Frequência semanal</span><strong>5,2</strong><small>Otimo</small></div>
+            <div><span>Volume total</span><strong>18.450 kg</strong><small>↑ 15%</small></div>
           </div>
           <div className="training-details">
             <div>
@@ -162,17 +162,17 @@ export default function PersonalStudentProgress({ student, onBack }) {
       <div className="athlete-secondary-grid">
         <article className="athlete-panel diet-overview">
           <h2>Progresso da dieta</h2>
-          <div className="athlete-ring"><strong>74%</strong><span>Aderencia alimentar</span></div>
+          <div className="athlete-ring"><strong>74%</strong><span>Aderência alimentar</span></div>
           <ul>
             <li><Flame size={18} /> 1.812 kcal <small>Media de calorias</small></li>
             <li><Apple size={18} /> 128 g <small>Media de proteinas</small></li>
             <li><BarChart3 size={18} /> 5,2 refeicoes <small>Media por dia</small></li>
-            <li><Droplets size={18} /> 2,1 L <small>Media de hidratacao</small></li>
+            <li><Droplets size={18} /> 2,1 L <small>Media de hidratação</small></li>
           </ul>
         </article>
 
         <article className="athlete-panel hydration-card">
-          <h2>Hidratacao</h2>
+          <h2>Hidratação</h2>
           <strong>2,1 L</strong>
           <span>Meta: 2,5 L</span>
           <div className="water-bars">
@@ -196,7 +196,7 @@ export default function PersonalStudentProgress({ student, onBack }) {
             {["Frontal", "Lateral", "Traseira"].map((label) => (
               <div key={label}>
                 <span>{label}</span>
-                <div><img src={athlete.avatar || "/erika-gomes.jpeg"} alt={`${label} antes`} /><b>â€º</b><img src={athlete.avatar || "/erika-gomes.jpeg"} alt={`${label} depois`} /></div>
+                <div><img src={athlete.avatar || "/erika-gomes.jpeg"} alt={`${label} antes`} /><b>›</b><img src={athlete.avatar || "/erika-gomes.jpeg"} alt={`${label} depois`} /></div>
               </div>
             ))}
           </div>
@@ -204,7 +204,7 @@ export default function PersonalStudentProgress({ student, onBack }) {
         </article>
 
         <article className="athlete-panel measure-table-panel">
-          <div className="section-heading"><h2>Evolução das medidas</h2><select defaultValue="month"><option value="month">Este mes</option></select></div>
+          <div className="section-heading"><h2>Evolução das medidas</h2><select defaultValue="month"><option value="month">Este mês</option></select></div>
           {measures.map(([label, current, previous, diff]) => (
             <div className="athlete-measure-row" key={label}><span>{label}</span><strong>{current}</strong><small>{previous}</small><em className={diff.includes("+") ? "up" : ""}>{diff}</em></div>
           ))}
@@ -212,12 +212,12 @@ export default function PersonalStudentProgress({ student, onBack }) {
 
         <article className="athlete-panel private-notes">
           <div className="section-heading"><h2>Anotacoes do personal</h2><button type="button">Ver todas</button></div>
-          <span>18/06/2025 â€¢ Hoje</span>
+          <span>18/06/2025 • Hoje</span>
           <p>Excelente evolução. Reducao significativa de gordura corporal e aumento de massa magra. Manter foco na dieta e treinos de forca.</p>
           <strong>Pontos fortes:</strong>
-          <ul><li>Alta consistencia</li><li>Boa execucao dos treinos</li><li>Excelente disciplina alimentar</li></ul>
+          <ul><li>Alta consistencia</li><li>Boa execu??o dos treinos</li><li>Excelente disciplina alimentar</li></ul>
           <strong>Pontos de atencao:</strong>
-          <ul><li>Aumentar ingestao de proteinas</li><li>Melhorar hidratacao nos dias de treino</li></ul>
+          <ul><li>Aumentar ingestao de proteinas</li><li>Melhorar hidratação nos dias de treino</li></ul>
           <button type="button"><NotebookPen size={17} /> Adicionar anotacao</button>
         </article>
       </div>
@@ -225,9 +225,9 @@ export default function PersonalStudentProgress({ student, onBack }) {
       <div className="athlete-bottom-grid">
         <article className="athlete-panel athlete-ranking">
           <h2>Ranking do aluno</h2>
-          <strong>1Âº</strong>
+          <strong>1º</strong>
           <span>Posicao geral entre todos os alunos</span>
-          {["Aderencia 92%", "Evolução 90%", "Frequencia 95%", "Dieta 88%", "Hidratacao 78%", "Avaliações 100%"].map((item) => <div key={item}>{item}<i /></div>)}
+          {["Aderência 92%", "Evolução 90%", "Frequência 95%", "Dieta 88%", "Hidratação 78%", "Avaliações 100%"].map((item) => <div key={item}>{item}<i /></div>)}
           <p>Score geral <b>92/100</b></p>
         </article>
 
@@ -247,9 +247,9 @@ export default function PersonalStudentProgress({ student, onBack }) {
       <footer className="athlete-progress-footer">
         <CalendarDays size={18} />
         <span>Última avaliação física: 18/06/2025</span>
-        <span>Proxima avaliação: 18/07/2025</span>
+        <span>Pr?xima avaliação: 18/07/2025</span>
         <span>Ultimo check-in: Hoje as 10:30</span>
-        <button type="button"><Shield size={17} /> Ver historico completo</button>
+        <button type="button"><Shield size={17} /> Ver hist?rico completo</button>
       </footer>
     </section>
   );

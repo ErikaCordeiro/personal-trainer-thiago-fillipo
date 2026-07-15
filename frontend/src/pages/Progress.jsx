@@ -22,8 +22,8 @@ const metricCards = [
   { label: "Gordura corporal", value: "18,6%", diff: "-1,2%", note: "evolução positiva", icon: HeartPulse },
   { label: "Massa magra", value: "54,1 kg", diff: "+1,4 kg", note: "ganho no ciclo", icon: Activity },
   { label: "IMC", value: "22,4", diff: "Normal", note: "faixa saudavel", icon: BadgeCheck },
-  { label: "Agua corporal", value: "39,6 L", diff: "+0,8 L", note: "melhora hidratacao", icon: Droplets },
-  { label: "Aderencia", value: "87%", diff: "+12%", note: "vs mes anterior", icon: TrendingUp },
+  { label: "Agua corporal", value: "39,6 L", diff: "+0,8 L", note: "melhora hidratação", icon: Droplets },
+  { label: "Aderência", value: "87%", diff: "+12%", note: "vs mês anterior", icon: TrendingUp },
   { label: "Score do Leao", value: "92/100", diff: "Excelente", note: "performance geral", icon: Trophy }
 ];
 
@@ -38,13 +38,13 @@ const records = [
   ["Maior carga", "180 kg", "Leg press"],
   ["Maior streak", "18 dias", "sequencia ativa"],
   ["Melhor mes", "Junho", "31 treinos"],
-  ["Maior frequencia", "5x/sem", "consistencia"],
+  ["Maior frequência", "5x/sem", "consistencia"],
   ["Maior volume", "18.450 kg", "ciclo atual"]
 ];
 
 const measures = [
   ["Cintura", "78,2 cm", "-3,1 cm"],
-  ["Braco", "30,5 cm", "+0,5 cm"],
+  ["Braço", "30,5 cm", "+0,5 cm"],
   ["Peito", "98,0 cm", "+1,8 cm"],
   ["Quadril", "102,3 cm", "-1,5 cm"],
   ["Coxa", "56,1 cm", "+0,8 cm"]
@@ -64,9 +64,9 @@ export default function Progress({ student, students = [] }) {
         <div>
           <p className="eyebrow">Central de evolução</p>
           <h1>Você esta evoluindo de verdade.</h1>
-          <span>Forca, medidas, dieta e consistencia reunidas em uma tela premium.</span>
+          <span>Força, medidas, dieta e consistencia reunidas em uma tela premium.</span>
           <div className="student-progress-hero-actions">
-            <button type="button" onClick={() => setModal("analysis")}>Ver anÃ¡lise completa</button>
+            <button type="button" onClick={() => setModal("analysis")}>Ver análise completa</button>
             <button type="button" onClick={() => setModal("coach")}>Falar com Coach IA</button>
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function Progress({ student, students = [] }) {
           <div className="section-heading">
             <div>
               <p className="eyebrow">Evolução de carga</p>
-              <h2>Forca aumentando</h2>
+              <h2>Força aumentando</h2>
             </div>
             <Dumbbell size={22} />
           </div>
@@ -154,7 +154,7 @@ export default function Progress({ student, students = [] }) {
             {["S", "T", "Q", "Q", "S", "S", "D"].map((day) => <span key={day}>{day}</span>)}
           </div>
           <ul>
-            <li><Flame size={17} /> Frequencia semanal: 5 treinos</li>
+            <li><Flame size={17} /> Frequência semanal: 5 treinos</li>
             <li><BadgeCheck size={17} /> Treinos concluidos: 31</li>
             <li><LineChart size={17} /> Consistencia mensal: 89%</li>
           </ul>
@@ -223,14 +223,14 @@ export default function Progress({ student, students = [] }) {
           <div className="section-heading">
             <div>
               <p className="eyebrow">Progresso da dieta</p>
-              <h2>Alimentacao e hidratacao</h2>
+              <h2>Alimentacao e hidratação</h2>
             </div>
             <Utensils size={22} />
           </div>
           <div className="diet-progress-metrics">
-            <div><strong>87%</strong><span>Aderencia alimentar</span></div>
+            <div><strong>87%</strong><span>Aderência alimentar</span></div>
             <div><strong>128g</strong><span>Proteinas medias</span></div>
-            <div><strong>2,1L</strong><span>Hidratacao media</span></div>
+            <div><strong>2,1L</strong><span>Hidratação media</span></div>
             <div><strong>1.812</strong><span>Calorias medias</span></div>
           </div>
           <div className="silver-bar"><span style={{ width: "87%" }} /></div>
@@ -257,28 +257,28 @@ export default function Progress({ student, students = [] }) {
         <div className="progress-modal-backdrop" role="presentation" onMouseDown={() => setModal(null)}>
           <article className="progress-action-modal" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
             <button className="modal-close" type="button" onClick={() => setModal(null)}>Fechar</button>
-            <p className="eyebrow">{modal === "coach" ? "Coach IA" : modal === "evolution" ? "EvoluÃ§Ã£o visual" : "AnÃ¡lise completa"}</p>
-            <h2>{modal === "coach" ? "Como posso te ajudar hoje?" : modal === "evolution" ? "Comparativo antes/depois" : "Resumo da sua evoluÃ§Ã£o"}</h2>
+            <p className="eyebrow">{modal === "coach" ? "Coach IA" : modal === "evolution" ? "Evolução visual" : "Análise completa"}</p>
+            <h2>{modal === "coach" ? "Como posso te ajudar hoje?" : modal === "evolution" ? "Comparativo antes/depois" : "Resumo da sua evolução"}</h2>
             {modal === "coach" ? (
               <div className="coach-question-grid">
-                <button type="button">Como melhorar minha forÃ§a?</button>
+                <button type="button">Como melhorar minha força?</button>
                 <button type="button">O que ajustar na dieta?</button>
                 <button type="button">Estou evoluindo bem?</button>
-                <button type="button">Como manter a consistÃªncia?</button>
+                <button type="button">Como manter a consistência?</button>
               </div>
             ) : modal === "evolution" ? (
               <div className="progress-before-after">
                 <img src={avatar} alt="Antes" />
-                <span>â†’</span>
+                <span>→</span>
                 <img src={avatar} alt="Depois" />
-                <p>ReduÃ§Ã£o de gordura, melhora de postura e aumento de massa magra no ciclo atual.</p>
+                <p>Redução de gordura, melhora de postura e aumento de massa magra no ciclo atual.</p>
               </div>
             ) : (
               <ul className="progress-analysis-list">
-                <li>ForÃ§a geral: +18% nos exercÃ­cios principais.</li>
-                <li>Carga no leg press: +60kg desde o inÃ­cio.</li>
-                <li>AderÃªncia alimentar: 87%, acima da mÃ©dia.</li>
-                <li>PrÃ³ximo foco: manter proteÃ­na e melhorar hidrataÃ§Ã£o.</li>
+                <li>Força geral: +18% nos exercícios principais.</li>
+                <li>Carga no leg press: +60kg desde o início.</li>
+                <li>Aderência alimentar: 87%, acima da média.</li>
+                <li>Próximo foco: manter proteína e melhorar hidratação.</li>
               </ul>
             )}
           </article>

@@ -32,10 +32,10 @@ const months = [
 ];
 
 const kpis = [
-  { label: "Receita do mes", value: "R$ 24.870", delta: "+18%", hint: "vs mes anterior", icon: CircleDollarSign, trend: [18, 26, 21, 31, 25, 35, 29, 42] },
-  { label: "Alunos pagantes", value: "128", delta: "+12%", hint: "vs mes anterior", icon: Users, trend: [20, 29, 24, 34, 30, 39, 35, 44] },
-  { label: "Inadimplentes", value: "7", delta: "-23%", hint: "vs mes anterior", icon: AlertTriangle, danger: true, trend: [17, 25, 18, 22, 19, 24, 21, 31] },
-  { label: "Renovacao", value: "92%", delta: "+5%", hint: "vs mes anterior", icon: RefreshCw, trend: [18, 23, 28, 25, 33, 37, 30, 41] }
+  { label: "Receita do mes", value: "R$ 24.870", delta: "+18%", hint: "vs mês anterior", icon: CircleDollarSign, trend: [18, 26, 21, 31, 25, 35, 29, 42] },
+  { label: "Alunos pagantes", value: "128", delta: "+12%", hint: "vs mês anterior", icon: Users, trend: [20, 29, 24, 34, 30, 39, 35, 44] },
+  { label: "Inadimplentes", value: "7", delta: "-23%", hint: "vs mês anterior", icon: AlertTriangle, danger: true, trend: [17, 25, 18, 22, 19, 24, 21, 31] },
+  { label: "Renovacao", value: "92%", delta: "+5%", hint: "vs mês anterior", icon: RefreshCw, trend: [18, 23, 28, 25, 33, 37, 30, 41] }
 ];
 
 const pendingCharges = [
@@ -47,13 +47,13 @@ const pendingCharges = [
 const dueGroups = [
   { label: "Hoje", total: "R$ 398,00", items: [["Juliana Costa", "Plano Premium", "R$ 199,00"], ["Lucas Martins", "Plano Basico", "R$ 199,00"]] },
   { label: "Esta semana", total: "R$ 597,00", items: [["Amanda Lima", "Plano Elite", "R$ 249,00"], ["+ 2 alunos", "Vencimentos futuros", "R$ 348,00"]] },
-  { label: "Este mes", total: "R$ 1.892,00", items: [["8 alunos", "Renovacoes previstas", "R$ 1.892,00"]] }
+  { label: "Este mês", total: "R$ 1.892,00", items: [["8 alunos", "Renovacoes previstas", "R$ 1.892,00"]] }
 ];
 
 const cashFlow = [
-  { label: "Receitas", value: "R$ 24.870,00", delta: "+18% vs mes anterior", type: "positive" },
-  { label: "Despesas", value: "R$ 6.430,00", delta: "+8% vs mes anterior", type: "warning" },
-  { label: "Lucro liquido", value: "R$ 18.440,00", delta: "+22% vs mes anterior", type: "neutral" }
+  { label: "Receitas", value: "R$ 24.870,00", delta: "+18% vs mês anterior", type: "positive" },
+  { label: "Despesas", value: "R$ 6.430,00", delta: "+8% vs mês anterior", type: "warning" },
+  { label: "Lucro liquido", value: "R$ 18.440,00", delta: "+22% vs mês anterior", type: "neutral" }
 ];
 
 export default function PersonalFinance() {
@@ -61,15 +61,15 @@ export default function PersonalFinance() {
 
   const modalContent = useMemo(() => {
     const content = {
-      period: ["Periodo financeiro", "Aqui voce podera trocar o intervalo do relatorio. A estrutura ja esta pronta para receber filtros reais."],
-      export: ["Exportar relatorio", "O PDF financeiro sera gerado quando o modulo de relatorios estiver conectado ao backend."],
-      analysis: ["Analise da IA", "Seu negocio esta saudavel: receita crescendo, boa renovacao e margem alta. Prioridade: reduzir os 7 inadimplentes."],
+      period: ["Per?odo financeiro", "Aqui voc? podera trocar o intervalo do relatório. A estrutura j? est? pronta para receber filtros reais."],
+      export: ["Exportar relatório", "O PDF financeiro sera gerado quando o modulo de relatórios estiver conectado ao backend."],
+      analysis: ["Analise da IA", "Seu neg?cio esta saudavel: receita crescendo, boa renovacao e margem alta. Prioridade: reduzir os 7 inadimplentes."],
       allCharges: ["Cobrancas pendentes", "Lista completa de inadimplentes preparada para filtro por plano, atraso e ultima tentativa de contato."],
       charge: ["Cobrar aluno", "Mensagem de cobranca preparada para WhatsApp/e-mail com link de pagamento."],
       chargeAll: ["Cobrar todos", "Acoes em lote serao enviadas para alunos inadimplentes com tom profissional e nao agressivo."],
-      due: ["Vencimentos", "Detalhes do vencimento selecionado com plano, valor, historico e acoes rapidas."],
+      due: ["Vencimentos", "Detalhes do vencimento selecionado com plano, valor, hist?rico e acoes rapidas."],
       coach: ["Coach IA Financeiro", "A IA sugeriu recuperar R$ 4.200 reduzindo inadimplencia e migrando 12 alunos para o Plano Premium."],
-      flow: ["Fluxo financeiro", "Comparativo do mes atual com receitas, despesas, lucro e previsao de fechamento."]
+      flow: ["Fluxo financeiro", "Comparativo do mês atual com receitas, despesas, lucro e previsão de fechamento."]
     };
     return content[modal] || null;
   }, [modal]);
@@ -80,11 +80,11 @@ export default function PersonalFinance() {
         <div>
           <span className="eyebrow">Painel administrativo</span>
           <h2>Financeiro</h2>
-          <p>Visao geral da saude financeira do seu negocio.</p>
+          <p>Visão geral da sa?de financeira do seu neg?cio.</p>
         </div>
         <div className="finance-toolbar">
           <button type="button" onClick={() => setModal("period")}><CalendarDays size={18} /> 01/06/2025 - 30/06/2025</button>
-          <button type="button" onClick={() => setModal("export")}><Download size={18} /> Exportar relatorio</button>
+          <button type="button" onClick={() => setModal("export")}><Download size={18} /> Exportar relatório</button>
         </div>
       </div>
 
@@ -97,7 +97,7 @@ export default function PersonalFinance() {
           <div>
             <p className="eyebrow">Saude financeira</p>
             <h3>Excelente!</h3>
-            <span>Seu negocio esta em otima saude financeira.</span>
+            <span>Seu neg?cio esta em otima sa?de financeira.</span>
             <button type="button" onClick={() => setModal("analysis")}><Brain size={15} /> Ver analise da IA</button>
           </div>
         </article>
@@ -156,7 +156,7 @@ export default function PersonalFinance() {
             <strong>Receita total <span>R$ 24.870,00</span></strong>
             <strong>Receita media/mes <span>R$ 20.725,00</span></strong>
             <strong>Maior receita <span>R$ 28.430,00</span><small>Maio/2025</small></strong>
-            <strong className="forecast">Previsao proximo mes <span>R$ 26.300,00</span></strong>
+            <strong className="forecast">Previsão pr?ximo mes <span>R$ 26.300,00</span></strong>
           </aside>
         </div>
       </article>
@@ -213,18 +213,18 @@ export default function PersonalFinance() {
         <div className="finance-ai-orb"><Brain size={44} /></div>
         <div className="finance-ai-insights">
           <h2>Coach IA Financeiro</h2>
-          <p><TrendingUp size={16} /> Faturamento cresceu 18% este mes.</p>
+          <p><TrendingUp size={16} /> Faturamento cresceu 18% este mês.</p>
           <p><AlertTriangle size={16} /> 7 alunos estao inadimplentes.</p>
           <p><ShieldCheck size={16} /> Plano Premium e o mais lucrativo.</p>
-          <p><Wallet size={16} /> Potencial de recuperar R$ 4.200 este mes.</p>
+          <p><Wallet size={16} /> Potencial de recuperar R$ 4.200 este mês.</p>
         </div>
-        <button type="button" onClick={() => setModal("coach")}><Brain size={18} /> Analisar negocio</button>
+        <button type="button" onClick={() => setModal("coach")}><Brain size={18} /> Analisar neg?cio</button>
       </article>
 
       <article className="finance-flow-card">
         <div className="section-heading">
           <h2>Fluxo financeiro</h2>
-          <button type="button" onClick={() => setModal("flow")}>Este mes</button>
+          <button type="button" onClick={() => setModal("flow")}>Este mês</button>
         </div>
         <div className="finance-flow-grid">
           {cashFlow.map((item) => (
@@ -245,7 +245,7 @@ export default function PersonalFinance() {
         <div>
           <p className="eyebrow">Risco de cancelamento</p>
           <h2>Retencao sob controle</h2>
-          <span>A IA cruza frequencia, pagamentos, aderencia e interacao para indicar risco de churn.</span>
+          <span>A IA cruza frequência, pagamentos, aderência e interacao para indicar risco de churn.</span>
         </div>
         <div className="finance-risk-grid">
           <div><strong>96</strong><span>baixo risco</span></div>

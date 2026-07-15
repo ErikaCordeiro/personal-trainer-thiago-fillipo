@@ -27,8 +27,8 @@ const categories = [
   { id: "all", label: "Todos", icon: FolderOpen },
   { id: "exams", label: "Exames", icon: FileCheck2 },
   { id: "photos", label: "Fotos", icon: Image },
-  { id: "videos", label: "Videos", icon: Video },
-  { id: "assessments", label: "Avaliacoes", icon: FileText },
+  { id: "vídeos", label: "Videos", icon: Video },
+  { id: "assessments", label: "Avaliações", icon: FileText },
   { id: "diet", label: "Dieta", icon: Pill },
   { id: "training", label: "Treino", icon: FileArchive },
   { id: "other", label: "Outros", icon: MoreHorizontal }
@@ -51,7 +51,7 @@ const initialFiles = [
   },
   {
     id: "file-2",
-    name: "Evolucao Frontal - 24/05/2026.jpg",
+    name: "Evolução Frontal - 24/05/2026.jpg",
     category: "Fotos",
     categoryId: "photos",
     date: "24/05/2026",
@@ -59,35 +59,35 @@ const initialFiles = [
     size: "1.8 MB",
     status: "Visto pelo personal",
     statusType: "viewed",
-    description: "Foto frontal para acompanhamento visual da evolucao.",
+    description: "Foto frontal para acompanhamento visual da evolução.",
     preview: "photo",
-    comment: "Otimo angulo para comparar sua proxima avaliacao."
+    comment: "Otimo angulo para comparar sua pr?xima avaliação."
   },
   {
     id: "file-3",
-    name: "Avaliacao Fisica Completa.pdf",
-    category: "Avaliacoes",
+    name: "Avaliação Física Completa.pdf",
+    category: "Avaliações",
     categoryId: "assessments",
     date: "22/05/2026",
     time: "14:05",
     size: "3.1 MB",
     status: "Aprovado pelo personal",
     statusType: "approved",
-    description: "Relatorio completo da avaliacao fisica do ciclo atual.",
+    description: "Relatório completo da avaliação física do ciclo atual.",
     preview: "document",
-    comment: "Aprovado. Vamos manter a estrategia por mais duas semanas."
+    comment: "Aprovado. Vamos manter a estrat?gia por mais duas semanas."
   },
   {
     id: "file-4",
     name: "Execucao Agachamento.mp4",
     category: "Videos",
-    categoryId: "videos",
+    categoryId: "vídeos",
     date: "21/05/2026",
     time: "09:15",
     size: "25.6 MB",
-    status: "Solicita revisao",
+    status: "Solicita revisão",
     statusType: "review",
-    description: "Video enviado para analise tecnica da execucao.",
+    description: "Video enviado para analise t?cnica da execu??o.",
     preview: "video",
     comment: "Vamos ajustar a amplitude e o alinhamento dos joelhos."
   },
@@ -101,7 +101,7 @@ const initialFiles = [
     size: "1.2 MB",
     status: "Enviado",
     statusType: "sent",
-    description: "Documento medico anexado ao historico do aluno.",
+    description: "Documento medico anexado ao hist?rico do aluno.",
     preview: "document",
     comment: "Ainda vou revisar esse arquivo."
   },
@@ -121,7 +121,7 @@ const initialFiles = [
   }
 ];
 
-const allowedTypes = ["Exames e laudos", "Fotos e videos", "PDFs e documentos", "Receitas medicas", "Avaliacoes e relatorios", "Outros arquivos"];
+const allowedTypes = ["Exames e laudos", "Fotos e vídeos", "PDFs e documentos", "Receitas médicas", "Avaliações e relatórios", "Outros arquivos"];
 
 export default function StudentFiles({ student }) {
   const inputRef = useRef(null);
@@ -159,7 +159,7 @@ export default function StudentFiles({ student }) {
         status: "Enviado",
         statusType: "sent",
         description: "Arquivo enviado pelo aluno para acompanhamento do personal.",
-        preview: category.id === "photos" ? "photo" : category.id === "videos" ? "video" : "document",
+        preview: category.id === "photos" ? "photo" : category.id === "vídeos" ? "video" : "document",
         comment: "Arquivo recebido. O personal sera notificado para analisar."
       };
     });
@@ -178,7 +178,7 @@ export default function StudentFiles({ student }) {
       <header className="student-files-header">
         <div>
           <h2>Arquivos</h2>
-          <p>Envie e organize seus arquivos. Seu personal tem acesso para acompanhar sua evolucao.</p>
+          <p>Envie e organize seus arquivos. Seu personal tem acesso para acompanhar sua evolução.</p>
         </div>
         <div className="student-files-safe-card">
           <ShieldCheck size={27} />
@@ -311,10 +311,10 @@ function FilePreview({ type, name }) {
 
 function categoryFromType(file) {
   if (file.type?.startsWith("image/")) return { id: "photos", label: "Fotos" };
-  if (file.type?.startsWith("video/")) return { id: "videos", label: "Videos" };
+  if (file.type?.startsWith("video/")) return { id: "vídeos", label: "Videos" };
   if (file.name?.toLowerCase().includes("dieta")) return { id: "diet", label: "Dieta" };
   if (file.name?.toLowerCase().includes("treino")) return { id: "training", label: "Treino" };
-  if (file.name?.toLowerCase().includes("avaliacao")) return { id: "assessments", label: "Avaliacoes" };
+  if (file.name?.toLowerCase().includes("avaliação")) return { id: "assessments", label: "Avaliações" };
   if (file.name?.toLowerCase().includes("exame")) return { id: "exams", label: "Exames" };
   return { id: "other", label: "Outros" };
 }

@@ -21,25 +21,25 @@ import {
 } from "lucide-react";
 
 const summary = [
-  { label: "IMC", value: "25,6", status: "Sobrepeso", delta: "Ã¢â€ â€œ 1,0 desde 20/05", icon: HeartPulse },
-  { label: "Gordura corporal", value: "24,3%", status: "Moderado", delta: "Ã¢â€ â€œ 2,1% desde 20/05", icon: TrendingDown },
-  { label: "Massa magra", value: "54,1 kg", status: "Adequado", delta: "Ã¢â€ â€˜ 1,4 kg desde 20/05", icon: Trophy },
-  { label: "Massa gorda", value: "18,3 kg", status: "Moderado", delta: "Ã¢â€ â€œ 1,1 kg desde 20/05", icon: Scale },
+  { label: "IMC", value: "25,6", status: "Sobrepeso", delta: "↓ 1,0 desde 20/05", icon: HeartPulse },
+  { label: "Gordura corporal", value: "24,3%", status: "Moderado", delta: "↓ 2,1% desde 20/05", icon: TrendingDown },
+  { label: "Massa magra", value: "54,1 kg", status: "Adequado", delta: "↑ 1,4 kg desde 20/05", icon: Trophy },
+  { label: "Massa gorda", value: "18,3 kg", status: "Moderado", delta: "↓ 1,1 kg desde 20/05", icon: Scale },
   { label: "TMB", value: "1.680 kcal", status: "por dia", delta: "Taxa metabolica basal", icon: Flame },
-  { label: "Agua corporal", value: "39,6 L", status: "Adequado", delta: "Ã¢â€ â€˜ 0,8 L desde 20/05", icon: Droplets }
+  { label: "Agua corporal", value: "39,6 L", status: "Adequado", delta: "↑ 0,8 L desde 20/05", icon: Droplets }
 ];
 
 const measurements = [
-  ["Pescoco", "34,2", "34,6", "Ã¢â€ â€œ 0,4"],
-  ["Ombro", "108,5", "109,2", "Ã¢â€ â€œ 0,7"],
-  ["Peito", "98,0", "98,7", "Ã¢â€ â€œ 0,7"],
-  ["Cintura", "78,2", "81,3", "Ã¢â€ â€œ 3,1"],
-  ["Abdomen", "85,4", "88,8", "Ã¢â€ â€œ 3,4"],
-  ["Quadril", "102,3", "103,8", "Ã¢â€ â€œ 1,5"],
-  ["Braco", "30,5", "30,8", "Ã¢â€ â€œ 0,3"],
-  ["Antebraco", "26,1", "26,4", "Ã¢â€ â€œ 0,3"],
-  ["Coxa", "56,1", "56,8", "Ã¢â€ â€œ 0,7"],
-  ["Panturrilha", "36,2", "36,6", "Ã¢â€ â€œ 0,4"]
+  ["Pescoço", "34,2", "34,6", "↓ 0,4"],
+  ["Ombro", "108,5", "109,2", "↓ 0,7"],
+  ["Peito", "98,0", "98,7", "↓ 0,7"],
+  ["Cintura", "78,2", "81,3", "↓ 3,1"],
+  ["Abdômen", "85,4", "88,8", "↓ 3,4"],
+  ["Quadril", "102,3", "103,8", "↓ 1,5"],
+  ["Braço", "30,5", "30,8", "↓ 0,3"],
+  ["Antebraço", "26,1", "26,4", "↓ 0,3"],
+  ["Coxa", "56,1", "56,8", "↓ 0,7"],
+  ["Panturrilha", "36,2", "36,6", "↓ 0,4"]
 ];
 
 const skinfolds = [
@@ -53,11 +53,11 @@ const skinfolds = [
 ];
 
 const evolution = [
-  ["Peso (kg)", "72,4 kg", "Ã¢â€ â€œ 2,8 kg"],
-  ["Gordura corporal (%)", "24,3%", "Ã¢â€ â€œ 2,1%"],
-  ["Massa magra (kg)", "54,1 kg", "Ã¢â€ â€˜ 1,4 kg"],
-  ["IMC", "25,6", "Ã¢â€ â€œ 1,0"],
-  ["Medidas (media)", "-2,3 cm", "Ã¢â€ â€œ"]
+  ["Peso (kg)", "72,4 kg", "↓ 2,8 kg"],
+  ["Gordura corporal (%)", "24,3%", "↓ 2,1%"],
+  ["Massa magra (kg)", "54,1 kg", "↑ 1,4 kg"],
+  ["IMC", "25,6", "↓ 1,0"],
+  ["Medidas (media)", "-2,3 cm", "↓"]
 ];
 
 const history = [
@@ -90,7 +90,7 @@ export default function StudentAssessments({ student }) {
         <div>
           <p className="eyebrow">Última avaliação</p>
           <h2>Você esta evoluindo de verdade, {name.split(" ")[0]}.</h2>
-          <span>Acompanhe sua evolução e veja o quanto voce esta avancando.</span>
+          <span>Acompanhe sua evolução e veja o quanto voc? esta avancando.</span>
         </div>
         <div className="student-assessment-date">
           <CalendarDays size={20} />
@@ -199,7 +199,7 @@ export default function StudentAssessments({ student }) {
           <h2>Comparar com avaliação anterior</h2>
           <div>
             <img src={student?.avatar || "/erika-gomes.jpeg"} alt="Antes" />
-            <span>Ã¢â€ â€</span>
+            <span>↔</span>
             <img src={student?.avatar || "/erika-gomes.jpeg"} alt="Depois" />
           </div>
           <button type="button" onClick={() => openDetail("photos", "Fotos da avaliação", "3 fotos", "Comparativo frontal, lateral e traseiro")}>Ver todas as fotos</button>
@@ -268,7 +268,7 @@ export default function StudentAssessments({ student }) {
 
       <div className="student-assessment-quote">
         <Activity size={22} />
-        <span>Disciplina hoje, resultado amanha. Você esta no caminho certo.</span>
+        <span>Disciplina hoje, resultado amanh?. Você esta no caminho certo.</span>
       </div>
 
       {detailModal && (
@@ -292,7 +292,7 @@ export default function StudentAssessments({ student }) {
             </svg>
             <p>
               Essa evolução compara sua avaliação atual com os registros anteriores. O objetivo e mostrar tendencia,
-              constancia e onde ajustar treino, dieta e hidratacao.
+              constancia e onde ajustar treino, dieta e hidratação.
             </p>
             <button className="metal-button inline" type="button" onClick={() => setDetailModal(null)}>Entendi</button>
           </article>

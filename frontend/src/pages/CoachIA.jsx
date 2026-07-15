@@ -4,9 +4,9 @@ import { ArrowLeft, Bot, Dumbbell, MessageCircle, Send, Sparkles, Utensils, Wand
 const quickPrompts = {
   personal: [
     "Gerar treino para hipertrofia",
-    "Analisar evolucao de um aluno",
+    "Analisar evolução de um aluno",
     "Criar dieta editavel",
-    "Resumir aderencia da semana",
+    "Resumir aderência da semana",
     "Sugerir feedback automatico"
   ],
   student: [
@@ -24,8 +24,8 @@ export default function CoachIA({ role = "student", student, onClose }) {
     {
       from: "coach",
       text: isPersonal
-        ? "Pronto, Thiago. Posso gerar treinos, dietas, relatorios e insights dos alunos."
-        : `Pronta para te ajudar, ${student?.name?.split(" ")[0] || "Erika"}. Posso explicar exercicios, musculos, execucao, nutricao e avaliacao fisica. As orientacoes do Personal Thiago Filippo tem prioridade.`
+        ? "Pronto, Thiago. Posso gerar treinos, dietas, relatórios e insights dos alunos."
+        : `Pronta para te ajudar, ${student?.name?.split(" ")[0] || "Erika"}. Posso explicar exercicios, musculos, execu??o, nutricao e avaliação física. As orientacoes do Personal Thiago Filippo tem prioridade.`
     }
   ]);
   const [input, setInput] = useState("");
@@ -54,7 +54,7 @@ export default function CoachIA({ role = "student", student, onClose }) {
           <span>
             {isPersonal
               ? "Crie, analise e otimize alunos com velocidade profissional."
-              : "Explique exercicios, nutricao, dores, execucao e conceitos fitness sem substituir seu personal."}
+              : "Explique exercicios, nutricao, dores, execu??o e conceitos fitness sem substituir seu personal."}
           </span>
         </div>
         <img src="/lion-juda-logo.png" alt="Leao de Juda" />
@@ -115,16 +115,16 @@ function buildResponse(prompt, role) {
   }
   if (lower.includes("treino") || lower.includes("carga") || lower.includes("supino") || lower.includes("exercicio")) {
     return role === "personal"
-      ? "Analise volume semanal, tecnica e descanso. Posso sugerir progressao de carga por exercicio e distribuir treinos por dia."
-      : "Posso explicar execucao e musculos trabalhados, mas nao altero seu treino. Se sentir dor, avise o personal antes de continuar.";
+      ? "Analise volume semanal, t?cnica e descanso. Posso sugerir progressao de carga por exercicio e distribuir treinos por dia."
+      : "Posso explicar execu??o e musculos trabalhados, mas nao altero seu treino. Se sentir dor, avise o personal antes de continuar.";
   }
   if (lower.includes("dor") || lower.includes("ombro") || lower.includes("desconforto")) {
-    return "Se houver dor aguda, formigamento ou perda de forca, pare o exercicio e fale com o Personal Thiago Filippo. Posso ajudar a entender possiveis causas, mas nao substituo avaliacao profissional.";
+    return "Se houver dor aguda, formigamento ou perda de forca, pare o exercicio e fale com o Personal Thiago Filippo. Posso ajudar a entender possiveis causas, mas nao substituo avaliação profissional.";
   }
   if (lower.includes("evol") || lower.includes("avalia") || lower.includes("imc")) {
     return role === "personal"
-      ? "A evolucao mostra melhora de consistencia, reducao de gordura e ganho de performance. O proximo passo e manter rotina e ajustar hidratacao."
-      : "Posso te ajudar a entender sua avaliacao, como IMC e composicao corporal. A interpretacao final e os ajustes devem vir do Personal Thiago Filippo.";
+      ? "A evolução mostra melhora de consistencia, reducao de gordura e ganho de performance. O pr?ximo passo e manter rotina e ajustar hidratação."
+      : "Posso te ajudar a entender sua avaliação, como IMC e composicao corporal. A interpretacao final e os ajustes devem vir do Personal Thiago Filippo.";
   }
   return role === "personal"
     ? "Boa pergunta. Minha recomendacao e olhar treino, dieta, descanso e constancia juntos. Posso transformar isso em uma acao pratica agora."

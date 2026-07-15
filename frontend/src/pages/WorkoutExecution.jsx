@@ -186,7 +186,7 @@ export default function WorkoutExecution({ workout, completed, onBack, onToggleE
                       {canEmbedYoutube(exercise.videoUrl) && (
                         <iframe
                           src={exercise.videoUrl}
-                          title={`Video de execucao - ${exercise.name}`}
+                          title={`Video de execu??o - ${exercise.name}`}
                           loading="lazy"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                           allowFullScreen

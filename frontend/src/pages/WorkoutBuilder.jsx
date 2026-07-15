@@ -86,7 +86,7 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
         <div className="form-grid">
           <label><span>Nome do treino</span><input name="name" key={`name-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.name || "Novo treino personalizado"} required /></label>
           <label><span>Aluno</span><select name="studentId" key={`student-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.studentId || students[0]?.id}>{students.map((student) => <option key={student.id} value={student.id}>{student.name}</option>)}</select></label>
-          <label><span>Foco</span><input name="focus" key={`focus-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.focus || "Forca, hipertrofia e cardio"} /></label>
+          <label><span>Foco</span><input name="focus" key={`focus-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.focus || "Força, hipertrofia e cardio"} /></label>
           <label><span>Duracao</span><input name="duration" key={`duration-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.duration || "60 min"} /></label>
           <label><span>Dia da semana</span><select name="date" key={`date-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.date || "Segunda"}>{["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"].map((day) => <option key={day} value={day}>{day}</option>)}</select></label>
         </div>
@@ -144,7 +144,7 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
                     <span><Upload size={15} /> Upload de video</span>
                     <input type="file" accept="video/*" onChange={(event) => updateExercise(exercise.id, "videoFile", event.target.files?.[0]?.name || "")} />
                   </label>
-                  <textarea placeholder="Observacoes e execucao" value={exercise.explanation} onChange={(event) => updateExercise(exercise.id, "explanation", event.target.value)} />
+                  <textarea placeholder="Observacoes e execu??o" value={exercise.explanation} onChange={(event) => updateExercise(exercise.id, "explanation", event.target.value)} />
                 </div>
                 {exercise.videoFile && <small className="upload-name">Video selecionado: {exercise.videoFile}</small>}
               </article>

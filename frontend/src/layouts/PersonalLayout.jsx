@@ -57,7 +57,7 @@ export default function PersonalLayout({
           onApproveStudent={onApproveStudent}
         />
         {children}
-        <nav className="personal-mobile-nav" aria-label="NavegaÃ§Ã£o mobile do personal">
+        <nav className="personal-mobile-nav" aria-label="Navegação mobile do personal">
           <button type="button" onClick={() => onNavigate("dashboard")}>Home</button>
           <button type="button" onClick={() => onNavigate("students")}>Alunos</button>
           <button className="mobile-coach" type="button" onClick={() => onNavigate("coach")}>

@@ -33,7 +33,7 @@ export default function Login({ onLogin, onSignup }) {
     const isSafari = /safari/.test(userAgent) && !/chrome|crios|android/.test(userAgent);
 
     if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone) {
-      return "O app ja esta instalado neste dispositivo.";
+      return "O app j? est? instalado neste dispositivo.";
     }
 
     if (isIOS) {

@@ -20,7 +20,7 @@ import {
 const meals = [
   {
     time: "07:00",
-    name: "Cafe da manha",
+    name: "Caf? da manh?",
     description: "Aveia com frutas, whey protein e chia",
     image: "https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?auto=format&fit=crop&w=520&q=80",
     calories: 542,
@@ -33,7 +33,7 @@ const meals = [
   },
   {
     time: "10:30",
-    name: "Lanche da manha",
+    name: "Lanche da manh?",
     description: "Iogurte natural com frutas e granola",
     image: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=520&q=80",
     calories: 236,
@@ -250,7 +250,7 @@ export default function StudentDiet({ student }) {
       setSavedMessage("Calorias, quantidade e macros precisam ser numeros positivos.");
       return;
     }
-    setSavedMessage("Refeicao salva no historico alimentar e enviada para o personal.");
+    setSavedMessage("Refeicao salva no hist?rico alimentar e enviada para o personal.");
     setModal(null);
   };
 
@@ -371,7 +371,7 @@ export default function StudentDiet({ student }) {
                   </div>
                 ))}
               </div>
-              <p>Adesao alimentar: 87% - Hidratacao: {waterPercent}%</p>
+              <p>Adesao alimentar: 87% - Hidratação: {waterPercent}%</p>
             </article>
 
             <article className="nutrition-card tips-card">
@@ -387,7 +387,7 @@ export default function StudentDiet({ student }) {
 
         <aside className="nutrition-right-column">
           <article className="nutrition-card hydration-panel">
-            <p className="eyebrow">Hidratacao</p>
+            <p className="eyebrow">Hidratação</p>
             <strong>{water.toFixed(1).replace(".", ",")} L <small>/ {waterGoal.toFixed(1).replace(".", ",")} L</small></strong>
             <span>{waterPercent}% da meta diaria</span>
             <div className="water-drops">
@@ -404,7 +404,7 @@ export default function StudentDiet({ student }) {
             <p className="eyebrow">Recomendacao de agua</p>
             <h2>{waterGoal.toFixed(1).replace(".", ",")} L</h2>
             <span>por dia</span>
-            <p>Com base na sua avaliação física, objetivo, frequencia de treino e peso atual, recomendamos esta meta diaria.</p>
+            <p>Com base na sua avaliação física, objetivo, frequência de treino e peso atual, recomendamos esta meta diaria.</p>
           </article>
 
           <article className="nutrition-card food-coach-card">
@@ -423,7 +423,7 @@ export default function StudentDiet({ student }) {
           </article>
 
           <article className="nutrition-card recipe-panel">
-            <p className="eyebrow">Sugestoes para voce</p>
+            <p className="eyebrow">Sugest?es para voc?</p>
             <h2>Receitas gostosas e saudaveis</h2>
             <div className="recipe-list">
               {recipes.map((recipe) => (

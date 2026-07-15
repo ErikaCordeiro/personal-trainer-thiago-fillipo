@@ -29,22 +29,22 @@ export const exerciseCatalog = [
   { name: "Desenvolvimento com Halteres", muscle: "Ombros", videoUrl: "https://www.youtube.com/embed/qEwKCR5JCog", explanation: "Empurre os halteres acima da cabeca mantendo core firme e punhos alinhados." },
   { name: "Elevacao Frontal com corda", muscle: "Ombros", videoUrl: "https://www.youtube.com/embed/-t7fuZ0KhDA", explanation: "Eleve a corda ate a linha dos ombros sem balanco do tronco." },
   { name: "Agachamento Livre", muscle: "Quadriceps e gluteos", videoUrl: "https://www.youtube.com/results?search_query=Leandro%20Twin%20Agachamento%20Livre%20execu%C3%A7%C3%A3o%20correta", explanation: "Mantenha o tronco firme, joelhos alinhados aos pes e controle a descida com amplitude segura." },
-  { name: "Agachamento com Barra", muscle: "Quadriceps e gluteos", videoUrl: "https://www.youtube.com/results?search_query=Leandro%20Twin%20Agachamento%20com%20Barra%20execu%C3%A7%C3%A3o%20correta", explanation: "Apoie a barra com seguranca, mantenha core ativo e suba empurrando o chao sem perder alinhamento." },
+  { name: "Agachamento com Barra", muscle: "Quadriceps e gluteos", videoUrl: "https://www.youtube.com/results?search_query=Leandro%20Twin%20Agachamento%20com%20Barra%20execu%C3%A7%C3%A3o%20correta", explanation: "Apoie a barra com seguran?a, mantenha core ativo e suba empurrando o chao sem perder alinhamento." },
   { name: "Agachamento Sumo", muscle: "Gluteos e pernas", videoUrl: "https://www.youtube.com/embed/2C-uNgKwPLE", explanation: "Base aberta, ponta dos pes levemente para fora e joelhos acompanhando a linha dos pes." },
   { name: "Agachamento Hack", muscle: "Quadriceps", videoUrl: "https://www.youtube.com/results?search_query=Leandro%20Twin%20Agachamento%20Hack%20execu%C3%A7%C3%A3o%20correta", explanation: "Controle a amplitude, mantenha lombar apoiada e joelhos acompanhando a linha dos pes." },
   { name: "Remada Baixa na Polia", muscle: "Costas", videoUrl: "https://www.youtube.com/embed/GZbfZ033f74", explanation: "Puxe em direcao ao abdomen com coluna neutra e controle na volta." },
   { name: "Biceps barra W", muscle: "Biceps", videoUrl: "https://www.youtube.com/embed/kwG2ipFRgfo", explanation: "Cotovelos fixos, punhos neutros e movimento sem impulso." },
   { name: "Rosca Alternada no banco 60", muscle: "Biceps", videoUrl: "https://www.youtube.com/embed/soxrZlIl35U", explanation: "Controle total na descida e rotacao natural do punho na subida." },
-  { name: "Triceps Testa", muscle: "Triceps", videoUrl: "https://www.youtube.com/embed/d_KZxkY_0cM", explanation: "Cotovelos apontados para cima e movimento controlado ate proximo da testa." },
+  { name: "Triceps Testa", muscle: "Triceps", videoUrl: "https://www.youtube.com/embed/d_KZxkY_0cM", explanation: "Cotovelos apontados para cima e movimento controlado ate pr?ximo da testa." },
   { name: "Triceps com corda na polia", muscle: "Triceps", videoUrl: "https://www.youtube.com/embed/2-LAMcpzODU", explanation: "Abra a corda no final do movimento e mantenha cotovelos colados ao corpo." },
   { name: "Cadeira Extensora", muscle: "Quadriceps", videoUrl: "https://www.youtube.com/embed/YyvSfVjQeL0", explanation: "Suba com controle, segure no topo e desca sem perder tensao." },
   { name: "Agachamento Articulado", muscle: "Quadriceps e gluteos", videoUrl: "https://www.youtube.com/embed/ultWZbUMPL8", explanation: "Mantenha postura firme, amplitude segura e controle na descida." },
   { name: "Leg Press", muscle: "Quadriceps", videoUrl: "https://www.youtube.com/embed/IZxyjW7MPJQ", explanation: "Controle a amplitude, joelhos alinhados e pes firmes na plataforma." },
   { name: "Flexor em Pe", muscle: "Posterior", videoUrl: "https://www.youtube.com/embed/1Tq3QdYUuHs", explanation: "Flexione o joelho sem mover o quadril e controle a volta." },
   { name: "Mesa Flexora", muscle: "Posterior", videoUrl: "https://www.youtube.com/embed/1Tq3QdYUuHs", explanation: "Contraia posterior no topo e retorne com controle." },
-  { name: "Stiff", muscle: "Posterior e gluteos", videoUrl: "https://www.youtube.com/embed/1uDiW5--rAE", explanation: "Quadril para tras, coluna neutra e halteres proximos ao corpo." },
+  { name: "Stiff", muscle: "Posterior e gluteos", videoUrl: "https://www.youtube.com/embed/1uDiW5--rAE", explanation: "Quadril para tras, coluna neutra e halteres pr?ximos ao corpo." },
   { name: "Panturrilhas em Pe e Sentado", muscle: "Panturrilhas", videoUrl: "https://www.youtube.com/embed/YMmgqO8Jo-k", explanation: "Suba ate a contracao maxima e desca com amplitude completa." },
-  { name: "HIIT Esteira ou Bike", muscle: "Cardio", videoUrl: "https://www.youtube.com/embed/ml6cT4AZdqI", explanation: "Alterne periodos intensos e leves mantendo tecnica e respiracao." }
+  { name: "HIIT Esteira ou Bike", muscle: "Cardio", videoUrl: "https://www.youtube.com/embed/ml6cT4AZdqI", explanation: "Alterne periodos intensos e leves mantendo t?cnica e respiracao." }
 ];
 
 const buildInstructorYoutubeUrl = (exerciseName) => (
@@ -60,7 +60,7 @@ const makeExercise = (id, name, sets, reps, rest, load) => {
     reps,
     rest,
     load,
-    explanation: catalog.explanation || "Executar com tecnica, controle e amplitude segura.",
+    explanation: catalog.explanation || "Executar com t?cnica, controle e amplitude segura.",
     videoUrl: catalog.videoUrl || buildInstructorYoutubeUrl(name),
     done: false
   };

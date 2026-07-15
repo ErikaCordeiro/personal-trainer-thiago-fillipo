@@ -33,7 +33,7 @@ const paymentMethods = [
 const planBenefits = [
   "Treinos ilimitados",
   "Dieta personalizada",
-  "Avaliacoes fisicas",
+  "Avaliações físicas",
   "Coach IA",
   "Suporte premium"
 ];
@@ -46,17 +46,17 @@ export default function StudentPayments({ student }) {
     const content = {
       pay: {
         title: "Pagar mensalidade",
-        text: "Sua proxima cobranca esta em dia. Quando houver boleto, PIX ou cartao disponivel, o link de pagamento aparece aqui.",
+        text: "Sua pr?xima cobranca esta em dia. Quando houver boleto, PIX ou cartao disponivel, o link de pagamento aparece aqui.",
         action: "Entendi"
       },
       method: {
         title: "Metodo de pagamento",
-        text: "Na V1, esta area ja esta preparada para integrar cartao, PIX, boleto, Mercado Pago, Stripe, Asaas ou PagSeguro.",
+        text: "Na V1, esta area j? est? preparada para integrar cartao, PIX, boleto, Mercado Pago, Stripe, Asaas ou PagSeguro.",
         action: "Fechar"
       },
       plan: {
         title: "Plano Premium",
-        text: "Seu plano garante acesso completo a treinos, dieta, avaliacoes, progresso, Coach IA e acompanhamento do personal.",
+        text: "Seu plano garante acesso completo a treinos, dieta, avaliações, progresso, Coach IA e acompanhamento do personal.",
         action: "Ver beneficios"
       },
       support: {
@@ -84,7 +84,7 @@ export default function StudentPayments({ student }) {
         <div>
           <span className="eyebrow">Assinatura premium</span>
           <h2>Pagamentos</h2>
-          <p>Acompanhe suas cobrancas, faturas e historico.</p>
+          <p>Acompanhe suas cobran?as, faturas e hist?rico.</p>
         </div>
         <button type="button" onClick={() => setModal("support")}>
           <Headphones size={18} />
@@ -95,7 +95,7 @@ export default function StudentPayments({ student }) {
       <article className="payment-main-card">
         <div className="payment-main-grid">
           <div className="payment-charge">
-            <span>Proxima cobranca</span>
+            <span>Pr?xima cobranca</span>
             <strong>R$ 199,00</strong>
             <div className="payment-plan-pill">
               <Crown size={24} />
@@ -208,7 +208,7 @@ export default function StudentPayments({ student }) {
           <ShieldCheck size={80} />
           <div>
             <h3>Treine com foco. Nos cuidamos do resto.</h3>
-            <p>Seu plano garante acesso completo a treinos, dieta, avaliacoes e acompanhamento.</p>
+            <p>Seu plano garante acesso completo a treinos, dieta, avaliações e acompanhamento.</p>
             <div>
               <span><Sparkles size={16} /> Acesso ilimitado</span>
               <span><MessageCircle size={16} /> Acompanhamento personalizado</span>

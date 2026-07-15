@@ -31,7 +31,7 @@ const notificationItems = [
   { id: "water", label: "Lembrete de agua", icon: Droplets },
   { id: "meal", label: "Lembrete de refeicao", icon: HeartPulse },
   { id: "messages", label: "Novas mensagens", icon: Bell },
-  { id: "assessments", label: "Avaliacoes", icon: Target },
+  { id: "assessments", label: "Avaliações", icon: Target },
   { id: "calendar", label: "Consultas agendadas", icon: CalendarDays }
 ];
 
@@ -75,7 +75,7 @@ export default function StudentSettings({ student }) {
     <section className="student-settings-page">
       <header className="student-settings-header">
         <div>
-          <h2>Configuracoes</h2>
+          <h2>Configurações</h2>
           <p>Gerencie sua conta e preferencias.</p>
         </div>
         <div className="student-settings-safe-card">
@@ -143,7 +143,7 @@ export default function StudentSettings({ student }) {
               );
             })}
           </div>
-          <button className="settings-wide-button" type="button" onClick={() => requestChange("Preferencias de notificacao atualizadas.")}>Gerenciar preferencias</button>
+          <button className="settings-wide-button" type="button" onClick={() => requestChange("Preferencias de notifica??o atualizadas.")}>Gerenciar preferencias</button>
         </article>
 
         <article className="student-settings-card span-4 schedule-card">
@@ -161,9 +161,9 @@ export default function StudentSettings({ student }) {
         </article>
 
         <article className="student-settings-card span-4 hydration-card">
-          <SectionTitle icon={Droplets} title="Hidratacao" />
+          <SectionTitle icon={Droplets} title="Hidratação" />
           <span className="settings-big-number">2,5 L</span>
-          <p>Meta diaria de agua calculada com base na sua avaliacao fisica.</p>
+          <p>Meta diaria de agua calculada com base na sua avaliação física.</p>
           <button className="settings-wide-button" type="button" onClick={() => requestChange("Pedido de recalculo de meta enviado.")}>Solicitar recalcular meta</button>
         </article>
 
@@ -171,9 +171,9 @@ export default function StudentSettings({ student }) {
           <SectionTitle icon={Lock} title="Privacidade" />
           <label className="settings-select-label"><span>Quem pode ver meus dados?</span><input value="Apenas eu e meu personal" readOnly /></label>
           <div className="settings-check-list">
-            <CheckLine label="Compartilhar fotos de evolucao" checked={privacy.photos} onClick={() => setPrivacy((value) => ({ ...value, photos: !value.photos }))} />
+            <CheckLine label="Compartilhar fotos de evolução" checked={privacy.photos} onClick={() => setPrivacy((value) => ({ ...value, photos: !value.photos }))} />
             <CheckLine label="Compartilhar exames" checked={privacy.exams} onClick={() => setPrivacy((value) => ({ ...value, exams: !value.exams }))} />
-            <CheckLine label="Compartilhar avaliacoes" checked={privacy.assessments} onClick={() => setPrivacy((value) => ({ ...value, assessments: !value.assessments }))} />
+            <CheckLine label="Compartilhar avaliações" checked={privacy.assessments} onClick={() => setPrivacy((value) => ({ ...value, assessments: !value.assessments }))} />
           </div>
           <button className="settings-wide-button" type="button" onClick={() => requestChange("Privacidade atualizada.")}>Gerenciar privacidade</button>
         </article>
@@ -199,7 +199,7 @@ export default function StudentSettings({ student }) {
           <SectionTitle icon={CreditCard} title="Conta" />
           <div className="settings-account-lines">
             <span><small>Plano atual</small><strong>Premium</strong></span>
-            <span><small>Proxima renovacao</small><strong>10/06/2026</strong></span>
+            <span><small>Pr?xima renovacao</small><strong>10/06/2026</strong></span>
             <span><small>Proximo pagamento</small><strong>R$ 89,90</strong></span>
           </div>
           <button className="settings-wide-button" type="button" onClick={() => requestChange("Area de assinatura preparada para integracao.")}>Gerenciar assinatura <ChevronRight size={17} /></button>
@@ -217,7 +217,7 @@ export default function StudentSettings({ student }) {
 
         <article className="student-settings-footer span-12">
           <div>
-            <p>Cada configuracao e um passo para uma jornada ainda mais personalizada e resultados extraordinarios.</p>
+            <p>Cada configuração e um passo para uma jornada ainda mais personalizada e resultados extraordinarios.</p>
             <strong>Thiago Filippo</strong>
             <small>Personal Trainer</small>
           </div>

@@ -42,7 +42,7 @@ const conversations = [
     metrics: { adherence: 87, workouts: "3/4", water: "2,1L / 2,5L", diet: 92 },
     messages: [
       { id: "m1", from: "student", type: "text", text: "Professor, senti dor no ombro direito durante o desenvolvimento com halteres. E normal?", time: "10:32" },
-      { id: "m2", from: "personal", type: "text", text: "Bom dia, Erika! Tudo bem?\n\nPode ser sobrecarga ou execucao incorreta. Vou te passar algumas orientacoes para ajustarmos isso.\n\nPode me enviar um video da execucao?", time: "10:35", read: true },
+      { id: "m2", from: "personal", type: "text", text: "Bom dia, Erika! Tudo bem?\n\nPode ser sobrecarga ou execu??o incorreta. Vou te passar algumas orientacoes para ajustarmos isso.\n\nPode me enviar um v?deo da execu??o?", time: "10:35", read: true },
       { id: "m3", from: "student", type: "text", text: "Claro! Ja ja envio aqui.", time: "10:36" },
       { id: "m4", from: "student", type: "video", text: "video_ombro.mp4", detail: "18.4 MB", time: "10:38" },
       { id: "m5", from: "personal", type: "text", text: "Otimo video! Identifiquei alguns pontos de ajuste na postura e amplitude. Vou ajustar seu treino e te enviar um exercicio alternativo para o ombro.", time: "10:42", read: true }
@@ -90,7 +90,7 @@ const conversations = [
     id: "conv-rafael",
     name: "Rafael Santos",
     avatar: "/lion-juda-logo.png",
-    objective: "Forca e recomposicao",
+    objective: "Força e recomposicao",
     startDate: "11/05/2024",
     nextAssessment: "04/07/2026",
     plan: "Plano Elite",
@@ -118,10 +118,10 @@ const conversations = [
     unread: 0,
     pinned: false,
     archived: false,
-    lastMessage: "Atualizei minhas medidas na avaliacao.",
+    lastMessage: "Atualizei minhas medidas na avaliação.",
     metrics: { adherence: 88, workouts: "4/4", water: "2,0L / 2,4L", diet: 90 },
     messages: [
-      { id: "c1", from: "student", type: "document", text: "avaliacao_junho.pdf", detail: "2.1 MB", time: "Ontem" }
+      { id: "c1", from: "student", type: "document", text: "avaliação_junho.pdf", detail: "2.1 MB", time: "Ontem" }
     ]
   },
   {
@@ -137,16 +137,16 @@ const conversations = [
     unread: 0,
     pinned: false,
     archived: false,
-    lastMessage: "Nao vou conseguir treinar amanha.",
+    lastMessage: "N?o vou conseguir treinar amanh?.",
     metrics: { adherence: 72, workouts: "2/4", water: "1,8L / 2,8L", diet: 76 },
     messages: [
-      { id: "b1", from: "student", type: "text", text: "Nao vou conseguir treinar amanha. Remarco para sexta?", time: "2 dias" }
+      { id: "b1", from: "student", type: "text", text: "N?o vou conseguir treinar amanh?. Remarco para sexta?", time: "2 dias" }
     ]
   }
 ];
 
 const quickActions = [
-  ["Nova avaliacao", FileText],
+  ["Nova avaliação", FileText],
   ["Atualizar treino", UserRound],
   ["Atualizar dieta", Check],
   ["Agendar consulta", CalendarDays],
@@ -279,11 +279,11 @@ export default function PersonalMessages() {
               <h4>Informacoes do aluno</h4>
               <p>Objetivo: {selected.objective}</p>
               <p>Inicio: {selected.startDate}</p>
-              <p>Proxima avaliacao: {selected.nextAssessment}</p>
+              <p>Pr?xima avaliação: {selected.nextAssessment}</p>
             </div>
             <button type="button" onClick={() => setMobileView("profile")}>Ver perfil completo</button>
             <div className="messages-adherence-chip">
-              <span>Aderencia geral</span>
+              <span>Aderência geral</span>
               <strong>{selected.metrics.adherence}%</strong>
             </div>
           </article>
@@ -316,12 +316,12 @@ export default function PersonalMessages() {
           <p>{selected.objective}</p>
           <div className="messages-profile-details">
             <span>Inicio<strong>{selected.startDate}</strong></span>
-            <span>Proxima avaliacao<strong>{selected.nextAssessment}</strong></span>
+            <span>Pr?xima avaliação<strong>{selected.nextAssessment}</strong></span>
             <span>Plano atual<strong>{selected.plan}</strong></span>
           </div>
 
           <div className="messages-metric-grid">
-            <span>Aderencia geral<strong>{selected.metrics.adherence}%</strong></span>
+            <span>Aderência geral<strong>{selected.metrics.adherence}%</strong></span>
             <span>Treinos da semana<strong>{selected.metrics.workouts}</strong></span>
             <span>Agua<strong>{selected.metrics.water}</strong></span>
             <span>Dieta<strong>{selected.metrics.diet}%</strong></span>
@@ -387,7 +387,7 @@ function ScheduleModal({ student, onClose }) {
       <div className="messages-schedule-modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
         <button type="button" className="messages-modal-close" onClick={onClose} aria-label="Fechar"><X size={18} /></button>
         <h3>Agendar consulta</h3>
-        <p>Escolha data, horario e formato para {student.name}.</p>
+        <p>Escolha data, horário e formato para {student.name}.</p>
         <div className="schedule-choice-grid">
           {['Online', 'Presencial'].map((item) => (
             <button key={item} className={type === item ? 'active' : ''} type="button" onClick={() => setType(item)}>{item}</button>

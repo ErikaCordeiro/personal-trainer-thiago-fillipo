@@ -23,27 +23,27 @@ const hours = ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "1
 
 const events = [
   { id: 1, day: "seg", time: "07:00", student: "Erika Gomes", type: "Treino", objective: "Hipertrofia", duration: "60 min", location: "Studio", status: "Confirmado", notes: "Inferiores com foco em progressao.", row: 0 },
-  { id: 2, day: "seg", time: "09:00", student: "Lucas Martins", type: "Avaliacao", objective: "Definicao", duration: "45 min", location: "Sala de avaliacao", status: "Confirmado", notes: "Revisar medidas e fotos.", row: 2 },
+  { id: 2, day: "seg", time: "09:00", student: "Lucas Martins", type: "Avaliação", objective: "Definicao", duration: "45 min", location: "Sala de avaliação", status: "Confirmado", notes: "Revisar medidas e fotos.", row: 2 },
   { id: 3, day: "seg", time: "14:00", student: "Amanda Lima", type: "Treino", objective: "Emagrecimento", duration: "60 min", location: "Studio", status: "Pendente", notes: "Treino metabolico leve.", row: 7 },
-  { id: 4, day: "ter", time: "08:00", student: "Patricia Alves", type: "Treino", objective: "Forca", duration: "60 min", location: "Studio", status: "Confirmado", notes: "Superiores A.", row: 1 },
-  { id: 5, day: "ter", time: "10:00", student: "Rafael Souza", type: "Avaliacao", objective: "Recomposicao", duration: "45 min", location: "Sala de avaliacao", status: "Confirmado", notes: "Nova bioimpedancia.", row: 3 },
+  { id: 4, day: "ter", time: "08:00", student: "Patricia Alves", type: "Treino", objective: "Força", duration: "60 min", location: "Studio", status: "Confirmado", notes: "Superiores A.", row: 1 },
+  { id: 5, day: "ter", time: "10:00", student: "Rafael Souza", type: "Avaliação", objective: "Recomposicao", duration: "45 min", location: "Sala de avaliação", status: "Confirmado", notes: "Nova bioimpedancia.", row: 3 },
   { id: 6, day: "qua", time: "07:30", student: "Juliana Costa", type: "Treino", objective: "Performance", duration: "60 min", location: "Studio", status: "Confirmado", notes: "Costas e biceps.", row: 0.5 },
-  { id: 7, day: "qua", time: "09:30", student: "Lucas Martins", type: "Avaliacao", objective: "Definicao", duration: "45 min", location: "Sala de avaliacao", status: "Confirmado", notes: "Conferencia de dobras.", row: 2.5 },
+  { id: 7, day: "qua", time: "09:30", student: "Lucas Martins", type: "Avaliação", objective: "Definicao", duration: "45 min", location: "Sala de avaliação", status: "Confirmado", notes: "Conferencia de dobras.", row: 2.5 },
   { id: 8, day: "qua", time: "11:30", student: "Equipe", type: "Reuniao", objective: "Operacao", duration: "30 min", location: "Online", status: "Confirmado", notes: "Ajustes de agenda.", row: 4.5 },
   { id: 9, day: "qua", time: "14:00", student: "Amanda Lima", type: "Dieta", objective: "Emagrecimento", duration: "30 min", location: "Online", status: "Pendente", notes: "Ajustar marmitas.", row: 7 },
   { id: 10, day: "qua", time: "17:00", student: "Erika Gomes", type: "Treino", objective: "Hipertrofia", duration: "60 min", location: "Studio", status: "Confirmado", notes: "Peito e ombros.", row: 10 },
-  { id: 11, day: "qui", time: "08:00", student: "Gabriel Ferreira", type: "Avaliacao", objective: "Ganho de massa", duration: "45 min", location: "Sala de avaliacao", status: "Confirmado", notes: "Reavaliar massa magra.", row: 1 },
+  { id: 11, day: "qui", time: "08:00", student: "Gabriel Ferreira", type: "Avaliação", objective: "Ganho de massa", duration: "45 min", location: "Sala de avaliação", status: "Confirmado", notes: "Reavaliar massa magra.", row: 1 },
   { id: 12, day: "qui", time: "10:00", student: "Erika Gomes", type: "Treino", objective: "Hipertrofia", duration: "60 min", location: "Studio", status: "Confirmado", notes: "Gluteos e posteriores.", row: 3 },
   { id: 13, day: "qui", time: "13:30", student: "Rafael Souza", type: "Dieta", objective: "Recomposicao", duration: "30 min", location: "Online", status: "Pendente", notes: "Plano alimentar semanal.", row: 6.5 },
   { id: 14, day: "sex", time: "07:00", student: "Amanda Lima", type: "Treino", objective: "Emagrecimento", duration: "60 min", location: "Studio", status: "Confirmado", notes: "Full body.", row: 0 },
-  { id: 15, day: "sex", time: "09:00", student: "Rafael Souza", type: "Avaliacao", objective: "Recomposicao", duration: "45 min", location: "Sala de avaliacao", status: "Confirmado", notes: "Fotos comparativas.", row: 2 },
-  { id: 16, day: "sex", time: "11:30", student: "Juliana Costa", type: "Dieta", objective: "Performance", duration: "30 min", location: "Online", status: "Confirmado", notes: "Pre-treino e hidratacao.", row: 4.5 },
+  { id: 15, day: "sex", time: "09:00", student: "Rafael Souza", type: "Avaliação", objective: "Recomposicao", duration: "45 min", location: "Sala de avaliação", status: "Confirmado", notes: "Fotos comparativas.", row: 2 },
+  { id: 16, day: "sex", time: "11:30", student: "Juliana Costa", type: "Dieta", objective: "Performance", duration: "30 min", location: "Online", status: "Confirmado", notes: "Pre-treino e hidratação.", row: 4.5 },
   { id: 17, day: "sex", time: "15:00", student: "Lucas Martins", type: "Treino", objective: "Definicao", duration: "60 min", location: "Studio", status: "Confirmado", notes: "Cardio final.", row: 8 }
 ];
 
 const typeClass = {
   Treino: "workout",
-  Avaliacao: "assessment",
+  Avaliação: "assessment",
   Dieta: "diet",
   Consulta: "consult",
   Reuniao: "meeting"
@@ -79,7 +79,7 @@ export default function PersonalAgenda({ students }) {
       <div className="agenda-summary-grid">
         <SummaryCard icon={CalendarDays} title="Hoje" value="8" detail="compromissos" />
         <SummaryCard icon={Users} title="Alunos agendados" value="24" detail="hoje" />
-        <SummaryCard icon={ClipboardCheck} title="Avaliacoes" value="3" detail="agendadas" />
+        <SummaryCard icon={ClipboardCheck} title="Avaliações" value="3" detail="agendadas" />
         <SummaryCard icon={Dumbbell} title="Treinos marcados" value="18" detail="hoje" />
       </div>
 
@@ -144,7 +144,7 @@ export default function PersonalAgenda({ students }) {
             </div>
             <div className="agenda-coach-orb"><Sparkles size={30} /></div>
             <ul>
-              <li>Voce possui 3 avaliacoes hoje.</li>
+              <li>Voce possui 3 avaliações hoje.</li>
               <li>2 alunos ainda nao confirmaram presenca.</li>
               <li>Sua agenda esta com 87% de ocupacao.</li>
             </ul>
@@ -176,7 +176,7 @@ export default function PersonalAgenda({ students }) {
         <AgendaModal title="Novo compromisso" onClose={() => setNewOpen(false)}>
           <form className="agenda-form" onSubmit={(event) => { event.preventDefault(); setNewOpen(false); }}>
             <label>Aluno<select defaultValue={students?.[0]?.name || "Erika Gomes"}><option>{students?.[0]?.name || "Erika Gomes"}</option><option>Amanda Lima</option><option>Gabriel Ferreira</option></select></label>
-            <label>Tipo<select defaultValue="Treino"><option>Treino</option><option>Avaliacao</option><option>Dieta</option><option>Reuniao</option><option>Consulta</option></select></label>
+            <label>Tipo<select defaultValue="Treino"><option>Treino</option><option>Avaliação</option><option>Dieta</option><option>Reuniao</option><option>Consulta</option></select></label>
             <label>Data<input type="date" defaultValue="2025-06-23" /></label>
             <label>Horario<input type="time" defaultValue="09:30" /></label>
             <label>Duracao<input type="text" defaultValue="60 min" /></label>
@@ -191,8 +191,8 @@ export default function PersonalAgenda({ students }) {
         <AgendaModal title="Insights da agenda" onClose={() => setInsightsOpen(false)}>
           <ul className="agenda-insight-list">
             <li><CheckCircle2 size={17} /> Melhor janela livre: quinta as 12:00.</li>
-            <li><CheckCircle2 size={17} /> Concentre avaliacoes pela manha para reduzir pausas.</li>
-            <li><CheckCircle2 size={17} /> Erika e Amanda podem alternar horarios sem conflito.</li>
+            <li><CheckCircle2 size={17} /> Concentre avaliações pela manh? para reduzir pausas.</li>
+            <li><CheckCircle2 size={17} /> Erika e Amanda podem alternar horários sem conflito.</li>
           </ul>
           <button type="button" className="agenda-metal-button" onClick={() => setInsightsOpen(false)}>Aplicar sugestao</button>
         </AgendaModal>

@@ -22,53 +22,53 @@ import {
 } from "lucide-react";
 
 const quickReports = [
-  ["Relatorio mensal", "Visao geral do mes", CalendarDays],
-  ["Relatorio de alunos", "Desempenho dos alunos", Users],
-  ["Relatorio financeiro", "Receitas e faturamento", Wallet],
-  ["Relatorio de treinos", "Adesao e conclusao", Dumbbell],
-  ["Relatorio de dietas", "Adesao e evolucao", Apple],
-  ["Relatorio de avaliacoes", "Evolucao corporal", FileText]
+  ["Relatório mensal", "Visão geral do mes", CalendarDays],
+  ["Relatório de alunos", "Desempenho dos alunos", Users],
+  ["Relatório financeiro", "Receitas e faturamento", Wallet],
+  ["Relatório de treinos", "Adesao e conclusao", Dumbbell],
+  ["Relatório de dietas", "Adesao e evolução", Apple],
+  ["Relatório de avaliações", "Evolução corporal", FileText]
 ];
 
 const kpis = [
-  ["Alunos ativos", "128", "+12% vs mes anterior", Users, [30, 42, 38, 50, 58, 72]],
-  ["Evolucao media", "87%", "+8% vs mes anterior", LineChart, [28, 35, 48, 55, 70, 87]],
-  ["Receita mensal", "R$ 24.580", "+15% vs mes anterior", Wallet, [16, 21, 19, 25, 28, 34]],
-  ["Aderencia media", "89%", "+7% vs mes anterior", CheckCircle2, [62, 70, 68, 76, 82, 89]],
-  ["Avaliacoes realizadas", "42", "+20% vs mes anterior", FileText, [18, 24, 25, 31, 35, 42]]
+  ["Alunos ativos", "128", "+12% vs mês anterior", Users, [30, 42, 38, 50, 58, 72]],
+  ["Evolução media", "87%", "+8% vs mês anterior", LineChart, [28, 35, 48, 55, 70, 87]],
+  ["Receita mensal", "R$ 24.580", "+15% vs mês anterior", Wallet, [16, 21, 19, 25, 28, 34]],
+  ["Aderência media", "89%", "+7% vs mês anterior", CheckCircle2, [62, 70, 68, 76, 82, 89]],
+  ["Avaliações realizadas", "42", "+20% vs mês anterior", FileText, [18, 24, 25, 31, 35, 42]]
 ];
 
 const recentReports = [
-  ["Relatorio Mensal - Maio/2026", "Gerado em 31/05/2026 as 10:42", "PDF", "2.4 MB"],
-  ["Relatorio de Alunos - Maio/2026", "Gerado em 30/05/2026 as 16:20", "PDF", "1.8 MB"],
-  ["Relatorio Financeiro - Maio/2026", "Gerado em 30/05/2026 as 09:15", "PDF", "1.2 MB"],
-  ["Relatorio de Treinos - Maio/2026", "Gerado em 29/05/2026 as 14:30", "PDF", "3.1 MB"],
-  ["Relatorio de Avaliacoes - Maio/2026", "Gerado em 28/05/2026 as 11:05", "PDF", "2.7 MB"]
+  ["Relatório Mensal - Maio/2026", "Gerado em 31/05/2026 as 10:42", "PDF", "2.4 MB"],
+  ["Relatório de Alunos - Maio/2026", "Gerado em 30/05/2026 as 16:20", "PDF", "1.8 MB"],
+  ["Relatório Financeiro - Maio/2026", "Gerado em 30/05/2026 as 09:15", "PDF", "1.2 MB"],
+  ["Relatório de Treinos - Maio/2026", "Gerado em 29/05/2026 as 14:30", "PDF", "3.1 MB"],
+  ["Relatório de Avaliações - Maio/2026", "Gerado em 28/05/2026 as 11:05", "PDF", "2.7 MB"]
 ];
 
 const ranking = [
-  ["Erika Gomes", "Maior evolucao", "+4,2%", "94"],
+  ["Erika Gomes", "Maior evolução", "+4,2%", "94"],
   ["Lucas Almeida", "Aumento de carga", "+22 kg", "91"],
   ["Mariana Costa", "Melhor dieta", "96%", "89"],
   ["Rafael Santos", "Perda de peso", "-3,8 kg", "86"],
-  ["Camila Ferreira", "Melhor aderencia", "92%", "84"]
+  ["Camila Ferreira", "Melhor aderência", "92%", "84"]
 ];
 
 const insightPrompts = [
-  ["Gerar resumo mensal", "Resumo completo do mes atual", Sparkles],
+  ["Gerar resumo mensal", "Resumo completo do mês atual", Sparkles],
   ["Quais alunos mais evoluiram?", "Analise dos melhores resultados", Trophy],
-  ["Quem precisa de atencao?", "Alunos com baixa aderencia", AlertTriangle],
-  ["Previsao de resultados", "Projecao para os proximos meses", LineChart],
-  ["Baixa aderencia alimentar", "Detectar queda em dieta", Apple],
-  ["Aumento de carga", "Evolucao por exercicio", Dumbbell]
+  ["Quem precisa de atencao?", "Alunos com baixa aderência", AlertTriangle],
+  ["Previsão de resultados", "Projecao para os pr?ximos meses", LineChart],
+  ["Baixa aderência alimentar", "Detectar queda em dieta", Apple],
+  ["Aumento de carga", "Evolução por exercicio", Dumbbell]
 ];
 
 const performanceData = [52, 61, 68, 64, 72, 79, 75, 88, 91, 86, 94, 96];
 
 export default function PersonalReports({ students = [] }) {
-  const [selectedReport, setSelectedReport] = useState("Relatorio mensal");
-  const [period, setPeriod] = useState("Este mes (01/05/2026 - 31/05/2026)");
-  const [reportType, setReportType] = useState("Relatorio mensal");
+  const [selectedReport, setSelectedReport] = useState("Relatório mensal");
+  const [period, setPeriod] = useState("Este mês (01/05/2026 - 31/05/2026)");
+  const [reportType, setReportType] = useState("Relatório mensal");
   const studentCount = students.length || 128;
 
   const bars = useMemo(() => performanceData.map((value, index) => ({ label: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"][index], value })), []);
@@ -77,28 +77,28 @@ export default function PersonalReports({ students = [] }) {
     <section className="reports-admin-page">
       <header className="reports-admin-header">
         <div>
-          <h2>Relatorios</h2>
-          <p>Visao geral dos resultados do seu negocio e da evolucao dos seus alunos.</p>
+          <h2>Relatórios</h2>
+          <p>Visão geral dos resultados do seu neg?cio e da evolução dos seus alunos.</p>
         </div>
         <div className="reports-header-actions">
           <button type="button" aria-label="Notificacoes"><Bell size={20} /><span>3</span></button>
           <label>
             <CalendarDays size={18} />
             <select value={period} onChange={(event) => setPeriod(event.target.value)}>
-              <option>Este mes (01/05/2026 - 31/05/2026)</option>
+              <option>Este mês (01/05/2026 - 31/05/2026)</option>
               <option>Ultimos 30 dias</option>
               <option>Ultimos 3 meses</option>
               <option>Ultimos 12 meses</option>
             </select>
             <ChevronDown size={16} />
           </label>
-          <button type="button"><Download size={18} /> Exportar relatorio</button>
+          <button type="button"><Download size={18} /> Exportar relatório</button>
         </div>
       </header>
 
       <article className="reports-card reports-quick-card">
         <div className="reports-section-title">
-          <h3>Relatorios rapidos</h3>
+          <h3>Relatórios rapidos</h3>
           <p>Atalhos executivos para gerar visoes prontas.</p>
         </div>
         <div className="reports-quick-grid">
@@ -130,7 +130,7 @@ export default function PersonalReports({ students = [] }) {
           <div className="reports-section-title horizontal">
             <div>
               <h3>Desempenho geral</h3>
-              <p>Evolucao de alunos, aderencia e resultado financeiro.</p>
+              <p>Evolução de alunos, aderência e resultado financeiro.</p>
             </div>
             <select>
               <option>Ultimos 6 meses</option>
@@ -149,7 +149,7 @@ export default function PersonalReports({ students = [] }) {
           </div>
           <div className="reports-chart-legend">
             <span><i /> Alunos</span>
-            <span><i /> Aderencia</span>
+            <span><i /> Aderência</span>
             <span><i /> Financeiro</span>
           </div>
         </article>
@@ -178,14 +178,14 @@ export default function PersonalReports({ students = [] }) {
       <div className="reports-lower-grid">
         <article className="reports-card reports-generator-card">
           <div className="reports-section-title">
-            <h3>Gerador de relatorio</h3>
-            <p>Selecione os filtros abaixo para gerar seu relatorio personalizado.</p>
+            <h3>Gerador de relatório</h3>
+            <p>Selecione os filtros abaixo para gerar seu relatório personalizado.</p>
           </div>
           <div className="reports-form-grid">
             <label>Periodo<input value="01/05/2026 - 31/05/2026" readOnly /></label>
             <label>Aluno<select><option>Todos os alunos</option><option>Erika Gomes</option><option>Lucas Almeida</option></select></label>
-            <label>Tipo de relatorio<select value={reportType} onChange={(event) => setReportType(event.target.value)}>{quickReports.map(([title]) => <option key={title}>{title}</option>)}</select></label>
-            <label>Status<select><option>Todos</option><option>Ativos</option><option>AtenÃ§Ã£o</option></select></label>
+            <label>Tipo de relatório<select value={reportType} onChange={(event) => setReportType(event.target.value)}>{quickReports.map(([title]) => <option key={title}>{title}</option>)}</select></label>
+            <label>Status<select><option>Todos</option><option>Ativos</option><option>Atenção</option></select></label>
             <label>Objetivo<select><option>Todos os objetivos</option><option>Hipertrofia</option><option>Emagrecimento</option></select></label>
             <label>Formato<select><option>PDF</option><option>Excel</option><option>CSV</option></select></label>
           </div>
@@ -199,7 +199,7 @@ export default function PersonalReports({ students = [] }) {
         <article className="reports-card reports-recent-card">
           <div className="reports-section-title horizontal">
             <div>
-              <h3>Relatorios recentes</h3>
+              <h3>Relatórios recentes</h3>
               <p>Arquivos gerados com identidade da marca.</p>
             </div>
             <button type="button">Ver todos</button>
@@ -220,7 +220,7 @@ export default function PersonalReports({ students = [] }) {
       <article className="reports-card reports-ai-card">
         <div>
           <div className="reports-section-title">
-            <h3>Coach IA para relatorios</h3>
+            <h3>Coach IA para relatórios</h3>
             <p>Use inteligencia artificial para gerar insights e analises avancadas.</p>
           </div>
           <div className="reports-insight-grid">

@@ -24,16 +24,16 @@ import {
 
 const initialMessages = [
   { id: "m1", from: "student", type: "text", text: "Bom dia, professor! Tudo bem?\nHoje durante o desenvolvimento estou sentindo dor no ombro direito.", time: "10:31", read: true },
-  { id: "m2", from: "personal", type: "text", text: "Bom dia! Tudo bem e com voce?\nMe envie um video da execucao para eu analisar melhor, por favor.", time: "10:32" },
-  { id: "m3", from: "student", type: "video", text: "execucao_ombro.mp4", detail: "0:18", time: "10:33", read: true },
+  { id: "m2", from: "personal", type: "text", text: "Bom dia! Tudo bem e com voc??\nMe envie um v?deo da execu??o para eu analisar melhor, por favor.", time: "10:32" },
+  { id: "m3", from: "student", type: "video", text: "execu??o_ombro.mp4", detail: "0:18", time: "10:33", read: true },
   { id: "m4", from: "personal", type: "text", text: "Otimo! Identifiquei alguns pontos de ajuste na postura e na amplitude. Vou te enviar um video explicando os detalhes e o que ajustar.", time: "10:35" },
   { id: "m5", from: "personal", type: "video", text: "ajuste_ombro_thiago.mp4", detail: "1:24", time: "10:36" },
-  { id: "m6", from: "student", type: "text", text: "Entendi! Muito obrigada, professor. Vou ajustar e te mando outro video na proxima semana.", time: "10:37", read: true }
+  { id: "m6", from: "student", type: "text", text: "Entendi! Muito obrigada, professor. Vou ajustar e te mando outro video na pr?xima semana.", time: "10:37", read: true }
 ];
 
 const quickActions = [
-  { id: "schedule", title: "Agendar consulta", text: "Escolha dia e horario", icon: CalendarDays, prompt: "Oi, Thiago! Quero agendar uma consulta." },
-  { id: "assessment", title: "Solicitar avaliacao", text: "Pedir nova avaliacao", icon: ClipboardCheck, prompt: "Oi, Thiago! Gostaria de solicitar uma nova avaliacao fisica." },
+  { id: "schedule", title: "Agendar consulta", text: "Escolha dia e horário", icon: CalendarDays, prompt: "Oi, Thiago! Quero agendar uma consulta." },
+  { id: "assessment", title: "Solicitar avaliação", text: "Pedir nova avaliação", icon: ClipboardCheck, prompt: "Oi, Thiago! Gostaria de solicitar uma nova avaliação física." },
   { id: "workout", title: "Duvida sobre treino", text: "Execucao, carga ou dor", icon: Dumbbell, prompt: "Oi, Thiago! Tenho uma duvida sobre meu treino." },
   { id: "diet", title: "Duvida sobre dieta", text: "Refeicoes e substituicoes", icon: Utensils, prompt: "Oi, Thiago! Tenho uma duvida sobre minha dieta." }
 ];
@@ -94,7 +94,7 @@ export default function StudentMessages({ student }) {
           <span>Personal</span>
           <h3>Thiago Filippo <ShieldCheck size={19} /></h3>
           <p><i /> Online</p>
-          <small>Disciplina • Foco • Proposito</small>
+          <small>Disciplina • Foco • Propósito</small>
         </div>
         <img className="student-personal-lion" src="/lion-juda-logo.png" alt="" />
       </article>
@@ -176,7 +176,7 @@ function StudentScheduleModal({ onClose, onConfirm }) {
       <div className="student-message-schedule" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
         <button type="button" className="student-message-modal-close" onClick={onClose} aria-label="Fechar"><X size={18} /></button>
         <h3>Agendar consulta</h3>
-        <p>Escolha o melhor dia e horario para falar com o Thiago.</p>
+        <p>Escolha o melhor dia e horário para falar com o Thiago.</p>
 
         <div className="student-schedule-personal">
           <img src="/lion-juda-logo.png" alt="" />

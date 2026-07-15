@@ -25,11 +25,11 @@ export default function AboutPersonal({ profile, editable = false, onSave }) {
             <textarea value={draft.bio} onChange={(event) => update("bio", event.target.value)} />
           ) : <p>{data.bio}</p>}
           <div className="about-personal-actions">
-            {editable && !editing && <button type="button" onClick={() => setEditing(true)}><Edit3 size={18} /> Editar informaÃ§Ãµes</button>}
-            {editable && editing && <button type="button" onClick={save}><Save size={18} /> Salvar pÃ¡gina</button>}
+            {editable && !editing && <button type="button" onClick={() => setEditing(true)}><Edit3 size={18} /> Editar informações</button>}
+            {editable && editing && <button type="button" onClick={save}><Save size={18} /> Salvar página</button>}
           </div>
         </div>
-        <img src="/lion-juda-logo.png" alt="LeÃ£o de JudÃ¡" />
+        <img src="/lion-juda-logo.png" alt="Leão de Judá" />
       </article>
 
       <section className="about-personal-grid">
@@ -40,12 +40,12 @@ export default function AboutPersonal({ profile, editable = false, onSave }) {
         </article>
         <article>
           <Star size={24} />
-          <span>ExperiÃªncia</span>
+          <span>Experiência</span>
           {editing ? <input value={draft.experience} onChange={(event) => update("experience", event.target.value)} /> : <strong>{data.experience}</strong>}
         </article>
         <article>
           <Target size={24} />
-          <span>MÃ©todo</span>
+          <span>Método</span>
           {editing ? <input value={draft.method} onChange={(event) => update("method", event.target.value)} /> : <strong>{data.method}</strong>}
         </article>
       </section>
@@ -56,7 +56,7 @@ export default function AboutPersonal({ profile, editable = false, onSave }) {
           {editing ? <textarea value={draft.philosophy} onChange={(event) => update("philosophy", event.target.value)} /> : <h3>{data.philosophy}</h3>}
         </article>
         <article className="about-card-large">
-          <p className="eyebrow">O que vocÃª encontra aqui</p>
+          <p className="eyebrow">O que você encontra aqui</p>
           <ul>
             {(data.highlights || []).map((item, index) => (
               <li key={`${item}-${index}`}><CheckCircle2 size={18} /> {item}</li>

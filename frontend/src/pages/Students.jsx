@@ -238,7 +238,7 @@ export default function Students({
               </label>
               <label className="wide">
                 <span>Observacoes</span>
-                <textarea name="notes" rows="4" placeholder="Lesoes, limitacoes, rotina, preferencias e estrategia." defaultValue={editingStudent?.notes || ""} />
+                <textarea name="notes" rows="4" placeholder="Lesoes, limitacoes, rotina, preferencias e estrat?gia." defaultValue={editingStudent?.notes || ""} />
               </label>
             </div>
             <div className="modal-actions">

@@ -15,9 +15,9 @@ import {
 
 const nutritionStats = [
   { label: "Planos ativos", value: "1", detail: "Erika", icon: Apple },
-  { label: "Aderencia media", value: "91%", detail: "+8% vs mes anterior", icon: CheckCircle2 },
+  { label: "Aderência media", value: "91%", detail: "+8% vs mês anterior", icon: CheckCircle2 },
   { label: "Refeicoes registradas", value: "18", detail: "ultimos 7 dias", icon: Utensils },
-  { label: "Hidratacao media", value: "72%", detail: "meta diaria", icon: Droplets },
+  { label: "Hidratação media", value: "72%", detail: "meta diaria", icon: Droplets },
   { label: "Alertas nutricionais", value: "3", detail: "precisam de atencao", icon: AlertTriangle }
 ];
 
@@ -35,14 +35,14 @@ const studentRows = [
 ];
 
 const meals = [
-  { time: "07:00", name: "Cafe da manha", student: "Erika", foods: "Aveia, whey, banana e chia", kcal: "542 kcal" },
+  { time: "07:00", name: "Caf? da manh?", student: "Erika", foods: "Aveia, whey, banana e chia", kcal: "542 kcal" },
   { time: "13:00", name: "Almoco", student: "Erika", foods: "Frango, arroz integral, feijao e salada", kcal: "680 kcal" },
   { time: "19:30", name: "Jantar", student: "Erika", foods: "Salmao com batata doce e legumes", kcal: "610 kcal" }
 ];
 
 const alerts = [
   "Erika ficou abaixo da meta de fibras",
-  "1 refeicao enviada por foto aguarda revisao"
+  "1 refeicao enviada por foto aguarda revisão"
 ];
 
 export default function PersonalDiet({ students }) {
@@ -128,7 +128,7 @@ export default function PersonalDiet({ students }) {
               <span>Calorias</span>
               <span>Proteina</span>
               <span>Agua</span>
-              <span>Aderencia</span>
+              <span>Aderência</span>
               <span>Status</span>
             </div>
             {studentRows.map((row) => (
@@ -212,7 +212,7 @@ export default function PersonalDiet({ students }) {
           <Sparkles size={24} />
           <p className="eyebrow">Coach IA nutricional</p>
           <h2>Gerar dieta, marmita ou ajuste</h2>
-          <p>Use a IA para criar planos, revisar fotos de refeicao, sugerir substituicoes e resumir a evolucao alimentar.</p>
+          <p>Use a IA para criar planos, revisar fotos de refeicao, sugerir substituicoes e resumir a evolução alimentar.</p>
           <div className="coach-admin-actions">
             <button type="button">Gerar dieta</button>
             <button type="button">Criar marmita</button>

@@ -18,14 +18,14 @@ import {
 } from "lucide-react";
 
 const kpis = [
-  ["Alunos ativos", "128", "↑ 12% vs mes anterior", Users],
-  ["Aderencia media", "78%", "↑ 6% vs mes anterior", Award],
-  ["Peso total perdido", "-128,4 kg", "↑ 15,3 kg vs mes anterior", TrendingDown],
-  ["Massa magra total ganha", "+46,7 kg", "↑ 6,3 kg vs mes anterior", Trophy],
-  ["Reducao media de gordura", "-2,4%", "↓ 0,6% vs mes anterior", Flame],
-  ["Adesao alimentar", "74%", "↑ 8% vs mes anterior", Apple],
-  ["Treinos concluidos", "2.156", "↑ 18% vs mes anterior", Dumbbell],
-  ["Hidratacao media", "2,1 L", "↑ 0,3 L vs mes anterior", Droplets]
+  ["Alunos ativos", "128", "↑ 12% vs mês anterior", Users],
+  ["Aderência media", "78%", "↑ 6% vs mês anterior", Award],
+  ["Peso total perdido", "-128,4 kg", "↑ 15,3 kg vs mês anterior", TrendingDown],
+  ["Massa magra total ganha", "+46,7 kg", "↑ 6,3 kg vs mês anterior", Trophy],
+  ["Reducao media de gordura", "-2,4%", "↓ 0,6% vs mês anterior", Flame],
+  ["Adesao alimentar", "74%", "↑ 8% vs mês anterior", Apple],
+  ["Treinos concluidos", "2.156", "↑ 18% vs mês anterior", Dumbbell],
+  ["Hidratação media", "2,1 L", "↑ 0,3 L vs mês anterior", Droplets]
 ];
 
 const highlights = [
@@ -35,10 +35,10 @@ const highlights = [
 ];
 
 const alerts = [
-  ["Alta", "3 alunos com queda de aderencia", "Aderencia abaixo de 50%"],
+  ["Alta", "3 alunos com queda de aderência", "Aderência abaixo de 50%"],
   ["Media", "2 alunos nao registraram refeicoes", "Nos ultimos 2 dias"],
-  ["Alta", "1 aluno aumentou gordura corporal", "Fique atento a evolucao"],
-  ["Media", "Baixa hidratacao geral", "Media abaixo do ideal"],
+  ["Alta", "1 aluno aumentou gordura corporal", "Fique atento a evolução"],
+  ["Media", "Baixa hidratação geral", "Media abaixo do ideal"],
   ["Boa", "Parabens! 12 alunos bateram meta", "Otimo trabalho"]
 ];
 
@@ -52,17 +52,17 @@ const ranking = [
 
 const measureRows = [
   ["Cintura", "78,2 cm", "81,1 cm", "-2,9 cm ↓", 82],
-  ["Abdomen", "85,4 cm", "88,7 cm", "-3,3 cm ↓", 76],
+  ["Abdômen", "85,4 cm", "88,7 cm", "-3,3 cm ↓", 76],
   ["Peito", "98,0 cm", "96,2 cm", "+1,8 cm ↑", 66],
   ["Quadril", "102,3 cm", "104,1 cm", "-1,8 cm ↓", 72],
-  ["Braco", "30,5 cm", "30,0 cm", "+0,5 cm ↑", 44],
+  ["Braço", "30,5 cm", "30,0 cm", "+0,5 cm ↑", 44],
   ["Coxa", "56,1 cm", "56,9 cm", "-0,8 cm ↓", 58]
 ];
 
 const insights = [
-  "Erika Gomes e a aluna com melhor evolucao do mes, com -4,2% de gordura corporal e +2,1 kg de massa magra.",
-  "Aderencia alimentar aumentou 8% em relacao ao mes anterior. Excelente tendencia.",
-  "Hidratacao media ainda abaixo do ideal. Sugira aumentar ingestao de agua aos alunos."
+  "Erika Gomes e a aluna com melhor evolução do mes, com -4,2% de gordura corporal e +2,1 kg de massa magra.",
+  "Aderência alimentar aumentou 8% em relacao ao mês anterior. Excelente tendencia.",
+  "Hidratação media ainda abaixo do ideal. Sugira aumentar ingestao de agua aos alunos."
 ];
 
 export default function PersonalProgress({ onOpenStudentProgress }) {
@@ -71,7 +71,7 @@ export default function PersonalProgress({ onOpenStudentProgress }) {
       <header className="progress-admin-header">
         <div>
           <h2>Progresso</h2>
-          <p>Acompanhe a evolucao geral de todos os seus alunos.</p>
+          <p>Acompanhe a evolução geral de todos os seus alunos.</p>
         </div>
         <div className="progress-filter-row">
           <select defaultValue="month">
@@ -83,7 +83,7 @@ export default function PersonalProgress({ onOpenStudentProgress }) {
           <select defaultValue="compare">
             <option value="compare">Comparar com: 01/04/2025 - 30/04/2025</option>
           </select>
-          <button type="button"><FileText size={18} /> Relatorio completo</button>
+          <button type="button"><FileText size={18} /> Relatório completo</button>
         </div>
       </header>
 
@@ -136,7 +136,7 @@ export default function PersonalProgress({ onOpenStudentProgress }) {
             <button type="button">Ver todos</button>
           </div>
           <div className="highlight-tabs">
-            {["Maior evolucao", "Mais consistentes", "Melhor dieta", "Mais treinos"].map((tab) => <button key={tab} type="button">{tab}</button>)}
+            {["Maior evolução", "Mais consistentes", "Melhor dieta", "Mais treinos"].map((tab) => <button key={tab} type="button">{tab}</button>)}
           </div>
           <div className="highlight-podium">
             {highlights.map((item) => (
@@ -181,13 +181,13 @@ export default function PersonalProgress({ onOpenStudentProgress }) {
             <li><Flame size={18} /> <strong>1.812 kcal</strong> Media de calorias</li>
             <li><Apple size={18} /> <strong>128 g</strong> Media de proteinas</li>
             <li><BarChart3 size={18} /> <strong>5,2 refeicoes</strong> Media de refeicoes/dia</li>
-            <li><Droplets size={18} /> <strong>2,1 L</strong> Media de hidratacao</li>
+            <li><Droplets size={18} /> <strong>2,1 L</strong> Media de hidratação</li>
           </ul>
         </article>
 
         <article className="progress-panel measures-progress-panel">
           <div className="section-heading">
-            <h2>Evolucao das medidas</h2>
+            <h2>Evolução das medidas</h2>
             <select defaultValue="month"><option value="month">Mes atual</option></select>
           </div>
           {measureRows.map(([label, current, previous, diff, value]) => (
@@ -203,7 +203,7 @@ export default function PersonalProgress({ onOpenStudentProgress }) {
 
         <article className="progress-panel visual-progress-panel">
           <div className="section-heading">
-            <h2>Evolucao visual</h2>
+            <h2>Evolução visual</h2>
             <button type="button">Ver todos</button>
           </div>
           <div className="visual-cards">
@@ -228,7 +228,7 @@ export default function PersonalProgress({ onOpenStudentProgress }) {
           <div className="section-heading">
             <h2>Ranking geral dos alunos</h2>
             <div className="progress-tabs compact">
-              {["Aderencia", "Evolucao", "Frequencia", "Dieta", "Hidratacao"].map((tab) => <button type="button" key={tab}>{tab}</button>)}
+              {["Aderência", "Evolução", "Frequência", "Dieta", "Hidratação"].map((tab) => <button type="button" key={tab}>{tab}</button>)}
             </div>
           </div>
           <div className="ranking-table">
@@ -252,7 +252,7 @@ export default function PersonalProgress({ onOpenStudentProgress }) {
           <h2>Distribuicao dos alunos</h2>
           <div className="distribution-donut"><span /></div>
           <ul>
-            <li>Em evolucao <strong>78 (61%)</strong></li>
+            <li>Em evolução <strong>78 (61%)</strong></li>
             <li>Em manutencao <strong>32 (25%)</strong></li>
             <li>Atencao necessaria <strong>12 (9%)</strong></li>
             <li>Sem progresso <strong>6 (5%)</strong></li>
@@ -276,7 +276,7 @@ export default function PersonalProgress({ onOpenStudentProgress }) {
 
       <footer className="progress-footer">
         <Trophy size={22} />
-        <span>Parabens! Voce ajudou 12 alunos a baterem suas metas este mes.</span>
+        <span>Parabens! Voce ajudou 12 alunos a baterem suas metas este mês.</span>
         <button type="button"><RefreshCw size={18} /> Atualizar</button>
       </footer>
     </section>

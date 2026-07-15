@@ -15,14 +15,14 @@ import {
 } from "lucide-react";
 
 const bodyMeasures = [
-  ["Pescoco", "neck"],
+  ["Pescoço", "neck"],
   ["Ombro", "shoulder"],
   ["Peito", "chest"],
   ["Cintura", "waist"],
-  ["Abdomen", "abdomen"],
+  ["Abdômen", "abdomen"],
   ["Quadril", "hip"],
-  ["Braco", "arm"],
-  ["Antebraco", "forearm"],
+  ["Braço", "arm"],
+  ["Antebraço", "forearm"],
   ["Coxa", "thigh"],
   ["Panturrilha", "calf"]
 ];
