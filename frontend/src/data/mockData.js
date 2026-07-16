@@ -69,77 +69,101 @@ const makeExercise = (id, name, sets, reps, rest, load) => {
 export const workouts = [
   {
     id: "wrk-erika-01",
-    name: "Costas, Ombros e Gluteos",
+    name: "Costas, Ombros e Glúteos",
     studentId: "stu-erika",
     status: "Ativo",
-    focus: "Costas, ombros e gluteos",
+    focus: "Costas, ombros e glúteos",
     duration: "60 min",
     date: "Segunda",
     exercises: [
-      makeExercise("ex-001", "Puxada Frontal", 3, "20 + progressao + drop set", "60-90s", "Leve / progressao / reduz 20kg"),
-      makeExercise("ex-002", "Puxador Frontal com triangulo", 3, "15 + rest pause", "90s", "25kg"),
-      makeExercise("ex-003", "Remada Baixa com triangulo", 5, "2x25 + 3x15", "60-90s", "25kg / 35kg"),
-      makeExercise("ex-004", "Elevacao Lateral", 5, "10", "60s", "5kg"),
-      makeExercise("ex-005", "Banco Romano", 3, "15", "60s", "5kg"),
-      makeExercise("ex-006", "Cadeira Abdutora", 5, "12", "90s", "Moderada a pesada"),
-      makeExercise("ex-007", "Elevacao Pelvica ou Quadril", 5, "10", "90s", "80kg"),
+      makeExercise("ex-001", "Puxada Frontal", 7, "3x20 + 4 séries progressivas + 3 drop sets", "60-90s", "25kg / progressão / reduz para 20kg"),
+      makeExercise("ex-002", "Puxador Frontal com triangulo", 3, "15 + rest pause de 15s nas 2 primeiras séries", "90s", "30kg"),
+      makeExercise("ex-003", "Remada Baixa com triangulo", 5, "2x25 + 3x15", "60-90s", "25kg / 40kg"),
+      makeExercise("ex-004", "Elevacao Lateral", 5, "10", "60s", "6kg"),
+      makeExercise("ex-005", "Banco Romano", 3, "15", "60s", "10kg"),
+      makeExercise("ex-006", "Cadeira Abdutora", 5, "12 com 2s de retenção", "90s", "80kg"),
+      makeExercise("ex-007", "Elevacao Pelvica ou Quadril", 5, "10", "90s", "120kg"),
       makeExercise("ex-008", "HIIT Esteira ou Bike", 1, "15 minutos", "1/1", "Cardio")
     ]
   },
   {
     id: "wrk-erika-02",
-    name: "Peito, Ombros e Gluteos",
+    name: "Peitos, Ombros e Glúteos",
     studentId: "stu-erika",
-    status: "Historico",
-    focus: "Peito, ombros e gluteos",
+    status: "Ativo",
+    focus: "Peitos, ombros e glúteos",
     duration: "60 min",
-    date: "Terca",
+    date: "Terça",
     exercises: [
-      makeExercise("ex-009", "Supino Inclinado articulado ou maquina", 4, "1x20 + 3x12", "60s", "Leve / 6kg a 10kg"),
-      makeExercise("ex-010", "Cross Over", 4, "15", "60s", "20kg"),
-      makeExercise("ex-011", "Peck Deck", 3, "5", "90s", "20kg"),
-      makeExercise("ex-012", "Desenvolvimento com Halteres", 4, "10", "90s", "5kg"),
-      makeExercise("ex-013", "Elevacao Frontal com corda", 3, "15 + rest pause", "90s", "Moderada / 5kg"),
-      makeExercise("ex-014", "Agachamento Sumo", 3, "15", "60s", "40kg"),
-      makeExercise("ex-015", "Cadeira Abdutora", 3, "12 bi-set", "90s", "Moderada"),
-      makeExercise("ex-016", "HIIT Esteira ou Bike", 1, "15 minutos", "1/1", "Cardio")
+      makeExercise("ex-009", "Supino Inclinado articulado ou maquina", 4, "1x20 + 3x12", "60s", "Leve / 14kg"),
+      makeExercise("ex-010", "Cross Over", 4, "15", "60s", "30kg"),
+      makeExercise("ex-011", "Peck Deck", 3, "5", "90s", "30kg"),
+      makeExercise("ex-012", "Desenvolvimento com Halteres", 4, "10", "90s", "7kg"),
+      makeExercise("ex-013", "Elevacao Frontal com corda", 3, "15 + rest pause nas 2 primeiras séries", "90s", "Moderada / 10kg"),
+      makeExercise("ex-014", "Agachamento Sumo", 3, "15", "60s", "80kg"),
+      makeExercise("ex-015", "Cadeira Abdutora", 3, "12 bi-set com stiff", "90s", "80kg abdutora / 25kg stiff"),
+      makeExercise("ex-016", "HIIT Esteira ou Bike", 1, "15 minutos", "Livre", "Cardio")
     ]
   },
   {
     id: "wrk-erika-03",
     name: "Full Arms",
     studentId: "stu-erika",
-    status: "Historico",
-    focus: "Ombros, biceps e triceps",
+    status: "Ativo",
+    focus: "Ombros, bíceps e tríceps",
     duration: "60 min",
     date: "Quinta",
     exercises: [
-      makeExercise("ex-017", "Desenvolvimento com Halteres", 5, "1x20 + 4x12", "60-90s", "Leve / 3kg a 5kg"),
-      makeExercise("ex-018", "Remada Baixa na Polia", 6, "4x10 + 2x10 drop set", "60s", "40kg"),
-      makeExercise("ex-019", "Elevacao Lateral", 5, "10", "90s", "4kg"),
-      makeExercise("ex-020", "Biceps barra W", 3, "12", "60s", "6kg"),
-      makeExercise("ex-021", "Rosca Alternada no banco 60", 4, "8-10", "60s", "5kg"),
+      makeExercise("ex-017", "Desenvolvimento com Halteres", 5, "1x20 + 4x12", "60-90s", "Leve / 7kg"),
+      makeExercise("ex-018", "Remada Baixa na Polia", 6, "4x10 + 2x10 reduz carga", "60s", "40kg / drop set na última série"),
+      makeExercise("ex-019", "Elevacao Lateral", 5, "10", "90s", "6kg"),
+      makeExercise("ex-020", "Biceps barra W", 3, "12", "60s", "18kg"),
+      makeExercise("ex-021", "Rosca Alternada no banco 60", 4, "8-10", "60s", "7kg"),
       makeExercise("ex-022", "Triceps Testa", 4, "12", "60s", "12kg"),
-      makeExercise("ex-023", "Triceps com corda na polia", 3, "12", "60s", "25kg"),
+      makeExercise("ex-023", "Triceps com corda na polia", 3, "12", "60s", "30kg"),
       makeExercise("ex-024", "HIIT Esteira ou Bike", 1, "15 minutos", "Esteira", "Cardio")
     ]
   },
   {
     id: "wrk-erika-04",
-    name: "Quadriceps e Posteriores",
+    name: "Quadríceps e Posteriores",
     studentId: "stu-erika",
-    status: "Historico",
-    focus: "Quadriceps, posterior e panturrilhas",
+    status: "Ativo",
+    focus: "Quadríceps, posterior e panturrilhas",
     duration: "65 min",
     date: "Sexta",
     exercises: [
-      makeExercise("ex-025", "Cadeira Extensora", 4, "1x20 + 3x15", "90s", "Moderada / 35kg"),
-      makeExercise("ex-026", "Agachamento Articulado", 5, "1x20 + 4x12", "60-90s", "Leve / 40kg"),
-      makeExercise("ex-027", "Leg Press", 4, "10", "60s", "160kg"),
-      makeExercise("ex-028", "Flexor em Pe", 4, "20 / 15 / 15 / 10 + 2 drop set", "60s", "Moderada"),
+      makeExercise("ex-025", "Cadeira Extensora", 4, "1x20 + 3x15", "90s", "20kg / 25kg / 50kg"),
+      makeExercise("ex-026", "Agachamento Articulado", 5, "1x20 + 4x12", "60-90s", "Leve / 20kg e 60kg"),
+      makeExercise("ex-027", "Leg Press", 4, "10", "60s", "200kg"),
+      makeExercise("ex-028", "Flexor em Pe", 4, "1x20 + 1x15 + 1x15 + 1x10 com 2 drop sets", "60s", "25kg / 30kg / 35kg / 40kg reduzindo"),
       makeExercise("ex-029", "Mesa Flexora", 4, "12", "90s", "25kg"),
-      makeExercise("ex-030", "Stiff", 3, "15", "60s", "10kg"),
+      makeExercise("ex-030", "Stiff", 3, "15", "60s", "25kg"),
       makeExercise("ex-031", "Panturrilhas em Pe e Sentado", 4, "12", "90s", "40kg")
+    ]
+  },
+  {
+    id: "wrk-erika-05",
+    name: "Aeróbico em Jejum (AEJ)",
+    studentId: "stu-erika",
+    status: "Ativo",
+    focus: "Cardio e redução de gordura",
+    duration: "40 min",
+    date: "Sábado",
+    exercises: [
+      makeExercise("ex-032", "HIIT Esteira ou Bike", 1, "Aeróbico em jejum", "Contínuo", "Intensidade leve a moderada")
+    ]
+  },
+  {
+    id: "wrk-erika-06",
+    name: "Aeróbico em Jejum (AEJ)",
+    studentId: "stu-erika",
+    status: "Ativo",
+    focus: "Cardio e redução de gordura",
+    duration: "40 min",
+    date: "Domingo",
+    exercises: [
+      makeExercise("ex-033", "HIIT Esteira ou Bike", 1, "Aeróbico em jejum", "Contínuo", "Intensidade leve a moderada")
     ]
   }
 ];
