@@ -1,4 +1,4 @@
-﻿import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { CheckCircle2, Circle, Clock, Dumbbell, Flame, Play, Video } from "lucide-react";
 
 const weekDays = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
@@ -14,6 +14,24 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
   const exercisesRef = useRef(null);
   const availableWorkouts = workouts.length ? workouts : [workout];
   const selectedWorkout = availableWorkouts.find((item) => item.id === selectedWorkoutId) || workout;
+  const [workoutHistory, setWorkoutHistory] = useState([]);
+
+  useEffect(() => {
+    const refreshHistory = () => {
+      try {
+        setWorkoutHistory(JSON.parse(window.localStorage.getItem("ptf_workout_history_v2") || "[]"));
+      } catch {
+        setWorkoutHistory([]);
+      }
+    };
+    refreshHistory();
+    window.addEventListener("focus", refreshHistory);
+    window.addEventListener("storage", refreshHistory);
+    return () => {
+      window.removeEventListener("focus", refreshHistory);
+      window.removeEventListener("storage", refreshHistory);
+    };
+  }, []);
 
   const workoutsByDay = useMemo(() => {
     const grouped = Object.fromEntries(weekDays.map((day) => [day, []]));
@@ -138,6 +156,34 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
         </div>
       </article>
       )}
+
+      <article className="workout-history-panel premium-panel">
+        <div className="section-heading compact-heading">
+          <div>
+            <p className="eyebrow">Hist?rico de treinos</p>
+            <h2>Seus treinos registrados</h2>
+          </div>
+          <span className="status-pill">{workoutHistory.length} registros</span>
+        </div>
+        {workoutHistory.length ? (
+          <div className="workout-history-list">
+            {workoutHistory.slice(0, 6).map((item) => (
+              <article key={item.id}>
+                <div>
+                  <strong>{item.workoutName}</strong>
+                  <span>{item.displayDate} ? {item.durationLabel} ? {item.status === "concluido" ? "Conclu?do" : "Incompleto"}</span>
+                </div>
+                <div>
+                  <b>{item.exercisesDone}/{item.exercisesTotal}</b> exerc?cios
+                  <small>{item.setsDone}/{item.setsTotal} s?ries ? {item.volume || 0} kg volume</small>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="empty-history-text">Finalize seu primeiro treino para criar o histórico real de evolução.</p>
+        )}
+      </article>
     </section>
   );
 }

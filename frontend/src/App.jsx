@@ -30,28 +30,29 @@ import PersonalStudentProgress from "./pages/PersonalStudentProgress.jsx";
 import CoachIA from "./pages/CoachIA.jsx";
 import AboutPersonal from "./pages/AboutPersonal.jsx";
 import { students as mockStudents, workouts as mockWorkouts } from "./data/mockData.js";
+import { apiRequest, clearToken, getToken } from "./services/api.js";
 
 const pageMeta = {
-  dashboard: ["Dashboard", "Disciplina hoje, liberdade amanh?."],
+  dashboard: ["Dashboard", "Disciplina hoje, liberdade amanhã."],
   students: ["Alunos", "Visualize, encontre e edite seus atletas com rapidez."],
-  "workout-builder": ["Treinos", "Monte protocolos personalizados com video, carga e descanso."],
-  exercise: ["Exercicio", "Execucao guiada com parametros claros e video incorporado."],
+  "workout-builder": ["Treinos", "Monte protocolos personalizados com vídeo, carga e descanso."],
+  exercise: ["Exercício", "Execução guiada com parâmetros claros e vídeo incorporado."],
   "student-view": ["Treino", "Treino do dia, check-ins e registro de carga."],
-  diet: ["Dietas", "Gestao alimentar, hidratação e registros nutricionais dos alunos."],
-  finance: ["Financeiro", "Visão geral da sa?de financeira do seu neg?cio."],
+  diet: ["Dietas", "Gestão alimentar, hidratação e registros nutricionais dos alunos."],
+  finance: ["Financeiro", "Visão geral da saúde financeira do seu negócio."],
   agenda: ["Agenda", "Organize seus alunos e compromissos."],
   chat: ["Mensagens", "Converse com seus alunos e acompanhe todas as mensagens."],
-  reports: ["Relatórios", "Visão geral dos resultados do seu neg?cio e dos seus alunos."],
+  reports: ["Relatórios", "Visão geral dos resultados do seu negócio e dos seus alunos."],
   assessments: ["Avaliações", "Registre, acompanhe e analise a evolução física dos seus alunos."],
-  payments: ["Pagamentos", "Acompanhe suas cobran?as, faturas e hist?rico."],
-  calendar: ["Calendário", "Sua consistencia e compromissos."],
+  payments: ["Pagamentos", "Acompanhe suas cobranças, faturas e histórico."],
+  calendar: ["Calendário", "Sua consistência e compromissos."],
   messages: ["Mensagens", "Converse diretamente com seu personal."],
   files: ["Arquivos", "Envie e organize seus arquivos para acompanhamento do seu personal."],
-  settings: ["Configurações", "Gerencie sua conta e preferencias."],
-  progress: ["Progresso", "Historico, evolução e indicadores de consistencia."],
+  settings: ["Configurações", "Gerencie sua conta e preferências."],
+  progress: ["Progresso", "Histórico, evolução e indicadores de consistência."],
   "student-progress-detail": ["Progresso individual", "Central individual de performance do aluno."],
   coach: ["Coach IA", "Seu assistente inteligente para treino, dieta e evolução."],
-  "about-personal": ["Sobre o Personal", "Conhe?a a metodologia, experi?ncia e filosofia do Thiago Filippo."]
+  "about-personal": ["Sobre o Personal", "Conheça a metodologia, experiência e filosofia do Thiago Filippo."]
 };
 
 const rolePath = {
@@ -59,31 +60,37 @@ const rolePath = {
   student: "/dashboard/aluno"
 };
 
+function normalizeSessionUser(user) {
+  const normalizedRole = user?.role === "student" || user?.role === "aluno" ? "student" : "personal";
+  return { ...user, role: normalizedRole };
+}
+
 function pageFromPath(pathname, role) {
   const path = (pathname || "").toLowerCase();
   const studentRoutes = {
     "/dashboard/aluno": "dashboard",
     "/aluno/progresso": "progress",
     "/aluno/dieta": "diet",
-    "/aluno/avaliação": "assessments",
+    "/aluno/avaliacao": "assessments",
+    "/aluno/avaliacoes": "assessments",
     "/aluno/pagamentos": "payments",
-    "/aluno/calendário": "calendar",
+    "/aluno/calendario": "calendar",
     "/aluno/mensagens": "messages",
     "/aluno/arquivos": "files",
-    "/aluno/configurações": "settings",
+    "/aluno/configuracoes": "settings",
     "/aluno/coach-ia": "coach",
     "/aluno/sobre-o-personal": "about-personal"
   };
   const personalRoutes = {
     "/dashboard/personal": "dashboard",
     "/dashboard/personal/dietas": "diet",
-    "/personal/avaliações": "assessments",
+    "/personal/avaliacoes": "assessments",
     "/personal/progresso": "progress",
     "/personal/financeiro": "finance",
     "/personal/agenda": "agenda",
     "/admin/mensagens": "chat",
-    "/admin/relatórios": "reports",
-    "/admin/configurações": "settings",
+    "/admin/relatorios": "reports",
+    "/admin/configuracoes": "settings",
     "/personal/coach-ia": "coach",
     "/personal/sobre-o-personal": "about-personal"
   };
@@ -97,6 +104,7 @@ function pushRoute(role) {
 
 export default function App() {
   const [session, setSession] = useState(null);
+  const [authReady, setAuthReady] = useState(false);
   const [activePage, setActivePage] = useState("dashboard");
   const [selectedExercise, setSelectedExercise] = useState(mockWorkouts[0].exercises[0]);
   const [students, setStudents] = useState(mockStudents);
@@ -115,12 +123,12 @@ export default function App() {
   const [focusedPendingStudentId, setFocusedPendingStudentId] = useState(null);
   const [personalProfile, setPersonalProfile] = useState({
     name: "Thiago Filippo",
-    bio: "Personal trainer focado em forca, disciplina, performance e transforma??o real. Une estrat?gia, t?cnica e acompanhamento pr?ximo para cada aluno evoluir com seguran?a.",
+    bio: "Personal trainer focado em força, disciplina, performance e transformação real. Une estratégia, técnica e acompanhamento próximo para cada aluno evoluir com segurança.",
     specialty: "Hipertrofia, emagrecimento e performance",
-    experience: "10+ anos de atua??o",
+    experience: "10+ anos de atuação",
     method: "Disciplina, foco e propósito",
-    philosophy: "Treinar nao e apenas cumprir exercicios. E construir uma versao mais forte, constante e confiante todos os dias.",
-    highlights: ["Treinos personalizados", "Acompanhamento de evolução", "Ajustes por performance", "Feedback inteligente", "Estrategia individual por objetivo"],
+    philosophy: "Treinar não é apenas cumprir exercícios. É construir uma versão mais forte, constante e confiante todos os dias.",
+    highlights: ["Treinos personalizados", "Acompanhamento de evolução", "Ajustes por performance", "Feedback inteligente", "Estratégia individual por objetivo"],
     email: "contato@thiagofilippo.com",
     instagram: "@personal.thiagofilippo"
   });
@@ -129,8 +137,44 @@ export default function App() {
   const activeWorkout = useMemo(() => workouts[0], [workouts]);
 
   useEffect(() => {
+    let mounted = true;
+
+    async function restoreSession() {
+      if (!getToken()) {
+        setAuthReady(true);
+        return;
+      }
+
+      try {
+        const user = await apiRequest("/users/me");
+        if (!mounted) return;
+        const normalizedUser = normalizeSessionUser(user);
+        setSession(normalizedUser);
+        setActivePage(pageFromPath(window.location.pathname, normalizedUser.role));
+      } catch {
+        clearToken();
+      } finally {
+        if (mounted) setAuthReady(true);
+      }
+    }
+
+    restoreSession();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem("ptf_pending_students", JSON.stringify(pendingStudents));
   }, [pendingStudents]);
+
+  if (!authReady) {
+    return (
+      <main className="login-screen login-loading-screen">
+        <div className="loading-orb" />
+      </main>
+    );
+  }
 
   if (!session) {
     return (
@@ -142,8 +186,8 @@ export default function App() {
           ]);
         }}
         onLogin={(user) => {
-          const normalizedRole = user.role === "student" || user.role === "aluno" ? "student" : "personal";
-          const normalizedUser = { ...user, role: normalizedRole };
+          const normalizedUser = normalizeSessionUser(user);
+          const normalizedRole = normalizedUser.role;
           setSession(normalizedUser);
           const requestedPage = pageFromPath(window.location.pathname, normalizedRole);
           setActivePage(requestedPage);
@@ -171,21 +215,21 @@ export default function App() {
     } else if (isStudent && page === "diet") {
       window.history.replaceState(null, "", "/aluno/dieta");
     } else if (isStudent && page === "assessments") {
-      window.history.replaceState(null, "", "/aluno/avaliação");
+      window.history.replaceState(null, "", "/aluno/avaliacao");
     } else if (isStudent && page === "payments") {
       window.history.replaceState(null, "", "/aluno/pagamentos");
     } else if (isStudent && page === "calendar") {
-      window.history.replaceState(null, "", "/aluno/calendário");
+      window.history.replaceState(null, "", "/aluno/calendario");
     } else if (isStudent && page === "messages") {
       window.history.replaceState(null, "", "/aluno/mensagens");
     } else if (isStudent && page === "files") {
       window.history.replaceState(null, "", "/aluno/arquivos");
     } else if (isStudent && page === "settings") {
-      window.history.replaceState(null, "", "/aluno/configurações");
+      window.history.replaceState(null, "", "/aluno/configuracoes");
     } else if (!isStudent && page === "diet") {
       window.history.replaceState(null, "", "/dashboard/personal/dietas");
     } else if (!isStudent && page === "assessments") {
-      window.history.replaceState(null, "", "/personal/avaliações");
+      window.history.replaceState(null, "", "/personal/avaliacoes");
     } else if (!isStudent && page === "progress") {
       window.history.replaceState(null, "", "/personal/progresso");
     } else if (!isStudent && page === "finance") {
@@ -195,9 +239,9 @@ export default function App() {
     } else if (!isStudent && page === "chat") {
       window.history.replaceState(null, "", "/admin/mensagens");
     } else if (!isStudent && page === "reports") {
-      window.history.replaceState(null, "", "/admin/relatórios");
+      window.history.replaceState(null, "", "/admin/relatorios");
     } else if (!isStudent && page === "settings") {
-      window.history.replaceState(null, "", "/admin/configurações");
+      window.history.replaceState(null, "", "/admin/configuracoes");
     } else if (!isStudent && page === "student-progress-detail") {
       window.history.replaceState(null, "", `/personal/aluno/${selectedStudentId || "aluno"}/progresso`);
     } else {
@@ -206,7 +250,6 @@ export default function App() {
   };
 
   const openWorkoutExecution = (workoutId) => {
-    resetWorkoutProgress(workoutId);
     setExecutionWorkoutId(workoutId);
     setActivePage("workout-execution");
     setSidebarOpen(false);
@@ -252,7 +295,7 @@ export default function App() {
 
   const deleteStudent = (student) => {
     if (!student) return;
-    const confirmed = window.confirm(`Excluir ${student.name}? Essa a??o remove o aluno da lista deste ambiente de teste.`);
+    const confirmed = window.confirm(`Excluir ${student.name}? Essa ação remove o aluno da lista deste ambiente de teste.`);
     if (!confirmed) return;
     setStudents((current) => current.filter((item) => item.id !== student.id));
     if (selectedStudentId === student.id) {
@@ -274,7 +317,7 @@ export default function App() {
       id: "student-welcome",
       type: "info",
       title: "App liberado",
-      message: "Seu acesso esta ativo. Voce ja pode acompanhar treino, dieta, avaliações e progresso."
+      message: "Seu acesso está ativo. Você já pode acompanhar treino, dieta, avaliações e progresso."
     }
   ];
 
@@ -283,6 +326,7 @@ export default function App() {
     meta,
     onNavigate: navigate,
     onLogout: () => {
+      clearToken();
       setSession(null);
       window.history.replaceState(null, "", "/");
     },

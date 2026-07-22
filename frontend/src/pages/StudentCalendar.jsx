@@ -38,8 +38,8 @@ const availableTimes = ["08:00", "09:00", "10:00", "14:00", "15:00", "16:00", "1
 
 const events = [
   ["Avaliação Física", "28/06", "Sábado - 09:00", "assessment"],
-  ["Atualizacao da Dieta", "30/06", "Segunda - 10:00", "diet"],
-  ["Treino Inferior B", "01/07", "Terca - 18:00", "workout"]
+  ["Atualização da Dieta", "30/06", "Segunda - 10:00", "diet"],
+  ["Treino Inferior B", "01/07", "Terça - 18:00", "workout"]
 ];
 
 export default function StudentCalendar({ student }) {
@@ -58,9 +58,9 @@ export default function StudentCalendar({ student }) {
       <div className="student-calendar-header">
         <div>
           <h2>Calendário</h2>
-          <p>Sua consistencia e compromissos.</p>
+          <p>Sua consistência e compromissos.</p>
         </div>
-        <button type="button" aria-label="Notificacoes"><Bell size={22} /></button>
+        <button type="button" aria-label="Notificações"><Bell size={22} /></button>
       </div>
 
       <article className="calendar-streak-card">
@@ -68,14 +68,14 @@ export default function StudentCalendar({ student }) {
           <img src="/lion-juda-logo.png" alt="" />
         </div>
         <div>
-          <span>Sequencia atual</span>
+          <span>sequência atual</span>
           <strong>18</strong>
           <p>dias seguidos</p>
           <small><CalendarDays size={14} /> Este mês</small>
         </div>
         <div className="calendar-streak-side">
-          <p><Trophy size={16} /> Melhor sequencia <strong>42 dias</strong></p>
-          <p><Target size={16} /> Meta do mes <strong>20 check-ins</strong></p>
+          <p><Trophy size={16} /> Melhor sequência <strong>42 dias</strong></p>
+          <p><Target size={16} /> Meta do mês <strong>20 check-ins</strong></p>
         </div>
       </article>
 
@@ -83,8 +83,8 @@ export default function StudentCalendar({ student }) {
         <div className="calendar-card-title">
           <h3>Junho 2026</h3>
           <div>
-            <button type="button" aria-label="Mes anterior"><ChevronLeft size={18} /></button>
-            <button type="button" aria-label="Proximo mes"><ChevronRight size={18} /></button>
+            <button type="button" aria-label="mês anterior"><ChevronLeft size={18} /></button>
+            <button type="button" aria-label="Próximo mês"><ChevronRight size={18} /></button>
           </div>
         </div>
         <div className="calendar-week-labels">
@@ -114,7 +114,7 @@ export default function StudentCalendar({ student }) {
 
       <article className="calendar-return-card">
         <div className="calendar-card-title">
-          <h3>Proximo retorno</h3>
+          <h3>Próximo retorno</h3>
           <button type="button" onClick={() => setScheduleOpen(true)}>Ver agenda</button>
         </div>
         <div className="calendar-return-body">
@@ -134,7 +134,7 @@ export default function StudentCalendar({ student }) {
         </button>
         <div className="calendar-return-actions">
           <button type="button" onClick={() => setScheduleOpen(true)}><CalendarDays size={17} /> Agendar consulta</button>
-          <button type="button" onClick={() => setScheduleOpen(true)}><Pencil size={17} /> Solicitar remarcacao</button>
+          <button type="button" onClick={() => setScheduleOpen(true)}><Pencil size={17} /> Solicitar remarcação</button>
         </div>
       </article>
 
@@ -142,18 +142,18 @@ export default function StudentCalendar({ student }) {
         <article className="calendar-mini-card adherence">
           <h3>Aderência geral</h3>
           <div className="calendar-progress-ring"><strong>87%</strong></div>
-          <p>Muito consistente. Continue assim para alcancar seus objetivos.</p>
+          <p>Muito consistente. Continue assim para alcançar seus objetivos.</p>
         </article>
 
         <article className="calendar-mini-card goals">
-          <h3>Metas do mes</h3>
+          <h3>Metas do mês</h3>
           <GoalLine label="Treinos" value="18/20" progress="90%" className="workout" />
           <GoalLine label="Agua" value="87%" progress="87%" className="water" />
           <GoalLine label="Dieta" value="92%" progress="92%" className="diet" />
         </article>
 
         <article className="calendar-mini-card events">
-          <h3>Proximos eventos</h3>
+          <h3>Próximos eventos</h3>
           {events.map(([title, date, detail, type]) => (
             <button key={title} type="button">
               <i className={type} />
@@ -167,9 +167,9 @@ export default function StudentCalendar({ student }) {
           <h3>Mensagem do seu Personal</h3>
           <div>
             <img src="/erika-gomes.jpeg" alt="" />
-            <span><strong>Thiago Filippo</strong><small>Excelente semana, {firstName}. Sua consistencia esta excelente. Continue focada.</small></span>
+            <span><strong>Thiago Filippo</strong><small>Excelente semana, {firstName}. Sua consistência está excelente. Continue focada.</small></span>
           </div>
-          <p>Ultima atualizacao: 24/06/2026</p>
+          <p>Última Atualização: 24/06/2026</p>
           <button type="button"><MessageCircle size={17} /> Enviar mensagem</button>
         </article>
       </div>
@@ -177,10 +177,10 @@ export default function StudentCalendar({ student }) {
       {dayDetail && (
         <CalendarModal title={`Dia ${dayDetail.day}`} onClose={() => setDayDetail(null)}>
           <div className="calendar-day-detail">
-            <p><DumbbellDot /> Treino realizado: Costas, ombros e gluteos</p>
+            <p><DumbbellDot /> Treino realizado: Costas, ombros e glúteos</p>
             <p><Droplets size={17} /> Agua consumida: 2,1 L</p>
             <p><Target size={17} /> Aderência alimentar: 92%</p>
-            <p><Check size={17} /> Check-in concluido</p>
+            <p><Check size={17} /> Check-in concluído</p>
             <p>Observacao do personal: mantenha o ritmo e priorize descanso.</p>
           </div>
         </CalendarModal>
@@ -220,7 +220,7 @@ export default function StudentCalendar({ student }) {
                 {time}
                 {selectedTime === time && <Check size={18} />}
               </button>
-            )) : <p>Nenhum horário disponivel no momento. Entre em contato com seu personal.</p>}
+            )) : <p>Nenhum horário disponível no momento. Entre em contato com seu personal.</p>}
           </div>
 
           <div className="schedule-summary">
@@ -233,7 +233,7 @@ export default function StudentCalendar({ student }) {
 
           <button className="calendar-metal-button" type="button" onClick={() => setScheduleOpen(false)}>Confirmar agendamento</button>
           <button className="calendar-ghost-button" type="button" onClick={() => setScheduleOpen(false)}>Cancelar</button>
-          <p className="schedule-note">Ao confirmar, seu horário ser? reservado e voc? receber? uma notifica??o com todos os detalhes.</p>
+          <p className="schedule-note">Ao confirmar, seu horário será reservado e você receberá uma notificação com todos os detalhes.</p>
         </CalendarModal>
       )}
     </section>
@@ -265,3 +265,6 @@ function CalendarModal({ title, subtitle, children, onClose }) {
 function DumbbellDot() {
   return <span className="calendar-dumbbell-dot" />;
 }
+
+
+

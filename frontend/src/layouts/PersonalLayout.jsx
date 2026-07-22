@@ -64,8 +64,9 @@ export default function PersonalLayout({
             <img src="/lion-juda-logo.png" alt="" />
             Coach IA
           </button>
-          <button type="button" onClick={() => onNavigate("dashboard")}>Agenda</button>
+          <button type="button" onClick={() => onNavigate("agenda")}>Agenda</button>
           <button type="button" onClick={() => setSidebarOpen(true)}>Mais</button>
+          <button className="mobile-logout-action" type="button" onClick={onLogout}>Sair</button>
         </nav>
       </main>
     </div>

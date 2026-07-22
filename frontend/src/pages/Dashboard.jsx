@@ -75,7 +75,9 @@ export default function StudentDashboard({ students, workouts, onNavigate }) {
           </ul>
           <button type="button" onClick={() => onNavigate("student-view")}>Iniciar treino <Play size={16} /></button>
         </div>
-        <img src={student?.avatar} alt={student?.name || "Aluno"} />
+        <div className="student-workout-avatar">
+          <img src={student?.avatar} alt={student?.name || "Aluno"} />
+        </div>
       </section>
 
       <section className="student-progress-card">

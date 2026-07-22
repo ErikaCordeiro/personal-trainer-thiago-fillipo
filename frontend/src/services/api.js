@@ -8,6 +8,10 @@ export function setToken(token) {
   localStorage.setItem("ptf_token", token);
 }
 
+export function clearToken() {
+  localStorage.removeItem("ptf_token");
+}
+
 export async function apiRequest(path, options = {}) {
   const token = getToken();
   const controller = new AbortController();
