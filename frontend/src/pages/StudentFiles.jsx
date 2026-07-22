@@ -27,7 +27,7 @@ const categories = [
   { id: "all", label: "Todos", icon: FolderOpen },
   { id: "exams", label: "Exames", icon: FileCheck2 },
   { id: "photos", label: "Fotos", icon: Image },
-  { id: "vídeos", label: "Videos", icon: Video },
+  { id: "vídeos", label: "V?deos", icon: Video },
   { id: "assessments", label: "Avaliações", icon: FileText },
   { id: "diet", label: "Dieta", icon: Pill },
   { id: "training", label: "Treino", icon: FileArchive },
@@ -61,7 +61,7 @@ const initialFiles = [
     statusType: "viewed",
     description: "Foto frontal para acompanhamento visual da evolução.",
     preview: "photo",
-    comment: "Otimo angulo para comparar sua pr?xima avaliação."
+    comment: "?timo angulo para comparar sua pr?xima avaliação."
   },
   {
     id: "file-3",
@@ -80,14 +80,14 @@ const initialFiles = [
   {
     id: "file-4",
     name: "Execucao Agachamento.mp4",
-    category: "Videos",
+    category: "V?deos",
     categoryId: "vídeos",
     date: "21/05/2026",
     time: "09:15",
     size: "25.6 MB",
     status: "Solicita revisão",
     statusType: "review",
-    description: "Video enviado para analise t?cnica da execu??o.",
+    description: "Video enviado para analise t?cnica da execu?o.",
     preview: "video",
     comment: "Vamos ajustar a amplitude e o alinhamento dos joelhos."
   },
@@ -160,7 +160,7 @@ export default function StudentFiles({ student }) {
         statusType: "sent",
         description: "Arquivo enviado pelo aluno para acompanhamento do personal.",
         preview: category.id === "photos" ? "photo" : category.id === "vídeos" ? "video" : "document",
-        comment: "Arquivo recebido. O personal sera notificado para analisar."
+        comment: "Arquivo recebido. O personal ser? notificado para analisar."
       };
     });
     setFiles((current) => [...mapped, ...current]);
@@ -182,7 +182,7 @@ export default function StudentFiles({ student }) {
         </div>
         <div className="student-files-safe-card">
           <ShieldCheck size={27} />
-          <span><strong>Seus arquivos sao seguros</strong><small>Compartilhados apenas com seu personal.</small></span>
+          <span><strong>Seus arquivos s?o seguros</strong><small>Compartilhados apenas com seu personal.</small></span>
         </div>
       </header>
 
@@ -209,7 +209,7 @@ export default function StudentFiles({ student }) {
               </div>
             </div>
             <div className="student-upload-types">
-              <strong>Voce pode enviar:</strong>
+              <strong>Voc? pode enviar:</strong>
               {allowedTypes.map((type) => <span key={type}><FileText size={16} /> {type}</span>)}
             </div>
           </article>
@@ -270,13 +270,13 @@ export default function StudentFiles({ student }) {
             </div>
 
             <article className="student-file-comments">
-              <div><h3>Comentarios do personal</h3><button type="button">Ver todos</button></div>
+              <div><h3>Coment?rios do personal</h3><button type="button">Ver todos</button></div>
               <div className="student-file-comment">
                 <img src="/lion-juda-logo.png" alt="Thiago Filippo" />
                 <span><strong>Thiago Filippo <CheckCircle2 size={15} /></strong><small>24/05/2026 as 14:32</small><p>{selectedFile.comment}</p></span>
               </div>
               <label>
-                <input value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Adicionar comentario..." />
+                <input value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Adicionar coment?rio..." />
                 <button type="button" onClick={() => setComment("")}><Send size={17} /></button>
               </label>
             </article>
@@ -298,7 +298,7 @@ function FilePreview({ type, name }) {
     return <div className="student-file-preview photo"><img src="/erika-gomes.jpeg" alt={name} /></div>;
   }
   if (type === "video") {
-    return <div className="student-file-preview video"><Video size={42} /><strong>Previa do video</strong><small>{name}</small></div>;
+    return <div className="student-file-preview video"><Video size={42} /><strong>Pr?via do v?deo</strong><small>{name}</small></div>;
   }
   return (
     <div className="student-file-preview document">
@@ -311,7 +311,7 @@ function FilePreview({ type, name }) {
 
 function categoryFromType(file) {
   if (file.type?.startsWith("image/")) return { id: "photos", label: "Fotos" };
-  if (file.type?.startsWith("video/")) return { id: "vídeos", label: "Videos" };
+  if (file.type?.startsWith("video/")) return { id: "vídeos", label: "V?deos" };
   if (file.name?.toLowerCase().includes("dieta")) return { id: "diet", label: "Dieta" };
   if (file.name?.toLowerCase().includes("treino")) return { id: "training", label: "Treino" };
   if (file.name?.toLowerCase().includes("avaliação")) return { id: "assessments", label: "Avaliações" };

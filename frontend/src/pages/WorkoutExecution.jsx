@@ -269,7 +269,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
   const currentExecution = execution.exercises.find((item) => item.exerciseId === execution.currentExerciseId) || execution.exercises[0];
   const currentExercise = workout.exercises.find((item) => item.id === currentExecution?.exerciseId) || workout.exercises[0];
   const currentSet = currentExecution?.sets.find((set) => set.status === "em_andamento") || currentExecution?.sets.find((set) => set.status === "pendente") || currentExecution?.sets.at(-1);
-  const restSeconds = execution.rest?.status === "em_andamento" ? Math.max(0, Math.ceil((new Date(execution.rest.endsAt).getTime() - Date.now()) / 1000)) : 0;
+  const restSeconds = execution.rest?.status === "em_andamento" ? Math.max(0, Math.ceil((new Date(execution.rest.restEndsAt).getTime() - Date.now()) / 1000)) : 0;
 
   useEffect(() => {
     if (execution.rest?.status === "em_andamento" && restSeconds <= 0) {
@@ -290,38 +290,71 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     }));
   }
 
-  function selectExercise(exerciseId) {
+  function toggleExercise(exerciseId) {
     setExecution((prev) => ({
       ...prev,
       currentExerciseId: exerciseId,
-      rest: null,
       exercises: prev.exercises.map((item) => item.exerciseId === exerciseId ? { ...item, expanded: !item.expanded } : item),
       updatedAt: nowIso()
     }));
   }
 
-  function startSet() {
-    if (!currentExecution || !currentSet || currentSet.status === "concluida" || execution.rest?.status === "em_andamento") return;
+  function focusExercise(exerciseId) {
+    setExecution((prev) => ({
+      ...prev,
+      currentExerciseId: exerciseId,
+      exercises: prev.exercises.map((item) => item.exerciseId === exerciseId ? { ...item, expanded: true } : item),
+      updatedAt: nowIso()
+    }));
+  }
+
+  function startSet(targetExerciseId = currentExecution?.exerciseId, targetSetNumber = currentSet?.setNumber, options = {}) {
+    if (!targetExerciseId || !targetSetNumber || execution.status === "pausado" || execution.rest?.status === "em_andamento") return;
+    const targetExercise = execution.exercises.find((item) => item.exerciseId === targetExerciseId);
+    const targetSet = targetExercise?.sets.find((set) => set.setNumber === targetSetNumber);
+    if (!targetExercise || !targetSet || targetSet.status === "concluida") return;
+    if (targetSet.status === "em_andamento") {
+      openCompleteSetModal(targetExerciseId, targetSetNumber);
+      return;
+    }
     const startStamp = nowIso();
     setExecution((prev) => ({
       ...prev,
       status: prev.status === "nao_iniciado" ? "em_andamento" : prev.status,
       startedAt: prev.startedAt || startStamp,
       activeSince: prev.status === "nao_iniciado" ? startStamp : prev.activeSince,
-      currentExerciseId: currentExecution.exerciseId,
-      currentSetNumber: currentSet.setNumber,
+      currentExerciseId: targetExerciseId,
+      currentSetNumber: targetSetNumber,
       exercises: prev.exercises.map((item) => {
-        if (item.exerciseId !== currentExecution.exerciseId) return item;
+        if (item.exerciseId !== targetExerciseId) return item;
         return {
           ...item,
           status: "em_andamento",
           expanded: true,
           startedAt: item.startedAt || startStamp,
-          sets: item.sets.map((set) => set.setNumber === currentSet.setNumber ? { ...set, status: "em_andamento", startedAt: set.startedAt || startStamp } : set)
+          sets: item.sets.map((set) => set.setNumber === targetSetNumber ? { ...set, status: "em_andamento", startedAt: set.startedAt || startStamp } : set)
         };
       }),
       updatedAt: startStamp
     }));
+    if (options.openModal) {
+      window.setTimeout(() => {
+        setSetModal({
+          exerciseId: targetExercise.exerciseId,
+          setNumber: targetSet.setNumber,
+          usedLoad: targetSet.usedLoad || targetSet.prescribedLoad || "",
+          completedReps: targetSet.completedReps || targetSet.prescribedReps || "",
+          observation: targetSet.observation || ""
+        });
+      }, 0);
+    }
+  }
+
+  function handleSetClick(exerciseId, setNumber) {
+    const exercise = execution.exercises.find((item) => item.exerciseId === exerciseId);
+    const set = exercise?.sets.find((item) => item.setNumber === setNumber);
+    if (!set || set.status === "concluida") return;
+    startSet(exerciseId, setNumber, { openModal: true });
   }
 
   function pauseWorkout() {
@@ -345,14 +378,16 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     });
   }
 
-  function openCompleteSetModal() {
-    if (!currentSet || currentSet.status !== "em_andamento") return;
+  function openCompleteSetModal(targetExerciseId = currentExecution?.exerciseId, targetSetNumber = currentSet?.setNumber) {
+    const targetExercise = execution.exercises.find((item) => item.exerciseId === targetExerciseId);
+    const targetSet = targetExercise?.sets.find((set) => set.setNumber === targetSetNumber);
+    if (!targetExercise || !targetSet || targetSet.status !== "em_andamento") return;
     setSetModal({
-      exerciseId: currentExecution.exerciseId,
-      setNumber: currentSet.setNumber,
-      usedLoad: currentSet.usedLoad || currentSet.prescribedLoad || "",
-      completedReps: currentSet.completedReps || currentSet.prescribedReps || "",
-      observation: currentSet.observation || ""
+      exerciseId: targetExercise.exerciseId,
+      setNumber: targetSet.setNumber,
+      usedLoad: targetSet.usedLoad || targetSet.prescribedLoad || "",
+      completedReps: targetSet.completedReps || targetSet.prescribedReps || "",
+      observation: targetSet.observation || ""
     });
   }
 
@@ -508,10 +543,10 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
               ) : (
                 <button className="metal-button ghost" type="button" onClick={pauseWorkout} disabled={execution.status !== "em_andamento"}><Pause size={18} /> Pausar</button>
               )}
-              <button className="metal-button" type="button" onClick={startSet} disabled={!currentSet || currentSet.status !== "pendente" || execution.status === "pausado" || execution.rest?.status === "em_andamento"}>
+              <button className="metal-button" type="button" onClick={() => startSet()} disabled={!currentSet || currentSet.status !== "pendente" || execution.status === "pausado" || execution.rest?.status === "em_andamento"}>
                 <Play size={18} /> Iniciar série
               </button>
-              <button className="metal-button" type="button" onClick={openCompleteSetModal} disabled={!currentSet || currentSet.status !== "em_andamento"}>
+              <button className="metal-button" type="button" onClick={() => openCompleteSetModal()} disabled={!currentSet || currentSet.status !== "em_andamento"}>
                 <CheckCircle2 size={18} /> Concluir série
               </button>
               <button className="metal-button light" type="button" onClick={requestFinish}>Finalizar treino</button>
@@ -533,7 +568,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
               const complete = exerciseExecution.status === "concluido";
               return (
                 <article className={`execution-v2-exercise premium-panel ${isCurrent ? "active" : ""} ${complete ? "collapsed" : ""}`} key={exerciseExecution.exerciseId}>
-                  <button className="exercise-title-button" type="button" onClick={() => selectExercise(exerciseExecution.exerciseId)}>
+                  <button className="exercise-title-button" type="button" onClick={() => toggleExercise(exerciseExecution.exerciseId)}>
                     <span className="exercise-check">{complete ? <CheckCircle2 size={22} /> : exerciseExecution.position}</span>
                     <span>
                       <strong>{source?.name}</strong>
@@ -558,10 +593,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
                             className={`set-row ${set.status}`}
                             key={set.setNumber}
                             type="button"
-                            onClick={() => {
-                              selectExercise(exerciseExecution.exerciseId);
-                              if (set.status === "pendente") startSet();
-                            }}
+                            onClick={() => handleSetClick(exerciseExecution.exerciseId, set.setNumber)}
                           >
                             <span>Série {set.setNumber}</span>
                             <span>{set.completedReps || set.prescribedReps || "-"}</span>

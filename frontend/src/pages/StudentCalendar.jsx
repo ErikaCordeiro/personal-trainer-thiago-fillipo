@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Bell,
   CalendarDays,
@@ -50,6 +50,40 @@ export default function StudentCalendar({ student }) {
   const [selectedDay, setSelectedDay] = useState(1);
   const [selectedTime, setSelectedTime] = useState("18:00");
   const firstName = student?.name?.split(" ")[0] || "Erika";
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    const refresh = () => {
+      try {
+        setHistory(JSON.parse(window.localStorage.getItem("ptf_workout_history_v2") || "[]"));
+      } catch {
+        setHistory([]);
+      }
+    };
+    refresh();
+    window.addEventListener("focus", refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener("focus", refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, []);
+
+  const completedWorkouts = history.filter((item) => item.status === "concluido");
+  const completedDays = useMemo(() => new Set(completedWorkouts.map((item) => new Date(item.date).toISOString().slice(0, 10))), [history]);
+  const currentStreak = useMemo(() => {
+    if (!completedDays.size) return 0;
+    const sorted = [...completedDays].sort();
+    const cursor = new Date(sorted.at(-1));
+    let count = 0;
+    while (completedDays.has(cursor.toISOString().slice(0, 10))) {
+      count += 1;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    return count;
+  }, [completedDays]);
+  const bestStreak = Math.max(currentStreak, Number(window.localStorage.getItem("ptf_best_workout_streak") || 0));
+  if (currentStreak > bestStreak) window.localStorage.setItem("ptf_best_workout_streak", String(currentStreak));
 
   const selectedDate = useMemo(() => `${availableDays[selectedDay][1]}/07/2026`, [selectedDay]);
 
@@ -69,8 +103,8 @@ export default function StudentCalendar({ student }) {
         </div>
         <div>
           <span>sequência atual</span>
-          <strong>18</strong>
-          <p>dias seguidos</p>
+          <strong>{currentStreak}</strong>
+          <p>{currentStreak === 1 ? "dia seguido" : "dias seguidos"}</p>
           <small><CalendarDays size={14} /> Este mês</small>
         </div>
         <div className="calendar-streak-side">
@@ -130,7 +164,7 @@ export default function StudentCalendar({ student }) {
         </div>
         <button className="calendar-metal-button" type="button" onClick={() => setAttendance(true)}>
           {attendance ? <Check size={18} /> : null}
-          {attendance ? "Presenca confirmada" : "Confirmar presenca"}
+          {attendance ? "Presen?a confirmada" : "Confirmar presen?a"}
         </button>
         <div className="calendar-return-actions">
           <button type="button" onClick={() => setScheduleOpen(true)}><CalendarDays size={17} /> Agendar consulta</button>
@@ -148,7 +182,7 @@ export default function StudentCalendar({ student }) {
         <article className="calendar-mini-card goals">
           <h3>Metas do mês</h3>
           <GoalLine label="Treinos" value="18/20" progress="90%" className="workout" />
-          <GoalLine label="Agua" value="87%" progress="87%" className="water" />
+          <GoalLine label="?gua" value="87%" progress="87%" className="water" />
           <GoalLine label="Dieta" value="92%" progress="92%" className="diet" />
         </article>
 
@@ -178,7 +212,7 @@ export default function StudentCalendar({ student }) {
         <CalendarModal title={`Dia ${dayDetail.day}`} onClose={() => setDayDetail(null)}>
           <div className="calendar-day-detail">
             <p><DumbbellDot /> Treino realizado: Costas, ombros e glúteos</p>
-            <p><Droplets size={17} /> Agua consumida: 2,1 L</p>
+            <p><Droplets size={17} /> ?gua consumida: 2,1 L</p>
             <p><Target size={17} /> Aderência alimentar: 92%</p>
             <p><Check size={17} /> Check-in concluído</p>
             <p>Observacao do personal: mantenha o ritmo e priorize descanso.</p>
@@ -212,7 +246,7 @@ export default function StudentCalendar({ student }) {
             ))}
           </div>
 
-          <h4>2. Horarios disponiveis - {availableDays[selectedDay][1]} de Julho</h4>
+          <h4>2. Hor?rios dispon?veis - {availableDays[selectedDay][1]} de Julho</h4>
           <div className="schedule-time-list">
             {availableTimes.length ? availableTimes.map((time) => (
               <button key={time} className={selectedTime === time ? "active" : ""} type="button" onClick={() => setSelectedTime(time)}>

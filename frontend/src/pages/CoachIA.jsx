@@ -5,18 +5,22 @@ const quickPrompts = {
   personal: [
     "Gerar treino para hipertrofia",
     "Analisar evolução de um aluno",
-    "Criar dieta editavel",
+    "Criar dieta editável",
     "Resumir aderência da semana",
-    "Sugerir feedback automatico"
+    "Sugerir feedback automático"
   ],
   student: [
     "Como fazer supino?",
-    "O que e hipertrofia?",
-    "O que e deficit calorico?",
+    "O que é hipertrofia?",
+    "O que é déficit calórico?",
     "Estou sentindo dor no ombro",
     "O que significa meu IMC?"
   ]
 };
+
+function decode(text) {
+  return text.replace(/\\u([0-9a-fA-F]{4})/g, (_, code) => String.fromCharCode(parseInt(code, 16)));
+}
 
 export default function CoachIA({ role = "student", student, onClose }) {
   const isPersonal = role === "personal";
@@ -24,10 +28,10 @@ export default function CoachIA({ role = "student", student, onClose }) {
     {
       from: "coach",
       text: isPersonal
-        ? "Pronto, Thiago. Posso gerar treinos, dietas, relatórios e insights dos alunos."
-        : `Pronta para te ajudar, ${student?.name?.split(" ")[0] || "Erika"}. Posso explicar exercicios, musculos, execu??o, nutricao e avaliação física. As orientacoes do Personal Thiago Filippo tem prioridade.`
+        ? "Pronto, Thiago. Posso gerar ideias, relatórios e insights editáveis para você aprovar."
+        : "Pronta para ajudar, " + (student?.name?.split(" ")[0] || "Erika") + ". Eu explico execução, músculos, nutrição e avaliação física. Não altero seus treinos: qualquer mudança precisa ser aprovada pelo Personal Thiago Filippo."
     }
-  ]);
+  ].map((item) => ({ ...item, text: decode(item.text) })));
   const [input, setInput] = useState("");
 
   const sendMessage = (text = input) => {
@@ -51,55 +55,37 @@ export default function CoachIA({ role = "student", student, onClose }) {
         <div>
           <p className="eyebrow">{isPersonal ? "Coach IA" : "Assistente Fitness"}</p>
           <h2>{isPersonal ? "Central inteligente do personal" : "Seu assistente fitness pessoal"}</h2>
-          <span>
-            {isPersonal
-              ? "Crie, analise e otimize alunos com velocidade profissional."
-              : "Explique exercicios, nutricao, dores, execu??o e conceitos fitness sem substituir seu personal."}
-          </span>
+          <span>{isPersonal ? "Crie ideias e análises para revisar antes de aplicar." : "Tire dúvidas com segurança, sem substituir as orientações do seu personal."}</span>
         </div>
-        <img src="/lion-juda-logo.png" alt="Leao de Juda" />
+        <img src="/lion-juda-logo.png" alt="Leão de Judá" />
       </article>
 
       <div className="coach-grid-premium">
         <article className="coach-chat-card">
           <div className="coach-chat-stream">
             {messages.map((message, index) => (
-              <div key={`${message.from}-${index}`} className={`coach-message ${message.from}`}>
+              <div key={message.from + index} className={"coach-message " + message.from}>
                 {message.from === "coach" && <Bot size={18} />}
                 <p>{message.text}</p>
               </div>
             ))}
           </div>
           <form className="coach-input-row" onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
-            <input
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              placeholder={isPersonal ? "Digite sua pergunta para o Coach IA..." : "Pergunte ao Assistente Fitness..."}
-            />
+            <input value={input} onChange={(event) => setInput(event.target.value)} placeholder={isPersonal ? "Digite sua pergunta para o Coach IA..." : "Pergunte ao Assistente Fitness..."} />
             <button type="submit"><Send size={18} /> Enviar</button>
           </form>
         </article>
 
         <aside className="coach-tools-card">
-          <p className="eyebrow">Acoes rapidas</p>
-          <div>
-            {(quickPrompts[role] || quickPrompts.student).map((prompt) => (
-              <button key={prompt} type="button" onClick={() => sendMessage(prompt)}>
-                <Sparkles size={17} /> {prompt}
-              </button>
-            ))}
-          </div>
+          <p className="eyebrow">Ações rápidas</p>
+          <div>{(quickPrompts[role] || quickPrompts.student).map((prompt) => <button key={prompt} type="button" onClick={() => sendMessage(prompt)}><Sparkles size={17} /> {prompt}</button>)}</div>
           <div className="coach-capabilities">
-            <span><Dumbbell size={18} /> {isPersonal ? "Treinos" : "Execucao"}</span>
-            <span><Utensils size={18} /> {isPersonal ? "Dieta" : "Nutricao"}</span>
-            <span><Wand2 size={18} /> {isPersonal ? "Analise" : "Conceitos"}</span>
-            <span><MessageCircle size={18} /> {isPersonal ? "Feedback" : "Duvidas"}</span>
+            <span><Dumbbell size={18} /> {isPersonal ? "Treinos" : "Execução"}</span>
+            <span><Utensils size={18} /> {isPersonal ? "Dieta" : "Nutrição"}</span>
+            <span><Wand2 size={18} /> {isPersonal ? "Análise" : "Conceitos"}</span>
+            <span><MessageCircle size={18} /> {isPersonal ? "Feedback" : "Dúvidas"}</span>
           </div>
-          {!isPersonal && (
-            <p className="assistant-priority-note">
-              As orientacoes do Personal Thiago Filippo tem prioridade sobre qualquer informacao fornecida pelo assistente.
-            </p>
-          )}
+          {!isPersonal && <p className="assistant-priority-note">Eu respondo perguntas e explico conceitos. Não altero treino, dieta ou avaliação sem o Personal Thiago Filippo.</p>}
         </aside>
       </div>
     </section>
@@ -108,25 +94,12 @@ export default function CoachIA({ role = "student", student, onClose }) {
 
 function buildResponse(prompt, role) {
   const lower = prompt.toLowerCase();
-  if (lower.includes("dieta") || lower.includes("refei") || lower.includes("calor")) {
-    return role === "personal"
-      ? "Sugestao criada: plano com proteina alta, carboidrato ajustado ao treino, fibras em todas as refeicoes e substituicoes editaveis para o aluno."
-      : "Posso explicar conceitos de nutricao, mas nao altero sua dieta. Para ajustes, siga o plano do Personal Thiago Filippo.";
-  }
-  if (lower.includes("treino") || lower.includes("carga") || lower.includes("supino") || lower.includes("exercicio")) {
-    return role === "personal"
-      ? "Analise volume semanal, t?cnica e descanso. Posso sugerir progressao de carga por exercicio e distribuir treinos por dia."
-      : "Posso explicar execu??o e musculos trabalhados, mas nao altero seu treino. Se sentir dor, avise o personal antes de continuar.";
-  }
-  if (lower.includes("dor") || lower.includes("ombro") || lower.includes("desconforto")) {
-    return "Se houver dor aguda, formigamento ou perda de forca, pare o exercicio e fale com o Personal Thiago Filippo. Posso ajudar a entender possiveis causas, mas nao substituo avaliação profissional.";
-  }
-  if (lower.includes("evol") || lower.includes("avalia") || lower.includes("imc")) {
-    return role === "personal"
-      ? "A evolução mostra melhora de consistencia, reducao de gordura e ganho de performance. O pr?ximo passo e manter rotina e ajustar hidratação."
-      : "Posso te ajudar a entender sua avaliação, como IMC e composicao corporal. A interpretacao final e os ajustes devem vir do Personal Thiago Filippo.";
-  }
-  return role === "personal"
-    ? "Boa pergunta. Minha recomendacao e olhar treino, dieta, descanso e constancia juntos. Posso transformar isso em uma acao pratica agora."
-    : "Boa pergunta. Posso explicar o conceito e orientar sinais de atencao, mas as orientacoes do Personal Thiago Filippo tem prioridade.";
+  if (lower.includes("supino")) return "No supino, mantenha os pés firmes, escápulas encaixadas para trás e para baixo, punhos alinhados e desça a barra com controle até perto do peito. Suba sem perder estabilidade. Se houver dor no ombro, pare e avise o Personal Thiago Filippo.";
+  if (lower.includes("hipertrofia")) return "Hipertrofia é o aumento de massa muscular. Ela acontece com treino bem executado, progressão de carga, alimentação adequada, descanso e constância.";
+  if (lower.includes("deficit") || lower.includes("déficit")) return "Déficit calórico é consumir menos calorias do que o corpo gasta. Ele ajuda na perda de gordura, mas precisa preservar proteínas, treino de força e saúde.";
+  if (lower.includes("dor") || lower.includes("ombro")) return "Dor no ombro não deve ser ignorada. Pare o exercício se for dor aguda, forte ou com perda de força. Grave a execução se puder e envie ao Personal Thiago Filippo para ele avaliar.";
+  if (lower.includes("imc")) return "IMC relaciona peso e altura. Ele ajuda como indicador geral, mas não mostra tudo: massa magra, gordura corporal, medidas e fotos também precisam ser analisadas.";
+  if (lower.includes("treino") || lower.includes("carga") || lower.includes("exerc")) return role === "personal" ? "Posso sugerir uma análise, mas a alteração final deve ser salva por você no treino do aluno." : "Posso explicar a execução e os músculos trabalhados, mas não altero seu treino. Mudanças só com o Personal Thiago Filippo.";
+  if (lower.includes("dieta") || lower.includes("refei") || lower.includes("calor")) return role === "personal" ? "Posso gerar uma sugestão editável de dieta para você revisar antes de enviar ao aluno." : "Posso explicar alimentos, macros e calorias, mas não altero sua dieta. Use como apoio e confirme ajustes com o personal.";
+  return role === "personal" ? "Boa pergunta. Posso transformar isso em uma sugestão prática para você revisar antes de aplicar." : "Boa pergunta. Vou te orientar de forma educativa, sem alterar seu treino ou dieta. As decisões finais ficam com o Personal Thiago Filippo.";
 }
