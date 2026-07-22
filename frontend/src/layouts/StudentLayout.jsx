@@ -55,13 +55,12 @@ export default function StudentLayout({
           onNotificationAction={onNotificationAction}
         />
         {children}
-        <nav className="bottom-nav student-bottom-nav" aria-label="Navegacao principal do aluno">
-          <button type="button" onClick={() => onNavigate("dashboard")}>Inicio</button>
+        <nav className="bottom-nav student-bottom-nav" aria-label="Navega??o principal do aluno">
+          <button type="button" onClick={() => onNavigate("dashboard")}>In?cio</button>
           <button type="button" onClick={() => onNavigate("student-view")}>Treinos</button>
           <button type="button" onClick={() => onNavigate("diet")}>Dieta</button>
           <button type="button" onClick={() => onNavigate("calendar")}>Calendário</button>
           <button type="button" onClick={() => onNavigate("messages")}>Mensagens</button>
-          <button className="mobile-logout-action" type="button" onClick={onLogout}>Sair</button>
         </nav>
       </main>
     </div>

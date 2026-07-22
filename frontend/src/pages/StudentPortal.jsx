@@ -160,25 +160,37 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
       <article className="workout-history-panel premium-panel">
         <div className="section-heading compact-heading">
           <div>
-            <p className="eyebrow">Hist?rico de treinos</p>
+            <p className="eyebrow">Histórico de treinos</p>
             <h2>Seus treinos registrados</h2>
           </div>
           <span className="status-pill">{workoutHistory.length} registros</span>
         </div>
         {workoutHistory.length ? (
           <div className="workout-history-list">
-            {workoutHistory.slice(0, 6).map((item) => (
-              <article key={item.id}>
-                <div>
-                  <strong>{item.workoutName}</strong>
-                  <span>{item.displayDate} ? {item.durationLabel} ? {item.status === "concluido" ? "Conclu?do" : "Incompleto"}</span>
-                </div>
-                <div>
-                  <b>{item.exercisesDone}/{item.exercisesTotal}</b> exerc?cios
-                  <small>{item.setsDone}/{item.setsTotal} s?ries ? {item.volume || 0} kg volume</small>
-                </div>
-              </article>
-            ))}
+            {workoutHistory.slice(0, 6).map((item) => {
+              const safeVolume = Number(item.volume);
+              const volumeLabel = Number.isFinite(safeVolume) && safeVolume > 0 && safeVolume < 200000
+                ? `${Math.round(safeVolume).toLocaleString("pt-BR")} kg de volume`
+                : "Volume em análise";
+              const doneExercises = Number(item.exercisesDone) || 0;
+              const totalExercises = Number(item.exercisesTotal) || 0;
+              const doneSets = Number(item.setsDone) || 0;
+              const totalSets = Number(item.setsTotal) || 0;
+              const statusLabel = item.status === "concluido" ? "Concluído" : "Incompleto";
+
+              return (
+                <article key={item.id}>
+                  <div>
+                    <strong>{item.workoutName}</strong>
+                    <span>{item.displayDate} • {item.durationLabel} • {statusLabel}</span>
+                  </div>
+                  <div>
+                    <b>{doneExercises}/{totalExercises}</b> exercícios
+                    <small>{doneSets}/{totalSets} séries • {volumeLabel}</small>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         ) : (
           <p className="empty-history-text">Finalize seu primeiro treino para criar o histórico real de evolução.</p>
