@@ -15,6 +15,7 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
   const availableWorkouts = workouts.length ? workouts : [workout];
   const selectedWorkout = availableWorkouts.find((item) => item.id === selectedWorkoutId) || workout;
   const [workoutHistory, setWorkoutHistory] = useState([]);
+  const [historyDetail, setHistoryDetail] = useState(null);
 
   useEffect(() => {
     const refreshHistory = () => {
@@ -163,7 +164,7 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
             <p className="eyebrow">Histórico de treinos</p>
             <h2>Seus treinos registrados</h2>
           </div>
-          <span className="status-pill">{workoutHistory.length} registros</span>
+          <span className="status-pill">{workoutHistory.length} {workoutHistory.length === 1 ? "registro" : "registros"}</span>
         </div>
         {workoutHistory.length ? (
           <div className="workout-history-list">
@@ -180,6 +181,7 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
 
               return (
                 <article key={item.id}>
+                  <button className="history-open-button" type="button" onClick={() => setHistoryDetail(item)} aria-label={`Ver detalhes de ${item.workoutName}`}>
                   <div>
                     <strong>{item.workoutName}</strong>
                     <span>{item.displayDate} • {item.durationLabel} • {statusLabel}</span>
@@ -188,6 +190,7 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
                     <b>{doneExercises}/{totalExercises}</b> exercícios
                     <small>{doneSets}/{totalSets} séries • {volumeLabel}</small>
                   </div>
+                  </button>
                 </article>
               );
             })}
@@ -196,6 +199,33 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
           <p className="empty-history-text">Finalize seu primeiro treino para criar o histórico real de evolução.</p>
         )}
       </article>
+
+      {historyDetail && (
+        <div className="modal-backdrop workout-history-detail-backdrop" role="dialog" aria-modal="true">
+          <article className="workout-history-detail premium-panel">
+            <button className="icon-button modal-close" type="button" onClick={() => setHistoryDetail(null)} aria-label="Fechar">?</button>
+            <p className="eyebrow">Diário de treino</p>
+            <h2>{historyDetail.workoutName}</h2>
+            <span>{historyDetail.displayDate} ? {historyDetail.durationLabel} ? {historyDetail.status === "concluido" ? "Concluído" : "Incompleto"}</span>
+            <div className="history-detail-grid">
+              <div><small>Tempo total</small><strong>{historyDetail.durationLabel}</strong></div>
+              <div><small>Exercícios</small><strong>{historyDetail.exercisesDone}/{historyDetail.exercisesTotal}</strong></div>
+              <div><small>Séries</small><strong>{historyDetail.setsDone}/{historyDetail.setsTotal}</strong></div>
+              <div><small>Volume total</small><strong>{Number(historyDetail.volume || 0).toLocaleString("pt-BR")} kg</strong></div>
+              <div><small>Maior carga</small><strong>{historyDetail.maxLoad || "-"}</strong></div>
+              <div><small>Repetições</small><strong>{historyDetail.repsTotal || 0}</strong></div>
+            </div>
+            <div className="history-exercise-detail-list">
+              {(historyDetail.exercises || []).map((exercise) => (
+                <div key={exercise.exerciseId}>
+                  <strong>{exercise.name}</strong>
+                  <span>{exercise.sets?.filter((set) => set.status === "concluida").length || 0}/{exercise.sets?.length || 0} séries ? carga máxima {exercise.maxLoad || "-"}</span>
+                </div>
+              ))}
+            </div>
+          </article>
+        </div>
+      )}
     </section>
   );
 }

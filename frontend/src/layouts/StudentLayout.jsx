@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BarChart3, CalendarDays, Dumbbell, Home, Utensils } from "lucide-react";
 import Header from "../components/Header.jsx";
 import Sidebar, { studentNavItems } from "../components/Sidebar.jsx";
 
@@ -55,12 +56,25 @@ export default function StudentLayout({
           onNotificationAction={onNotificationAction}
         />
         {children}
-        <nav className="bottom-nav student-bottom-nav" aria-label="Navega??o principal do aluno">
-          <button type="button" onClick={() => onNavigate("dashboard")}>In?cio</button>
-          <button type="button" onClick={() => onNavigate("student-view")}>Treinos</button>
-          <button type="button" onClick={() => onNavigate("diet")}>Dieta</button>
-          <button type="button" onClick={() => onNavigate("calendar")}>Calendário</button>
-          <button type="button" onClick={() => onNavigate("messages")}>Mensagens</button>
+        <nav className="bottom-nav student-bottom-nav" aria-label="Navegação principal do aluno">
+          {[
+            ["dashboard", "Início", Home],
+            ["student-view", "Treinos", Dumbbell],
+            ["diet", "Dieta", Utensils],
+            ["calendar", "Calendário", CalendarDays],
+            ["progress", "Progresso", BarChart3]
+          ].map(([page, label, Icon]) => (
+            <button
+              key={page}
+              className={activePage === page ? "active" : ""}
+              type="button"
+              onClick={() => onNavigate(page)}
+              aria-label={label}
+            >
+              <Icon size={20} />
+              <span>{label}</span>
+            </button>
+          ))}
         </nav>
       </main>
     </div>

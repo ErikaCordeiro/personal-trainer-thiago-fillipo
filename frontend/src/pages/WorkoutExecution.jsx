@@ -41,6 +41,30 @@ function parseRestSeconds(rest) {
   return match ? Number(match[0]) : 60;
 }
 
+function playRestDoneSound() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const context = new AudioContext();
+    const gain = context.createGain();
+    gain.gain.setValueAtTime(0.0001, context.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.14, context.currentTime + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.34);
+    gain.connect(context.destination);
+    [660, 880].forEach((frequency, index) => {
+      const oscillator = context.createOscillator();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(frequency, context.currentTime + index * 0.1);
+      oscillator.connect(gain);
+      oscillator.start(context.currentTime + index * 0.1);
+      oscillator.stop(context.currentTime + 0.32 + index * 0.1);
+    });
+    window.setTimeout(() => context.close?.(), 700);
+  } catch {
+    // Som pode ser bloqueado pelo navegador ate uma interacao do usuario.
+  }
+}
+
 function parseSeriesCount(sets) {
   const match = String(sets || "3").match(/\d+/);
   return Math.max(1, match ? Number(match[0]) : 3);
@@ -193,6 +217,10 @@ function saveHistory(execution, workout, duration, finishStatus) {
     setsDone: completedSets.length,
     setsTotal: exerciseSummary.flatMap((exercise) => exercise.sets).length,
     volume: Math.round(numericVolume),
+    maxLoad: numericLoads.length ? `${Math.max(...numericLoads).toLocaleString("pt-BR")} kg` : "-",
+    averageLoad: numericLoads.length ? Math.round(numericLoads.reduce((sum, value) => sum + value, 0) / numericLoads.length) : 0,
+    repsTotal,
+    estimatedCalories: Math.max(120, Math.round((duration / 60) * 7)),
     feedback: execution.feedback,
     exercises: exerciseSummary
   };
@@ -213,6 +241,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
   const [finishOpen, setFinishOpen] = useState(false);
   const [confirmIncomplete, setConfirmIncomplete] = useState(false);
   const [saving, setSaving] = useState("Salvo");
+  const [restFinishedNotice, setRestFinishedNotice] = useState(false);
   const [feedback, setFeedback] = useState({
     feeling: "Bem",
     difficulty: "Moderado",
@@ -273,7 +302,10 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
 
   useEffect(() => {
     if (execution.rest?.status === "em_andamento" && restSeconds <= 0) {
-      if (navigator.vibrate) navigator.vibrate(120);
+      if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
+      playRestDoneSound();
+      setRestFinishedNotice(true);
+      window.setTimeout(() => setRestFinishedNotice(false), 2800);
       setExecution((prev) => ({
         ...prev,
         rest: { ...prev.rest, status: "concluido", completedAt: nowIso(), completedRestSeconds: prev.rest.selectedSeconds },
@@ -610,6 +642,13 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
           </section>
         </section>
       </section>
+
+      {restFinishedNotice && (
+        <div className="rest-finished-toast" role="status">
+          <strong>Descanso concluído!</strong>
+          <span>Vamos para a próxima série.</span>
+        </div>
+      )}
 
       {execution.rest && (
         <div className="modal-backdrop rest-overlay" role="dialog" aria-modal="true">
