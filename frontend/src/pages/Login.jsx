@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Apple, Chrome, Download, Lock, Mail, UserPlus, X } from "lucide-react";
+import { Apple, Chrome, Download, Eye, EyeOff, Lock, Mail, UserPlus, X } from "lucide-react";
 import LionLogo from "../components/LionLogo.jsx";
 import { apiRequest, login as apiLogin } from "../services/api.js";
 
@@ -11,6 +11,8 @@ export default function Login({ onLogin, onSignup }) {
   const [installPrompt, setInstallPrompt] = useState(null);
   const [installMessage, setInstallMessage] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [keepConnected, setKeepConnected] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
   const [signupMessage, setSignupMessage] = useState("");
 
@@ -18,7 +20,7 @@ export default function Login({ onLogin, onSignup }) {
     const handleBeforeInstallPrompt = (event) => {
       event.preventDefault();
       setInstallPrompt(event);
-      setInstallMessage("Instalacao disponivel no Android/Chrome. Toque em Instalar app para adicionar na tela inicial.");
+      setInstallMessage("Instalação disponível no Android/Chrome. Toque em Instalar app para adicionar na tela inicial.");
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -38,17 +40,17 @@ export default function Login({ onLogin, onSignup }) {
 
     if (isIOS) {
       return isSafari
-        ? "No iPhone/iPad: abra no Safari, toque no icone Compartilhar e escolha Adicionar a Tela de Inicio. O iOS nao permite instalar por botao direto."
-        : "No iPhone/iPad: copie/abra este link no Safari, toque em Compartilhar e depois em Adicionar a Tela de Inicio.";
+        ? "No iPhone/iPad: abra no Safari, toque no ?cone Compartilhar e escolha Adicionar a Tela de In?cio. O iOS não permite instalar por bot?o direto."
+        : "No iPhone/iPad: copie/abra este link no Safari, toque em Compartilhar e depois em Adicionar a Tela de In?cio.";
     }
 
     if (isAndroid) {
       return isChrome
-        ? "No Android/Chrome: toque em Instalar app. Se nao aparecer, abra o menu do Chrome e escolha Instalar app ou Adicionar a Tela inicial."
+        ? "No Android/Chrome: toque em Instalar app. Se não aparecer, abra o menu do Chrome e escolha Instalar app ou Adicionar a Tela inicial."
         : "No Android: abra este link no Chrome e toque em Instalar app ou Adicionar a Tela inicial.";
     }
 
-    return "No computador: use Chrome/Edge e clique no icone de instalar na barra de endereco ou no menu do navegador > Instalar Thiago Filippo.";
+    return "No computador: use Chrome/Edge e clique no ?cone de instalar na barra de endere?o ou no menu do navegador > Instalar Thiago Filippo.";
   };
 
   const installApp = async () => {
@@ -62,7 +64,7 @@ export default function Login({ onLogin, onSignup }) {
     setInstallPrompt(null);
     setInstallMessage(
       choice.outcome === "accepted"
-        ? "Instalacao iniciada. O app Thiago Filippo deve aparecer na tela inicial ou na lista de aplicativos."
+        ? "Instalação iniciada. O app Thiago Filippo deve aparecer na tela inicial ou na lista de aplicativos."
         : getInstallFallbackMessage()
     );
   };
@@ -75,7 +77,7 @@ export default function Login({ onLogin, onSignup }) {
     const password = String(form.get("password"));
 
     try {
-      await apiLogin(email, password);
+      await apiLogin(email, password, keepConnected);
       const user = await apiRequest("/users/me");
       onLogin(user);
     } catch {
@@ -95,7 +97,7 @@ export default function Login({ onLogin, onSignup }) {
       objective: form.get("objective"),
       notes: form.get("notes")
     });
-    setSignupMessage("Cadastro enviado. Aguarde aprovacao do personal para liberar seu acesso.");
+    setSignupMessage("Cadastro enviado. Aguarde aprovação do personal para liberar seu acesso.");
     setSignupOpen(false);
     event.currentTarget.reset();
   };
@@ -131,17 +133,36 @@ export default function Login({ onLogin, onSignup }) {
               <Lock size={16} />
               <input
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Senha"
                 value={credentials.password}
                 onChange={(event) => setCredentials((current) => ({ ...current, password: event.target.value }))}
                 minLength={8}
+                autoComplete="current-password"
                 required
               />
+              <button
+                className="password-toggle"
+                type="button"
+                onClick={() => setShowPassword((value) => !value)}
+                aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
           </label>
+          <div className="login-options-row">
+            <label className="keep-connected-option">
+              <input
+                type="checkbox"
+                checked={keepConnected}
+                onChange={(event) => setKeepConnected(event.target.checked)}
+              />
+              <span>Manter conectado</span>
+            </label>
+            <button className="forgot-link" type="button">Esqueci minha senha</button>
+          </div>
           {loginError ? <p className="login-error">{loginError}</p> : null}
-          <button className="forgot-link" type="button">Esqueci minha senha</button>
           <button className="metal-button" type="submit">Entrar</button>
           <button className="install-app-button" type="button" onClick={installApp}>
             <Download size={15} />
@@ -154,7 +175,7 @@ export default function Login({ onLogin, onSignup }) {
             <button type="button" aria-label="Entrar com Apple"><Apple size={23} /></button>
           </div>
           <small>
-            Nao tem uma conta?{" "}
+            Não tem uma conta?{" "}
             <button className="signup-link-button" type="button" onClick={() => setSignupOpen(true)}>
               Cadastre-se
             </button>
@@ -183,8 +204,8 @@ export default function Login({ onLogin, onSignup }) {
               <label><span>Altura</span><input name="height" type="number" min="1" max="2.5" step="0.01" required placeholder="1.67" /></label>
               <label><span>Objetivo</span><input name="objective" required placeholder="Emagrecimento, hipertrofia..." /></label>
               <label className="wide">
-                <span>Observacoes</span>
-                <textarea name="notes" rows="4" placeholder="Lesoes, rotina, restricoes, preferencias ou objetivo principal." />
+                <span>Observa??es</span>
+                <textarea name="notes" rows="4" placeholder="Les?es, rotina, restri??es, preferencias ou objetivo principal." />
               </label>
             </div>
             <button className="metal-button inline" type="submit">

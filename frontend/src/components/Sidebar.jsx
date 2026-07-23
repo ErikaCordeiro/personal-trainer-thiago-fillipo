@@ -13,9 +13,11 @@ import {
   Home,
   Info,
   LineChart,
+  LogOut,
   Menu,
   MessageCircle,
   Settings,
+  UserCircle,
   Users
 } from "lucide-react";
 import LionLogo from "./LionLogo.jsx";
@@ -37,7 +39,7 @@ export const personalNavItems = [
 ];
 
 export const studentNavItems = [
-  { id: "dashboard", label: "Inicio", icon: Home },
+  { id: "dashboard", label: "Início", icon: Home },
   { id: "student-view", label: "Treinos", icon: Dumbbell },
   { id: "diet", label: "Dieta", icon: Apple },
   { id: "assessments", label: "Avaliações", icon: ClipboardCheck },
@@ -60,7 +62,8 @@ export default function Sidebar({
   navItems = personalNavItems,
   profileName = "Thiago Filippo",
   profileRole = "Personal trainer",
-  profileInitials = "TF"
+  profileInitials = "TF",
+  onLogout
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const effectiveCollapsed = collapsed && !mobileOpen;
@@ -68,7 +71,7 @@ export default function Sidebar({
   const inactive = new Set(["profile"]);
   const assistantName = isStudentMenu ? "Assistente Fitness" : "Coach IA";
   const assistantText = isStudentMenu
-    ? "Tire duvidas sobre execu??o, musculos, dieta e avaliação."
+    ? "Tire dúvidas sobre execu??o, músculos, dieta e avaliação."
     : "Pergunte sobre treinos, dieta, evolução e mais.";
   const handleNavigate = (item) => {
     onNavigate(inactive.has(item.id) ? "dashboard" : item.id);
@@ -130,6 +133,14 @@ export default function Sidebar({
               <strong>{profileName}</strong>
               <small>{profileRole}</small>
             </div>
+          </div>
+
+          <div className="sidebar-account-menu" aria-label="Menu do perfil">
+            <button type="button" onClick={() => onNavigate("about-personal")}><UserCircle size={17} /><span>Meu Perfil</span></button>
+            <button type="button" onClick={() => onNavigate("settings")}><Settings size={17} /><span>Configura?es</span></button>
+            <button type="button" onClick={() => onNavigate("coach")}><Bot size={17} /><span>Ajuda</span></button>
+            <button type="button" onClick={() => onNavigate("about-personal")}><Info size={17} /><span>Sobre</span></button>
+            <button className="logout-menu-button" type="button" onClick={onLogout}><LogOut size={17} /><span>Sair da conta</span></button>
           </div>
 
           <div className="coach-card">

@@ -197,6 +197,13 @@ function saveHistory(execution, workout, duration, finishStatus) {
     };
   });
   const completedSets = exerciseSummary.flatMap((exercise) => exercise.sets).filter((set) => set.status === "concluida");
+  const numericLoads = completedSets
+    .map((set) => Number(String(set.usedLoad).replace(",", ".").replace(/[^0-9.]/g, "")))
+    .filter((value) => Number.isFinite(value) && value > 0);
+  const repsTotal = completedSets.reduce((sum, set) => {
+    const reps = Number(String(set.completedReps).replace(/[^0-9]/g, ""));
+    return sum + (Number.isFinite(reps) ? reps : 0);
+  }, 0);
   const numericVolume = completedSets.reduce((sum, set) => {
     const load = Number(String(set.usedLoad).replace(",", ".").replace(/[^0-9.]/g, ""));
     const reps = Number(String(set.completedReps).replace(/[^0-9]/g, ""));

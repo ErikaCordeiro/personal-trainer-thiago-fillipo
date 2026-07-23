@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Bell, CalendarDays, CheckCircle2, LogOut, Menu, Search, Sparkles, UserPlus } from "lucide-react";
+import { Bell, CalendarDays, CheckCircle2, Menu, Search, Sparkles, UserPlus } from "lucide-react";
 
 export default function Header({
   title,
@@ -23,7 +23,7 @@ export default function Header({
     : [
         {
           id: "empty",
-          title: variant === "student" ? "Tudo certo por aqui" : "Nenhuma pendencia agora",
+          title: variant === "student" ? "Tudo certo por aqui" : "Nenhuma pendência agora",
           message: variant === "student" ? "Quando houver novidades do personal, elas aparecem aqui." : "Novos cadastros e alertas importantes aparecem aqui.",
           type: "info"
         }
@@ -44,7 +44,7 @@ export default function Header({
         </button>
         <label className="search-shell compact-search">
           <Search size={18} />
-          <input placeholder="Buscar aluno, treino ou exercicio" />
+          <input placeholder="Buscar aluno, treino ou exercício" />
         </label>
         <button className="icon-button glow-button" type="button" aria-label="Coach IA" onClick={onCoachClick}>
           <Sparkles size={19} />
@@ -53,7 +53,7 @@ export default function Header({
           <button
             className="icon-button"
             type="button"
-            aria-label="Notificacoes"
+            aria-label="Notifica??es"
             aria-expanded={notificationsOpen}
             onClick={() => setNotificationsOpen((value) => !value)}
           >
@@ -61,11 +61,11 @@ export default function Header({
             {notifications.length > 0 ? <span className="notification-dot">{notifications.length}</span> : null}
           </button>
           {notificationsOpen && (
-            <div className="notification-popover" role="dialog" aria-label="Notificacoes">
+            <div className="notification-popover" role="dialog" aria-label="Notifica??es">
               <div className="notification-popover-header">
                 <div>
-                  <p className="eyebrow">Notificacoes</p>
-                  <strong>{variant === "student" ? "Avisos do aluno" : "Central de aprovacao"}</strong>
+                  <p className="eyebrow">Notifica??es</p>
+                  <strong>{variant === "student" ? "Avisos do aluno" : "Central de aprovação"}</strong>
                 </div>
                 <button type="button" onClick={() => setNotificationsOpen(false)}>Fechar</button>
               </div>
@@ -79,7 +79,7 @@ export default function Header({
                       <strong>{item.title}</strong>
                       <p>{item.message}</p>
                       {item.student ? (
-                        <small>{item.student.email} - {item.student.objective || "Objetivo nao informado"}</small>
+                        <small>{item.student.email} - {item.student.objective || "Objetivo não informado"}</small>
                       ) : null}
                       <div className="notification-actions">
                         {item.type === "student-signup" ? (
@@ -130,9 +130,6 @@ export default function Header({
             <small>{user?.role === "student" ? "Aluno" : "Personal"}</small>
           </div>
         </div>
-        <button className="icon-button" type="button" aria-label="Sair" onClick={onLogout}>
-          <LogOut size={19} />
-        </button>
       </div>
     </header>
   );

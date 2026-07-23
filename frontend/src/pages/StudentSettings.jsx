@@ -143,7 +143,7 @@ export default function StudentSettings({ student }) {
               );
             })}
           </div>
-          <button className="settings-wide-button" type="button" onClick={() => requestChange("Preferencias de notifica??o atualizadas.")}>Gerenciar preferencias</button>
+          <button className="settings-wide-button" type="button" onClick={() => requestChange("Preferencias de notificação atualizadas.")}>Gerenciar preferencias</button>
         </article>
 
         <article className="student-settings-card span-4 schedule-card">
@@ -182,11 +182,11 @@ export default function StudentSettings({ student }) {
           <SectionTitle icon={Smartphone} title="Aplicativo" />
           <span className="settings-label">Tema</span>
           <div className="settings-segment"><button className="active" type="button"><Moon size={17} /> Escuro</button><button type="button"><Sun size={17} /> Claro</button></div>
-          <label className="settings-select-label"><span>Idioma</span><select defaultValue="pt"><option value="pt">Portugues (Brasil)</option></select></label>
+          <label className="settings-select-label"><span>Idioma</span><select defaultValue="pt"><option value="pt">Português (Brasil)</option></select></label>
         </article>
 
         <article className="student-settings-card span-4 integrations-card">
-          <SectionTitle icon={Link2} title="Integracoes futuras" />
+          <SectionTitle icon={Link2} title="Integra??es futuras" />
           <div className="settings-integration-list">
             {integrations.map((item) => {
               const Icon = item.icon;
@@ -199,25 +199,23 @@ export default function StudentSettings({ student }) {
           <SectionTitle icon={CreditCard} title="Conta" />
           <div className="settings-account-lines">
             <span><small>Plano atual</small><strong>Premium</strong></span>
-            <span><small>Pr?xima renovacao</small><strong>10/06/2026</strong></span>
-            <span><small>Proximo pagamento</small><strong>R$ 89,90</strong></span>
+            <span><small>Próxima renovação</small><strong>10/06/2026</strong></span>
+            <span><small>Pr?ximo pagamento</small><strong>R$ 89,90</strong></span>
           </div>
           <button className="settings-wide-button" type="button" onClick={() => requestChange("Area de assinatura preparada para integracao.")}>Gerenciar assinatura <ChevronRight size={17} /></button>
         </article>
 
         <article className="student-settings-card security-card span-12">
-          <SectionTitle icon={Shield} title="Seguranca da conta" />
-          <div className="settings-security-grid">
-            <button type="button"><KeyRound size={20} /><span><strong>Alterar senha</strong><small>Mantenha sua conta segura</small></span><ChevronRight size={18} /></button>
-            <button type="button"><Smartphone size={20} /><span><strong>Dispositivos conectados</strong><small>Gerencie seus dispositivos</small></span><ChevronRight size={18} /></button>
-            <button type="button"><LogOut size={20} /><span><strong>Encerrar sessoes</strong><small>Sair dos outros acessos</small></span><ChevronRight size={18} /></button>
-            <button className="danger" type="button" onClick={() => setDeleteArmed((value) => !value)}><Trash2 size={20} /><span><strong>{deleteArmed ? "Confirmar exclusao" : "Excluir conta"}</strong><small>Esta acao nao podera ser desfeita</small></span><ChevronRight size={18} /></button>
+          <SectionTitle icon={Shield} title="Seguran?a da conta" />
+          <div className="settings-security-grid connected-devices-grid">
+            <button type="button"><Smartphone size={20} /><span><strong>Dispositivos conectados</strong><small>iPhone/PWA - sess?o atual - ?ltimo acesso hoje - localização aproximada indisponível</small></span><ChevronRight size={18} /></button>
+            <button type="button" onClick={() => requestChange("Outras sess?es ser?o encerradas quando houver m?ltiplos dispositivos conectados.")}><KeyRound size={20} /><span><strong>Encerrar todas as outras sess?es</strong><small>Mantenha somente este acesso ativo</small></span><ChevronRight size={18} /></button>
           </div>
         </article>
 
         <article className="student-settings-footer span-12">
           <div>
-            <p>Cada configuração e um passo para uma jornada ainda mais personalizada e resultados extraordinarios.</p>
+            <p>Cada configuração e um passo para uma jornada ainda mais personalizada e resultados extraordin?rios.</p>
             <strong>Thiago Filippo</strong>
             <small>Personal Trainer</small>
           </div>

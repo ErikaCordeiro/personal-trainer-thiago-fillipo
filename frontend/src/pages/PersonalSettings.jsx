@@ -154,7 +154,7 @@ export default function PersonalSettings() {
 
         <SettingsCard number="6" title="Notificacoes" icon={Bell}>
           <ToggleList labels={adminNotifications} keys={["newStudent", "appointment", "rescheduled", "payment", "file", "message"]} toggles={toggles} onToggle={toggle} />
-          <button className="admin-settings-wide" type="button" onClick={() => notify("Preferencias de notifica??o atualizadas.")}>Gerenciar notifica??es</button>
+          <button className="admin-settings-wide" type="button" onClick={() => notify("Preferencias de notificação atualizadas.")}>Gerenciar notifica??es</button>
         </SettingsCard>
 
         <SettingsCard number="7" title="Coach IA" icon={Bot}>
@@ -165,25 +165,24 @@ export default function PersonalSettings() {
         <SettingsCard number="8" title="Aplicativo" icon={Smartphone}>
           <span className="admin-settings-label">Tema</span>
           <div className="admin-settings-segment"><button className={theme === "dark" ? "active" : ""} type="button" onClick={() => setTheme("dark")}><Moon size={17} /> Escuro</button><button className={theme === "light" ? "active" : ""} type="button" onClick={() => setTheme("light")}><Sun size={17} /> Claro</button></div>
-          <label className="admin-settings-select"><span>Idioma</span><select defaultValue="pt"><option value="pt">Portugues (Brasil)</option></select></label>
-          <button className="admin-settings-wide" type="button" onClick={() => notify("Preferencias do aplicativo salvas.")}>Salvar preferencias</button>
+          <label className="admin-settings-select"><span>Idioma</span><select defaultValue="pt"><option value="pt">Portugu?s (Brasil)</option></select></label>
+          <button className="admin-settings-wide" type="button" onClick={() => notify("Preferencias do aplicativo salvas.")}>Salvar prefer?ncias</button>
         </SettingsCard>
 
-        <SettingsCard number="9" title="Seguranca" icon={Lock}>
-          <div className="admin-security-lines">
-            <button type="button"><KeyRound size={17} /> Alterar senha <ChevronRight size={16} /></button>
-            <button type="button"><ShieldCheck size={17} /> Autenticacao em duas etapas <em>Ativado</em><ChevronRight size={16} /></button>
-            <button type="button"><Smartphone size={17} /> Dispositivos conectados <small>3 dispositivos</small><ChevronRight size={16} /></button>
-            <button type="button"><Globe2 size={17} /> Sessoes ativas <small>1 sessao ativa</small><ChevronRight size={16} /></button>
+        <SettingsCard number="9" title="Seguran?a" icon={Lock}>
+          <div className="admin-security-lines connected-devices-grid">
+            <button type="button"><Smartphone size={17} /> Dispositivos conectados <small>Navegador/PWA - sess?o atual - ?ltimo acesso hoje</small><ChevronRight size={16} /></button>
+            <button type="button"><Globe2 size={17} /> Encerrar todas as outras sess?es <small>Dispon?vel quando houver m?ltiplos acessos</small><ChevronRight size={16} /></button>
+            <button type="button"><ShieldCheck size={17} /> Autenticação em duas etapas <em>Estrutura preparada</em><ChevronRight size={16} /></button>
           </div>
         </SettingsCard>
 
-        <SettingsCard number="10" title="Backup e Exportacao" icon={Database}>
-          <AdminLine label="Exportar alunos" action="Exportar" onClick={() => notify("Exportacao de alunos iniciada.")} />
-          <AdminLine label="Exportar avaliações" action="Exportar" onClick={() => notify("Exportacao de avaliações iniciada.")} />
-          <AdminLine label="Exportar financeiro" action="Exportar" onClick={() => notify("Exportacao financeira iniciada.")} />
+        <SettingsCard number="10" title="Backup e Exportação" icon={Database}>
+          <AdminLine label="Exportar alunos" action="Exportar" onClick={() => notify("Exportação de alunos iniciada.")} />
+          <AdminLine label="Exportar avaliações" action="Exportar" onClick={() => notify("Exportação de avaliações iniciada.")} />
+          <AdminLine label="Exportar financeiro" action="Exportar" onClick={() => notify("Exportação financeira iniciada.")} />
           <AdminLine label="Backup completo" action="Realizar backup" onClick={() => notify("Backup completo iniciado.")} />
-          <p>Ultimo backup: 24/05/2026 as 03:15</p>
+          <p>?ltimo backup: 24/05/2026 ?s 03:15</p>
         </SettingsCard>
 
         <SettingsCard number="11" title="Termos e Privacidade" icon={FileText}>
@@ -205,16 +204,16 @@ export default function PersonalSettings() {
         </SettingsCard>
 
         <article className="admin-settings-danger-zone">
-          <h3>13. Zona de Seguranca</h3>
+          <h3>13. Zona de Seguran?a</h3>
           <div>
-            <DangerAction icon={Trash2} title="Excluir conta" text="Esta acao nao podera ser desfeita." armed={armedAction === "delete"} onClick={() => setArmedAction(armedAction === "delete" ? null : "delete")} />
-            <DangerAction icon={RefreshCcw} title="Resetar sistema" text="Todos os dados serao removidos." armed={armedAction === "reset"} onClick={() => setArmedAction(armedAction === "reset" ? null : "reset")} />
+            <DangerAction icon={Trash2} title="Excluir conta" text="Esta ação não poder? ser desfeita." armed={armedAction === "delete"} onClick={() => setArmedAction(armedAction === "delete" ? null : "delete")} />
+            <DangerAction icon={RefreshCcw} title="Resetar sistema" text="Todos os dados ser?o removidos." armed={armedAction === "reset"} onClick={() => setArmedAction(armedAction === "reset" ? null : "reset")} />
           </div>
         </article>
 
         <article className="admin-settings-footer">
           <img src="/lion-juda-logo.png" alt="Thiago Filippo" />
-          <div><p>Voce esta no controle do seu neg?cio. Cada configuração e um passo para transformar vidas e gerar resultados.</p><strong>Thiago Filippo</strong><small>Personal Trainer</small></div>
+          <div><p>Voc? est? no controle do seu neg?cio. Cada configuração e um passo para transformar vidas e gerar resultados.</p><strong>Thiago Filippo</strong><small>Personal Trainer</small></div>
           <img src="/lion-juda-logo.png" alt="" />
         </article>
       </div>

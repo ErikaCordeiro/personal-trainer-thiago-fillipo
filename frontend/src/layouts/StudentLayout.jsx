@@ -41,6 +41,7 @@ export default function StudentLayout({
         profileName={student?.name || session?.name || "Aluno"}
         profileRole="Aluno"
         profileInitials={(student?.name || session?.name || "Aluno").slice(0, 2)}
+        onLogout={onLogout}
       />
       <main className="main-panel student-main" onClickCapture={handleCoachCapture}>
         <Header

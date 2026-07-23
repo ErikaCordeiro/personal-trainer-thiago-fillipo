@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { CheckCircle2, Circle, Clock, Dumbbell, Flame, Play, Video } from "lucide-react";
+import { CheckCircle2, Circle, Clock, Dumbbell, Flame, Play, Video, X } from "lucide-react";
+import { loadWorkoutHistory } from "../utils/activityData.js";
 
 const weekDays = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
 
@@ -20,7 +21,7 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
   useEffect(() => {
     const refreshHistory = () => {
       try {
-        setWorkoutHistory(JSON.parse(window.localStorage.getItem("ptf_workout_history_v2") || "[]"));
+        setWorkoutHistory(loadWorkoutHistory());
       } catch {
         setWorkoutHistory([]);
       }
@@ -45,7 +46,7 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
 
   const percent = useMemo(() => {
     const done = selectedWorkout.exercises.filter((exercise) => completed.has(exercise.id)).length;
-    return Math.round((done / selectedWorkout.exercises.length) * 100);
+    return selectedWorkout.exercises.length ? Math.round((done / selectedWorkout.exercises.length) * 100) : 0;
   }, [selectedWorkout, completed]);
 
   return (
@@ -203,10 +204,10 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
       {historyDetail && (
         <div className="modal-backdrop workout-history-detail-backdrop" role="dialog" aria-modal="true">
           <article className="workout-history-detail premium-panel">
-            <button className="icon-button modal-close" type="button" onClick={() => setHistoryDetail(null)} aria-label="Fechar">?</button>
+            <button className="icon-button modal-close" type="button" onClick={() => setHistoryDetail(null)} aria-label="Fechar"><X size={18} /></button>
             <p className="eyebrow">Diário de treino</p>
             <h2>{historyDetail.workoutName}</h2>
-            <span>{historyDetail.displayDate} ? {historyDetail.durationLabel} ? {historyDetail.status === "concluido" ? "Concluído" : "Incompleto"}</span>
+            <span>{historyDetail.displayDate} • {historyDetail.durationLabel} • {historyDetail.status === "concluido" ? "Concluído" : "Incompleto"}</span>
             <div className="history-detail-grid">
               <div><small>Tempo total</small><strong>{historyDetail.durationLabel}</strong></div>
               <div><small>Exercícios</small><strong>{historyDetail.exercisesDone}/{historyDetail.exercisesTotal}</strong></div>

@@ -30,7 +30,8 @@ import PersonalStudentProgress from "./pages/PersonalStudentProgress.jsx";
 import CoachIA from "./pages/CoachIA.jsx";
 import AboutPersonal from "./pages/AboutPersonal.jsx";
 import { students as mockStudents, workouts as mockWorkouts } from "./data/mockData.js";
-import { apiRequest, clearToken, getToken } from "./services/api.js";
+import { apiRequest, clearToken, getToken, logoutSession, refreshSession } from "./services/api.js";
+import { clearDemoActivityDataOnce } from "./utils/activityData.js";
 
 const pageMeta = {
   dashboard: ["Dashboard", "Disciplina hoje, liberdade amanhã."],
@@ -103,8 +104,12 @@ function pushRoute(role) {
 }
 
 export default function App() {
+  useEffect(() => {
+    clearDemoActivityDataOnce();
+  }, []);
   const [session, setSession] = useState(null);
   const [authReady, setAuthReady] = useState(false);
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [activePage, setActivePage] = useState("dashboard");
   const [selectedExercise, setSelectedExercise] = useState(mockWorkouts[0].exercises[0]);
   const [students, setStudents] = useState(mockStudents);
@@ -140,17 +145,29 @@ export default function App() {
     let mounted = true;
 
     async function restoreSession() {
-      if (!getToken()) {
-        setAuthReady(true);
-        return;
-      }
-
       try {
-        const user = await apiRequest("/users/me");
+        let user = null;
+        if (getToken()) {
+          try {
+            user = await apiRequest("/users/me");
+          } catch {
+            clearToken();
+          }
+        }
+
+        if (!user) {
+          const refreshed = await refreshSession();
+          user = refreshed.user || await apiRequest("/users/me");
+        }
+
         if (!mounted) return;
         const normalizedUser = normalizeSessionUser(user);
         setSession(normalizedUser);
-        setActivePage(pageFromPath(window.location.pathname, normalizedUser.role));
+        const requestedPage = pageFromPath(window.location.pathname, normalizedUser.role);
+        setActivePage(requestedPage);
+        if (window.location.pathname === "/") {
+          pushRoute(normalizedUser.role);
+        }
       } catch {
         clearToken();
       } finally {
@@ -306,7 +323,7 @@ export default function App() {
   const personalNotifications = pendingStudents.map((student) => ({
     id: `pending-${student.id}`,
     type: "student-signup",
-    title: "Novo aluno aguardando aprovacao",
+    title: "Novo aluno aguardando aprovação",
     message: `${student.name} solicitou acesso ao app.`,
     student,
     actionLabel: "Ver aluno"
@@ -325,11 +342,7 @@ export default function App() {
     activePage,
     meta,
     onNavigate: navigate,
-    onLogout: () => {
-      clearToken();
-      setSession(null);
-      window.history.replaceState(null, "", "/");
-    },
+    onLogout: () => setLogoutConfirmOpen(true),
     session,
     sidebarOpen,
     setSidebarOpen,
@@ -397,8 +410,32 @@ export default function App() {
     </>
   );
 
+  const confirmLogout = async () => {
+    await logoutSession();
+    setLogoutConfirmOpen(false);
+    setSession(null);
+    setActivePage("dashboard");
+    setExecutionWorkoutId(null);
+    window.history.replaceState(null, "", "/");
+  };
+
+  const logoutModal = logoutConfirmOpen ? (
+    <div className="logout-modal-backdrop" role="presentation" onMouseDown={() => setLogoutConfirmOpen(false)}>
+      <section className="logout-modal" role="dialog" aria-modal="true" aria-labelledby="logout-title" onMouseDown={(event) => event.stopPropagation()}>
+        <p className="eyebrow">Sessão segura</p>
+        <h2 id="logout-title">Sair da conta?</h2>
+        <p>Seu progresso será salvo. Caso exista um treino em andamento, ele continuará disponível quando você entrar novamente.</p>
+        <div className="logout-modal-actions">
+          <button type="button" onClick={() => setLogoutConfirmOpen(false)}>Cancelar</button>
+          <button className="danger" type="button" onClick={confirmLogout}>Sair</button>
+        </div>
+      </section>
+    </div>
+  ) : null;
+
   if (isStudent) {
     return (
+      <>
       <StudentLayout {...commonLayoutProps}>
         {activePage === "dashboard" && <StudentDashboard students={students} workouts={workouts} onNavigate={navigate} />}
         {activePage === "diet" && <StudentDiet student={students[0]} />}
@@ -410,10 +447,13 @@ export default function App() {
         {activePage === "settings" && <StudentSettings student={students[0]} />}
         {sharedPages}
       </StudentLayout>
+      {logoutModal}
+      </>
     );
   }
 
   return (
+    <>
     <PersonalLayout {...commonLayoutProps}>
       {activePage === "dashboard" && <PersonalDashboard students={students} workouts={workouts} onNavigate={navigate} />}
       {activePage === "diet" && <PersonalDiet students={students} />}
@@ -473,5 +513,7 @@ export default function App() {
       )}
       {sharedPages}
     </PersonalLayout>
+    {logoutModal}
+    </>
   );
 }

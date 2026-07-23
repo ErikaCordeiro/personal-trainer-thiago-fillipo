@@ -41,6 +41,7 @@ export default function PersonalLayout({
         profileName="Thiago Filippo"
         profileRole="Personal trainer"
         profileInitials="TF"
+        onLogout={onLogout}
       />
       <main className="main-panel personal-main" onClickCapture={handleCoachCapture}>
         <Header
@@ -66,7 +67,6 @@ export default function PersonalLayout({
           </button>
           <button type="button" onClick={() => onNavigate("agenda")}>Agenda</button>
           <button type="button" onClick={() => setSidebarOpen(true)}>Mais</button>
-          <button className="mobile-logout-action" type="button" onClick={onLogout}>Sair</button>
         </nav>
       </main>
     </div>
