@@ -368,6 +368,7 @@ export default function App() {
           workouts={workouts}
           completed={completed}
           onStartWorkout={openWorkoutExecution}
+          onNavigate={navigate}
           onToggleExercise={(id) => {
             setCompleted((current) => {
               const next = new Set(current);
@@ -437,7 +438,7 @@ export default function App() {
     return (
       <>
       <StudentLayout {...commonLayoutProps}>
-        {activePage === "dashboard" && <StudentDashboard students={students} workouts={workouts} onNavigate={navigate} />}
+        {activePage === "dashboard" && <StudentDashboard students={students} workouts={workouts} onNavigate={navigate} onStartWorkout={openWorkoutExecution} />}
         {activePage === "diet" && <StudentDiet student={students[0]} />}
         {activePage === "assessments" && <StudentAssessments student={students[0]} />}
         {activePage === "payments" && <StudentPayments student={students[0]} />}

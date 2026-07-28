@@ -26,6 +26,21 @@ import {
 
 const week = ["S", "T", "Q", "Q", "S", "S", "D"];
 const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
+const ACTIVE_WORKOUT_KEY = "ptf_active_workout_id";
+const weekDays = ["Domingo", "Segunda", "Terca", "Quarta", "Quinta", "Sexta", "Sabado"];
+
+function normalizeText(value = "") {
+  return String(value).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+
+function resolveWorkout(workouts = [], activeWorkoutId) {
+  if (!workouts.length) return null;
+  const selected = workouts.find((item) => item.id === activeWorkoutId);
+  if (selected) return selected;
+  const today = normalizeText(weekDays[new Date().getDay()]);
+  return workouts.find((item) => normalizeText(item.date).includes(today)) || workouts[0];
+}
 
 function sumVolume(history) {
   return history.reduce((sum, item) => sum + (Number(item.volume) || 0), 0);
@@ -39,13 +54,16 @@ function currentWeekDoneSet(history) {
   return new Set(week.map((_, index) => {
     const date = new Date(start);
     date.setDate(start.getDate() + index);
-    return dates.has(toLocalDateKey(date)) ? index : null;
+    return dates.has(toLocalDateKey(date)) ?index : null;
   }).filter((value) => value !== null));
 }
 
-export default function StudentDashboard({ students, workouts, onNavigate }) {
+export default function StudentDashboard({ students, workouts, onNavigate, onStartWorkout }) {
   const student = students[0];
-  const todayWorkout = workouts[0];
+  const [activeWorkoutId, setActiveWorkoutId] = useState(() => {
+    try { return window.localStorage.getItem(ACTIVE_WORKOUT_KEY); } catch { return null; }
+  });
+  const todayWorkout = resolveWorkout(workouts, activeWorkoutId);
   const [history, setHistory] = useState(() => loadWorkoutHistory());
 
   useEffect(() => {
@@ -58,11 +76,28 @@ export default function StudentDashboard({ students, workouts, onNavigate }) {
     };
   }, []);
 
+  useEffect(() => {
+    const refreshActiveWorkout = (event) => {
+      const nextId = event?.detail?.workoutId;
+      if (nextId) {
+        setActiveWorkoutId(nextId);
+        return;
+      }
+      try { setActiveWorkoutId(window.localStorage.getItem(ACTIVE_WORKOUT_KEY)); } catch {}
+    };
+    window.addEventListener("ptf-active-workout-changed", refreshActiveWorkout);
+    window.addEventListener("storage", refreshActiveWorkout);
+    return () => {
+      window.removeEventListener("ptf-active-workout-changed", refreshActiveWorkout);
+      window.removeEventListener("storage", refreshActiveWorkout);
+    };
+  }, []);
+
   const completedWorkouts = history;
   const streak = calculateCurrentWorkoutStreak(history);
   const totalVolume = sumVolume(history);
   const monthWorkouts = completedWorkoutsInMonth(history);
-  const score = completedWorkouts.length ? Math.min(100, 60 + completedWorkouts.length * 4 + Math.min(streak * 3, 24)) : 0;
+  const score = completedWorkouts.length ?Math.min(100, 60 + completedWorkouts.length * 4 + Math.min(streak * 3, 24)) : 0;
   const weeklyDone = useMemo(() => currentWeekDoneSet(completedWorkouts), [completedWorkouts.length]);
   const emptyMessage = "Seu progresso começará a aparecer após o primeiro treino.";
 
@@ -75,19 +110,19 @@ export default function StudentDashboard({ students, workouts, onNavigate }) {
             <strong>{score}</strong>
             <span>/100</span>
           </div>
-          <b>{score >= 90 ? "Excelente" : score > 0 ? "Em evolução" : "Sem dados ainda"}</b>
+          <b>{score >= 90 ?"Excelente" : score > 0 ?"Em evolução" : "Sem dados ainda"}</b>
           <div className="xp-bar"><span style={{ width: `${score}%` }} /></div>
-          <small>{completedWorkouts.length ? "Baseado em treinos concluídos, sequência e volume registrado." : emptyMessage}</small>
+          <small>{completedWorkouts.length ?"Baseado em treinos concluídos, sequência e volume registrado." : emptyMessage}</small>
         </div>
         <img src="/lion-juda-logo.png" alt="Leão de Judá" />
       </section>
 
       <section className="student-streak-card">
         <p className="eyebrow">Sequência</p>
-        <div><strong>{streak}</strong><span>{streak === 1 ? "dia seguido" : "dias seguidos"}</span></div>
+        <div><strong>{streak}</strong><span>{streak === 1 ?"dia seguido" : "dias seguidos"}</span></div>
         <div className="student-week-row">
           {week.map((day, index) => (
-            <span key={day + index} className={weeklyDone.has(index) ? "done" : ""}>
+            <span key={day + index} className={weeklyDone.has(index) ?"done" : ""}>
               <CheckCircle2 size={18} />
               <small>{day}</small>
             </span>
@@ -97,14 +132,14 @@ export default function StudentDashboard({ students, workouts, onNavigate }) {
 
       <section className="student-mini-evolution">
         <p className="eyebrow">Evolução semanal</p>
-        {completedWorkouts.length ? (
+        {completedWorkouts.length ?(
           <svg viewBox="0 0 120 54" preserveAspectRatio="none" aria-label="Evolução semanal">
             <polyline points="4,46 22,36 40,40 58,28 78,34 98,18 116,26" />
             <circle cx="98" cy="18" r="3" />
           </svg>
         ) : <p className="dashboard-empty-note">Nenhuma atividade registrada ainda.</p>}
-        <strong>{totalVolume ? `${Math.round(totalVolume).toLocaleString("pt-BR")} kg` : "0 kg"}</strong>
-        <span>{totalVolume ? "Volume registrado" : "Volume real"}</span>
+        <strong>{totalVolume ?`${Math.round(totalVolume).toLocaleString("pt-BR")} kg` : "0 kg"}</strong>
+        <span>{totalVolume ?"Volume registrado" : "Volume real"}</span>
       </section>
 
       <section className="student-workout-hero">
@@ -116,7 +151,7 @@ export default function StudentDashboard({ students, workouts, onNavigate }) {
             <li><BarChart3 size={17} />{todayWorkout?.duration || "60 min"}</li>
             <li><Flame size={17} />estimativa do treino</li>
           </ul>
-          <button type="button" onClick={() => onNavigate("student-view")}>Acessar treino <Play size={16} /></button>
+          <button type="button" onClick={() => todayWorkout ?onStartWorkout?.(todayWorkout.id) : onNavigate("student-view")}>Acessar treino <Play size={16} /></button>
         </div>
         <div className="student-workout-avatar premium-photo">
           <img src={student?.avatar || "/erika-gomes.jpeg"} alt={student?.name || "Aluno"} />
@@ -128,7 +163,7 @@ export default function StudentDashboard({ students, workouts, onNavigate }) {
         <div className="progress-ring neon-ring" style={{ "--value": `${score}%` }}>
           <strong>{score}%</strong>
         </div>
-        <b>{score ? "Continue firme" : "Primeiro treino aguardando"}</b>
+        <b>{score ?"Continue firme" : "Primeiro treino aguardando"}</b>
         <span>{completedWorkouts.length} treino(s) finalizado(s)</span>
       </section>
 
@@ -152,7 +187,7 @@ export default function StudentDashboard({ students, workouts, onNavigate }) {
 
       <section className="student-physical-chart">
         <div className="section-heading"><div><p className="eyebrow">Evolução física</p><h2>Dados reais</h2></div></div>
-        {completedWorkouts.length ? (
+        {completedWorkouts.length ?(
           <div className="student-chart-lines"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline points="0,76 16,70 32,66 48,58 64,46 80,38 100,32" /></svg><div>{months.map((month) => <span key={month}>{month}</span>)}</div></div>
         ) : <p className="empty-history-text">Nenhuma atividade registrada ainda. {emptyMessage}</p>}
       </section>

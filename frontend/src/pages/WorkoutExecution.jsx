@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+﻿import React, { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   CheckCircle2,
@@ -13,6 +13,7 @@ import {
   Save,
   Star,
   Video,
+  Volume2,
   X
 } from "lucide-react";
 
@@ -38,7 +39,7 @@ function shortDate(date = new Date()) {
 
 function parseRestSeconds(rest) {
   const match = String(rest || "60").match(/\d+/);
-  return match ? Number(match[0]) : 60;
+  return match ?Number(match[0]) : 60;
 }
 
 function playRestDoneSound() {
@@ -65,9 +66,89 @@ function playRestDoneSound() {
   }
 }
 
+
+function parseFirstNumber(value) {
+  const match = String(value || "").replace(",", ".").match(/\d+(?:\.\d+)?/);
+  return match ?Number(match[0]) : 0;
+}
+
+function parseRepsSuggestion(value) {
+  const text = String(value || "");
+  const compound = text.match(/[xX]\s*(\d+)/);
+  if (compound) return compound[1];
+  const numbers = text.match(/\d+/g);
+  return numbers?.length ?numbers[numbers.length - 1] : "12";
+}
+
+function buildWeightOptions() {
+  const options = ["0"];
+  for (let value = 2.5; value <= 220; value += 2.5) {
+    options.push(Number.isInteger(value) ?String(value) : String(value).replace(".", ","));
+  }
+  return options;
+}
+
+function notifyRestFinished() {
+  if (typeof window === "undefined") return;
+  if (navigator.vibrate) navigator.vibrate([120, 70, 120]);
+  playRestDoneSound();
+  if ("Notification" in window && Notification.permission === "granted") {
+    new Notification("Descanso concluído", {
+      body: "Hora da próxima série.",
+      icon: "/pwa-icon-192.png"
+    });
+  }
+}
+
+function requestRestNotifications() {
+  if (typeof window === "undefined" || !("Notification" in window)) return;
+  if (Notification.permission === "default") {
+    Notification.requestPermission().catch(() => {});
+  }
+}
+
+function NumberPickerSheet({ title, value, unit, values, onCancel, onConfirm }) {
+  const normalizedValue = String(value || values[0]);
+  const currentIndex = Math.max(0, values.findIndex((item) => String(item) === normalizedValue));
+  const [index, setIndex] = useState(currentIndex);
+  const selected = values[index] ?? values[0];
+  const visible = values.slice(Math.max(0, index - 3), Math.min(values.length, index + 4));
+
+  return (
+    <div className="modal-backdrop picker-backdrop" role="dialog" aria-modal="true" onMouseDown={onCancel}>
+      <article className="number-picker-sheet premium-panel" onMouseDown={(event) => event.stopPropagation()}>
+        <span className="eyebrow">{title}</span>
+        <strong>{selected}{unit}</strong>
+        <div className="number-picker-window">
+          {visible.map((item) => {
+            const itemIndex = values.findIndex((valueItem) => valueItem === item);
+            return (
+              <button
+                key={`${title}-${item}`}
+                className={itemIndex === index ?"active" : ""}
+                type="button"
+                onClick={() => setIndex(itemIndex)}
+              >
+                {item}{unit}
+              </button>
+            );
+          })}
+        </div>
+        <div className="picker-stepper">
+          <button type="button" onClick={() => setIndex((current) => Math.max(0, current - 1))}>-</button>
+          <button type="button" onClick={() => setIndex((current) => Math.min(values.length - 1, current + 1))}>+</button>
+        </div>
+        <div className="modal-actions">
+          <button className="metal-button ghost" type="button" onClick={onCancel}>Cancelar</button>
+          <button className="metal-button light" type="button" onClick={() => onConfirm(String(selected))}>Confirmar</button>
+        </div>
+      </article>
+    </div>
+  );
+}
 function parseSeriesCount(sets) {
   const match = String(sets || "3").match(/\d+/);
-  return Math.max(1, match ? Number(match[0]) : 3);
+  return Math.max(1, match ?Number(match[0]) : 3);
 }
 
 function getExecutionKey(workoutId) {
@@ -153,7 +234,7 @@ function normalizeExecution(saved, workout) {
 function loadExecution(workout) {
   try {
     const raw = window.localStorage.getItem(getExecutionKey(workout.id));
-    return normalizeExecution(raw ? JSON.parse(raw) : null, workout);
+    return normalizeExecution(raw ?JSON.parse(raw) : null, workout);
   } catch {
     return buildInitialExecution(workout);
   }
@@ -190,7 +271,7 @@ function saveHistory(execution, workout, duration, finishStatus) {
     const source = workout.exercises.find((exercise) => exercise.id === item.exerciseId);
     return {
       exerciseId: item.exerciseId,
-      name: source?.name || "Exercício",
+      name: source?.name || "ExercÃ­cio",
       status: item.status,
       sets: item.sets,
       maxLoad: maxLoadText(item)
@@ -198,19 +279,20 @@ function saveHistory(execution, workout, duration, finishStatus) {
   });
   const completedSets = exerciseSummary.flatMap((exercise) => exercise.sets).filter((set) => set.status === "concluida");
   const numericLoads = completedSets
-    .map((set) => Number(String(set.usedLoad).replace(",", ".").replace(/[^0-9.]/g, "")))
+    .map((set) => parseFirstNumber(set.usedLoad))
     .filter((value) => Number.isFinite(value) && value > 0);
   const repsTotal = completedSets.reduce((sum, set) => {
-    const reps = Number(String(set.completedReps).replace(/[^0-9]/g, ""));
-    return sum + (Number.isFinite(reps) ? reps : 0);
+    const reps = parseFirstNumber(set.completedReps);
+    return sum + (Number.isFinite(reps) ?reps : 0);
   }, 0);
   const numericVolume = completedSets.reduce((sum, set) => {
-    const load = Number(String(set.usedLoad).replace(",", ".").replace(/[^0-9.]/g, ""));
-    const reps = Number(String(set.completedReps).replace(/[^0-9]/g, ""));
-    return sum + (Number.isFinite(load) && Number.isFinite(reps) ? load * reps : 0);
+    const load = parseFirstNumber(set.usedLoad);
+    const reps = parseFirstNumber(set.completedReps);
+    return sum + (Number.isFinite(load) && Number.isFinite(reps) ?load * reps : 0);
   }, 0);
   const record = {
-    id: `hist-${execution.id}-${Date.now()}`,
+    id: `hist-${execution.id}`,
+    executionId: execution.id,
     studentId: execution.studentId,
     workoutId: workout.id,
     workoutName: workout.name,
@@ -224,8 +306,8 @@ function saveHistory(execution, workout, duration, finishStatus) {
     setsDone: completedSets.length,
     setsTotal: exerciseSummary.flatMap((exercise) => exercise.sets).length,
     volume: Math.round(numericVolume),
-    maxLoad: numericLoads.length ? `${Math.max(...numericLoads).toLocaleString("pt-BR")} kg` : "-",
-    averageLoad: numericLoads.length ? Math.round(numericLoads.reduce((sum, value) => sum + value, 0) / numericLoads.length) : 0,
+    maxLoad: numericLoads.length ?`${Math.max(...numericLoads).toLocaleString("pt-BR")} kg` : "-",
+    averageLoad: numericLoads.length ?Math.round(numericLoads.reduce((sum, value) => sum + value, 0) / numericLoads.length) : 0,
     repsTotal,
     estimatedCalories: Math.max(120, Math.round((duration / 60) * 7)),
     feedback: execution.feedback,
@@ -233,7 +315,8 @@ function saveHistory(execution, workout, duration, finishStatus) {
   };
   try {
     const current = JSON.parse(window.localStorage.getItem(HISTORY_KEY) || "[]");
-    window.localStorage.setItem(HISTORY_KEY, JSON.stringify([record, ...current].slice(0, 40)));
+    const deduped = current.filter((item) => item.executionId !== execution.id && item.id !== record.id);
+    window.localStorage.setItem(HISTORY_KEY, JSON.stringify([record, ...deduped].slice(0, 40)));
   } catch {
     window.localStorage.setItem(HISTORY_KEY, JSON.stringify([record]));
   }
@@ -249,11 +332,13 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
   const [confirmIncomplete, setConfirmIncomplete] = useState(false);
   const [saving, setSaving] = useState("Salvo");
   const [restFinishedNotice, setRestFinishedNotice] = useState(false);
+  const [activePicker, setActivePicker] = useState(null);
+  const [speakingId, setSpeakingId] = useState(null);
   const [feedback, setFeedback] = useState({
     feeling: "Bem",
     difficulty: "Moderado",
     rating: 5,
-    hadPain: "Não",
+    hadPain: "NÃ£o",
     painArea: "",
     painIntensity: "0",
     observation: ""
@@ -272,13 +357,13 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     try {
       setSaving("Salvando...");
       window.localStorage.setItem(getExecutionKey(workout.id), JSON.stringify({ ...execution, updatedAt: nowIso() }));
-      const id = window.setTimeout(() => setSaving(navigator.onLine ? "Salvo" : "Sem conexão - os dados serão sincronizados"), 250);
+      const id = window.setTimeout(() => setSaving(navigator.onLine ?"Salvo" : "Sem conexÃ£o - os dados serÃ£o sincronizados"), 250);
       return () => window.clearTimeout(id);
     } catch {
-      setSaving("Sem conexão - os dados serão sincronizados");
+      setSaving("Sem conexÃ£o - os dados serÃ£o sincronizados");
     }
     return undefined;
-  }, [execution, workout.id, tick]);
+  }, [execution, workout.id]);
 
   useEffect(() => {
     const persist = () => {
@@ -301,11 +386,11 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
   const elapsed = liveElapsed(execution);
   const exercises = exerciseTotals(execution);
   const sets = setTotals(execution);
-  const percent = sets.total ? Math.round((sets.done / sets.total) * 100) : 0;
+  const percent = sets.total ?Math.round((sets.done / sets.total) * 100) : 0;
   const currentExecution = execution.exercises.find((item) => item.exerciseId === execution.currentExerciseId) || execution.exercises[0];
   const currentExercise = workout.exercises.find((item) => item.id === currentExecution?.exerciseId) || workout.exercises[0];
   const currentSet = currentExecution?.sets.find((set) => set.status === "em_andamento") || currentExecution?.sets.find((set) => set.status === "pendente") || currentExecution?.sets.at(-1);
-  const restSeconds = execution.rest?.status === "em_andamento" ? Math.max(0, Math.ceil((new Date(execution.rest.restEndsAt).getTime() - Date.now()) / 1000)) : 0;
+  const restSeconds = execution.rest?.status === "em_andamento" ?Math.max(0, Math.ceil((new Date(execution.rest.restEndsAt).getTime() - Date.now()) / 1000)) : 0;
 
   useEffect(() => {
     if (execution.rest?.status === "em_andamento" && restSeconds <= 0) {
@@ -324,7 +409,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
   function updateExercise(exerciseId, updater) {
     setExecution((prev) => ({
       ...prev,
-      exercises: prev.exercises.map((item) => item.exerciseId === exerciseId ? updater(item) : item),
+      exercises: prev.exercises.map((item) => item.exerciseId === exerciseId ?updater(item) : item),
       updatedAt: nowIso()
     }));
   }
@@ -333,7 +418,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     setExecution((prev) => ({
       ...prev,
       currentExerciseId: exerciseId,
-      exercises: prev.exercises.map((item) => item.exerciseId === exerciseId ? { ...item, expanded: !item.expanded } : item),
+      exercises: prev.exercises.map((item) => item.exerciseId === exerciseId ?{ ...item, expanded: !item.expanded } : item),
       updatedAt: nowIso()
     }));
   }
@@ -342,7 +427,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     setExecution((prev) => ({
       ...prev,
       currentExerciseId: exerciseId,
-      exercises: prev.exercises.map((item) => item.exerciseId === exerciseId ? { ...item, expanded: true } : item),
+      exercises: prev.exercises.map((item) => item.exerciseId === exerciseId ?{ ...item, expanded: true } : item),
       updatedAt: nowIso()
     }));
   }
@@ -359,9 +444,9 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     const startStamp = nowIso();
     setExecution((prev) => ({
       ...prev,
-      status: prev.status === "nao_iniciado" ? "em_andamento" : prev.status,
+      status: prev.status === "nao_iniciado" ?"em_andamento" : prev.status,
       startedAt: prev.startedAt || startStamp,
-      activeSince: prev.status === "nao_iniciado" ? startStamp : prev.activeSince,
+      activeSince: prev.status === "nao_iniciado" ?startStamp : prev.activeSince,
       currentExerciseId: targetExerciseId,
       currentSetNumber: targetSetNumber,
       exercises: prev.exercises.map((item) => {
@@ -371,7 +456,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
           status: "em_andamento",
           expanded: true,
           startedAt: item.startedAt || startStamp,
-          sets: item.sets.map((set) => set.setNumber === targetSetNumber ? { ...set, status: "em_andamento", startedAt: set.startedAt || startStamp } : set)
+          sets: item.sets.map((set) => set.setNumber === targetSetNumber ?{ ...set, status: "em_andamento", startedAt: set.startedAt || startStamp } : set)
         };
       }),
       updatedAt: startStamp
@@ -382,7 +467,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
           exerciseId: targetExercise.exerciseId,
           setNumber: targetSet.setNumber,
           usedLoad: targetSet.usedLoad || targetSet.prescribedLoad || "",
-          completedReps: targetSet.completedReps || targetSet.prescribedReps || "",
+          completedReps: targetSet.completedReps || parseRepsSuggestion(targetSet.prescribedReps) || "",
           observation: targetSet.observation || ""
         });
       }, 0);
@@ -425,7 +510,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
       exerciseId: targetExercise.exerciseId,
       setNumber: targetSet.setNumber,
       usedLoad: targetSet.usedLoad || targetSet.prescribedLoad || "",
-      completedReps: targetSet.completedReps || targetSet.prescribedReps || "",
+      completedReps: targetSet.completedReps || parseRepsSuggestion(targetSet.prescribedReps) || "",
       observation: targetSet.observation || ""
     });
   }
@@ -442,7 +527,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
         if (item.exerciseId !== setModal.exerciseId) return item;
         const nextSets = item.sets.map((set) => {
           if (set.setNumber !== setModal.setNumber) return set;
-          const started = set.startedAt ? new Date(set.startedAt).getTime() : Date.now();
+          const started = set.startedAt ?new Date(set.startedAt).getTime() : Date.now();
           return {
             ...set,
             status: "concluida",
@@ -457,12 +542,12 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
         const hasNext = nextSets.some((set) => set.status === "pendente");
         shouldRest = hasNext && !allDone;
         if (allDone) completedExerciseId = item.exerciseId;
-        return { ...item, sets: nextSets, status: allDone ? "concluido" : "em_andamento", completedAt: allDone ? completedAt : item.completedAt, expanded: !allDone };
+        return { ...item, sets: nextSets, status: allDone ?"concluido" : "em_andamento", completedAt: allDone ?completedAt : item.completedAt, expanded: !allDone };
       });
       return {
         ...prev,
         exercises: nextExercises,
-        rest: shouldRest ? {
+        rest: shouldRest ?{
           status: "em_andamento",
           restStartedAt: completedAt,
           restEndsAt: new Date(Date.now() + rest * 1000).toISOString(),
@@ -475,6 +560,10 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     });
     if (completedExerciseId && onToggleExercise) onToggleExercise(completedExerciseId);
     setSetModal(null);
+  }
+
+  function shouldRequestRestPermission(seconds) {
+    return seconds > 0 && typeof window !== "undefined" && "Notification" in window && Notification.permission === "default";
   }
 
   function adjustRest(delta) {
@@ -509,7 +598,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
 
   function submitFinish() {
     const complete = execution.exercises.every((item) => item.status === "concluido");
-    const status = complete ? "concluido" : "incompleto";
+    const status = complete ?"concluido" : "incompleto";
     const finalDuration = liveElapsed(execution);
     const finished = {
       ...execution,
@@ -530,8 +619,8 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
 
   const stats = [
     ["Tempo do treino", formatTime(elapsed), Clock],
-    ["Exercícios", `${exercises.done}/${exercises.total}`, Dumbbell],
-    ["Séries", `${sets.done}/${sets.total}`, CheckCircle2],
+    ["ExercÃ­cios", `${exercises.done}/${exercises.total}`, Dumbbell],
+    ["SÃ©ries", `${sets.done}/${sets.total}`, CheckCircle2],
     ["Progresso", `${percent}%`, Save]
   ];
 
@@ -545,7 +634,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
             <h2>{workout.name}</h2>
             <p>{workout.focus || "Treino personalizado"}</p>
           </div>
-          <span className={`status-pill status-${execution.status}`}>{execution.status.replace("nao_iniciado", "não iniciado").replace("em_andamento", "em andamento")}</span>
+          <span className={`status-pill status-${execution.status}`}>{execution.status.replace("nao_iniciado", "nÃ£o iniciado").replace("em_andamento", "em andamento")}</span>
         </header>
 
         <section className="execution-v2-stats">
@@ -568,37 +657,37 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
 
         <section className="execution-v2-grid">
           <aside className="execution-v2-current premium-panel">
-            <span className="eyebrow">Exercício atual</span>
+            <span className="eyebrow">ExercÃ­cio atual</span>
             <h3>{currentExecution?.position || 1} de {workout.exercises.length}</h3>
             <h2>{currentExercise?.name}</h2>
-            <p>{currentSet ? `Série ${currentSet.setNumber} de ${currentExecution.sets.length} • ${currentSet.prescribedReps || currentExercise?.reps || "repetições"}` : "Selecione um exercício"}</p>
+            <p>{currentSet ?`SÃ©rie ${currentSet.setNumber} de ${currentExecution.sets.length} â€¢ ${currentSet.prescribedReps || currentExercise?.reps || "repetiÃ§Ãµes"}` : "Selecione um exercÃ­cio"}</p>
             <div className="current-prescription">
               <span>Descanso: {currentExercise?.rest || "60s"}</span>
               <span>Carga sugerida: {currentExercise?.load || "Livre"}</span>
             </div>
             <div className="execution-v2-actions">
-              {execution.status === "pausado" ? (
+              {execution.status === "pausado" ?(
                 <button className="metal-button" type="button" onClick={resumeWorkout}><Play size={18} /> Continuar</button>
               ) : (
                 <button className="metal-button ghost" type="button" onClick={pauseWorkout} disabled={execution.status !== "em_andamento"}><Pause size={18} /> Pausar</button>
               )}
               <button className="metal-button" type="button" onClick={() => startSet()} disabled={!currentSet || currentSet.status !== "pendente" || execution.status === "pausado" || execution.rest?.status === "em_andamento"}>
-                <Play size={18} /> Iniciar série
+                <Play size={18} /> Iniciar sÃ©rie
               </button>
               <button className="metal-button" type="button" onClick={() => openCompleteSetModal()} disabled={!currentSet || currentSet.status !== "em_andamento"}>
-                <CheckCircle2 size={18} /> Concluir série
+                <CheckCircle2 size={18} /> Concluir sÃ©rie
               </button>
               <button className="metal-button light" type="button" onClick={requestFinish}>Finalizar treino</button>
             </div>
           </aside>
 
-          <section className="execution-v2-list" aria-label="Exercícios do treino">
+          <section className="execution-v2-list" aria-label="ExercÃ­cios do treino">
             <div className="section-heading compact-heading">
               <div>
-                <span className="eyebrow">Exercícios</span>
-                <h3>{exercises.done} de {exercises.total} concluídos</h3>
+                <span className="eyebrow">ExercÃ­cios</span>
+                <h3>{exercises.done} de {exercises.total} concluÃ­dos</h3>
               </div>
-              <strong>{sets.done}/{sets.total} séries</strong>
+              <strong>{sets.done}/{sets.total} sÃ©ries</strong>
             </div>
             {execution.exercises.map((exerciseExecution) => {
               const source = workout.exercises.find((exercise) => exercise.id === exerciseExecution.exerciseId);
@@ -606,14 +695,14 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
               const isCurrent = execution.currentExerciseId === exerciseExecution.exerciseId;
               const complete = exerciseExecution.status === "concluido";
               return (
-                <article className={`execution-v2-exercise premium-panel ${isCurrent ? "active" : ""} ${complete ? "collapsed" : ""}`} key={exerciseExecution.exerciseId}>
+                <article className={`execution-v2-exercise premium-panel ${isCurrent ?"active" : ""} ${complete ?"collapsed" : ""}`} key={exerciseExecution.exerciseId}>
                   <button className="exercise-title-button" type="button" onClick={() => toggleExercise(exerciseExecution.exerciseId)}>
-                    <span className="exercise-check">{complete ? <CheckCircle2 size={22} /> : exerciseExecution.position}</span>
+                    <span className="exercise-check">{complete ?<CheckCircle2 size={22} /> : exerciseExecution.position}</span>
                     <span>
                       <strong>{source?.name}</strong>
-                      <small>{complete ? `${localSets.done}/${localSets.total} séries concluídas • Carga máxima: ${maxLoadText(exerciseExecution)}` : `${source?.sets} • ${source?.reps}`}</small>
+                      <small>{complete ?`${localSets.done}/${localSets.total} sÃ©ries concluÃ­das â€¢ Carga mÃ¡xima: ${maxLoadText(exerciseExecution)}` : `${source?.sets} â€¢ ${source?.reps}`}</small>
                     </span>
-                    {exerciseExecution.expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                    {exerciseExecution.expanded ?<ChevronUp size={18} /> : <ChevronDown size={18} />}
                   </button>
 
                   {exerciseExecution.expanded && (
@@ -624,7 +713,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
                         <span>Carga sugerida: {source?.load || "Livre"}</span>
                       </div>
                       {source?.videoUrl && (
-                        <button className="video-link-button" type="button" onClick={() => setVideoExercise(source)}><Video size={16} /> Ver execução do exercício</button>
+                        <button className="video-link-button" type="button" onClick={() => setVideoExercise(source)}><Video size={16} /> Ver execuÃ§Ã£o do exercÃ­cio</button>
                       )}
                       <div className="set-list">
                         {exerciseExecution.sets.map((set) => (
@@ -634,10 +723,10 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
                             type="button"
                             onClick={() => handleSetClick(exerciseExecution.exerciseId, set.setNumber)}
                           >
-                            <span>Série {set.setNumber}</span>
+                            <span>SÃ©rie {set.setNumber}</span>
                             <span>{set.completedReps || set.prescribedReps || "-"}</span>
                             <span>{set.usedLoad || set.prescribedLoad || "-"}</span>
-                            {set.status === "concluida" ? <CheckCircle2 size={18} /> : <span className="set-dot" />}
+                            {set.status === "concluida" ?<CheckCircle2 size={18} /> : <span className="set-dot" />}
                           </button>
                         ))}
                       </div>
@@ -652,8 +741,8 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
 
       {restFinishedNotice && (
         <div className="rest-finished-toast" role="status">
-          <strong>Descanso concluído!</strong>
-          <span>Vamos para a próxima série.</span>
+          <strong>Descanso concluÃ­do!</strong>
+          <span>Vamos para a prÃ³xima sÃ©rie.</span>
         </div>
       )}
 
@@ -661,16 +750,16 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
         <div className="modal-backdrop rest-overlay" role="dialog" aria-modal="true">
           <article className="rest-card premium-panel">
             <span className="eyebrow">Descanso</span>
-            <div className="rest-ring" style={{ "--value": `${execution.rest.status === "concluido" ? 100 : Math.max(0, 100 - (restSeconds / Math.max(1, execution.rest.selectedSeconds)) * 100)}%` }}>
+            <div className="rest-ring" style={{ "--value": `${execution.rest.status === "concluido" ?100 : Math.max(0, 100 - (restSeconds / Math.max(1, execution.rest.selectedSeconds)) * 100)}%` }}>
               <strong>{formatTime(restSeconds)}</strong>
-              <span>{execution.rest.status === "concluido" ? "Pronto" : "entre séries"}</span>
+              <span>{execution.rest.status === "concluido" ?"Pronto" : "entre sÃ©ries"}</span>
             </div>
             <p>Descanso recomendado: {execution.rest.prescribedSeconds}s</p>
             <div className="rest-controls">
               <button type="button" onClick={() => adjustRest(-15)}><Minus size={16} /> 15s</button>
               <button type="button" onClick={() => adjustRest(15)}><Plus size={16} /> 15s</button>
             </div>
-            <button className="metal-button light" type="button" onClick={skipRest}>{execution.rest.status === "concluido" ? "Iniciar próxima série" : "Pular descanso"}</button>
+            <button className="metal-button light" type="button" onClick={skipRest}>{execution.rest.status === "concluido" ?"Iniciar prÃ³xima sÃ©rie" : "Pular descanso"}</button>
           </article>
         </div>
       )}
@@ -679,24 +768,52 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
         <div className="modal-backdrop" role="dialog" aria-modal="true">
           <article className="form-modal premium-panel workout-set-modal">
             <button className="icon-button modal-close" type="button" onClick={() => setSetModal(null)} aria-label="Fechar"><X size={18} /></button>
-            <span className="eyebrow">Concluir série</span>
-            <h3>Registre o que você fez</h3>
+            <span className="eyebrow">Concluir sÃ©rie</span>
+            <h3>Registre o que vocÃª fez</h3>
             <label>Carga usada</label>
             <input value={setModal.usedLoad} onChange={(event) => setSetModal((prev) => ({ ...prev, usedLoad: event.target.value }))} placeholder="Ex: 22,5 kg ou peso corporal" />
-            <label>Repetições realizadas</label>
+            <label>RepetiÃ§Ãµes realizadas</label>
             <input value={setModal.completedReps} onChange={(event) => setSetModal((prev) => ({ ...prev, completedReps: event.target.value }))} placeholder="Ex: 12" />
-            <label>Observação opcional</label>
-            <textarea value={setModal.observation} onChange={(event) => setSetModal((prev) => ({ ...prev, observation: event.target.value }))} placeholder="Como foi a série?" />
-            <button className="metal-button light" type="button" onClick={completeSet}>Salvar e concluir série</button>
+            <label>ObservaÃ§Ã£o opcional</label>
+            <textarea value={setModal.observation} onChange={(event) => setSetModal((prev) => ({ ...prev, observation: event.target.value }))} placeholder="Como foi a sÃ©rie?" />
+            <button className="metal-button light" type="button" onClick={completeSet}>Salvar e concluir sÃ©rie</button>
           </article>
         </div>
+      )}
+
+      {setModal && activePicker === "load" && (
+        <NumberPickerSheet
+          title="Carga usada"
+          unit=" kg"
+          values={weightOptions}
+          value={String(parseFirstNumber(setModal.usedLoad)).replace(".", ",")}
+          onCancel={() => setActivePicker(null)}
+          onConfirm={(value) => {
+            setSetModal((prev) => ({ ...prev, usedLoad: `${value}kg` }));
+            setActivePicker(null);
+          }}
+        />
+      )}
+
+      {setModal && activePicker === "reps" && (
+        <NumberPickerSheet
+          title="RepetiÃ§Ãµes"
+          unit=" reps"
+          values={repOptions}
+          value={String(parseFirstNumber(setModal.completedReps) || 12)}
+          onCancel={() => setActivePicker(null)}
+          onConfirm={(value) => {
+            setSetModal((prev) => ({ ...prev, completedReps: value }));
+            setActivePicker(null);
+          }}
+        />
       )}
 
       {confirmIncomplete && (
         <div className="modal-backdrop" role="dialog" aria-modal="true">
           <article className="form-modal premium-panel">
             <h3>Treino incompleto</h3>
-            <p>Você ainda possui exercícios ou séries pendentes. Deseja realmente encerrar o treino como incompleto?</p>
+            <p>VocÃª ainda possui exercÃ­cios ou sÃ©ries pendentes. Deseja realmente encerrar o treino como incompleto?</p>
             <div className="modal-actions">
               <button className="metal-button ghost" type="button" onClick={() => setConfirmIncomplete(false)}>Continuar treino</button>
               <button className="metal-button light" type="button" onClick={openIncompleteFeedback}>Encerrar como incompleto</button>
@@ -711,32 +828,32 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
             <button className="icon-button modal-close" type="button" onClick={() => setFinishOpen(false)} aria-label="Fechar"><X size={18} /></button>
             <span className="eyebrow">Feedback final</span>
             <h3>Como foi seu treino hoje?</h3>
-            <label>Como você se sentiu?</label>
+            <label>Como vocÃª se sentiu?</label>
             <select value={feedback.feeling} onChange={(event) => setFeedback((prev) => ({ ...prev, feeling: event.target.value }))}>
               {(["Muito bem", "Bem", "Cansado", "Com dor", "Desmotivado"]).map((option) => <option key={option}>{option}</option>)}
             </select>
             <label>Dificuldade</label>
             <select value={feedback.difficulty} onChange={(event) => setFeedback((prev) => ({ ...prev, difficulty: event.target.value }))}>
-              {(["Fácil", "Moderado", "Difícil", "Muito difícil"]).map((option) => <option key={option}>{option}</option>)}
+              {(["FÃ¡cil", "Moderado", "DifÃ­cil", "Muito difÃ­cil"]).map((option) => <option key={option}>{option}</option>)}
             </select>
             <label>Nota</label>
             <div className="rating-row">
               {[1, 2, 3, 4, 5].map((star) => (
-                <button key={star} type="button" className={feedback.rating >= star ? "active" : ""} onClick={() => setFeedback((prev) => ({ ...prev, rating: star }))}><Star size={20} /></button>
+                <button key={star} type="button" className={feedback.rating >= star ?"active" : ""} onClick={() => setFeedback((prev) => ({ ...prev, rating: star }))}><Star size={20} /></button>
               ))}
             </div>
             <label>Sentiu dor ou desconforto?</label>
             <select value={feedback.hadPain} onChange={(event) => setFeedback((prev) => ({ ...prev, hadPain: event.target.value }))}>
-              <option>Não</option>
+              <option>NÃ£o</option>
               <option>Sim</option>
             </select>
             {feedback.hadPain === "Sim" && (
               <div className="form-grid compact">
-                <input value={feedback.painArea} onChange={(event) => setFeedback((prev) => ({ ...prev, painArea: event.target.value }))} placeholder="Região do corpo" />
+                <input value={feedback.painArea} onChange={(event) => setFeedback((prev) => ({ ...prev, painArea: event.target.value }))} placeholder="RegiÃ£o do corpo" />
                 <input value={feedback.painIntensity} onChange={(event) => setFeedback((prev) => ({ ...prev, painIntensity: event.target.value }))} placeholder="Intensidade 0 a 10" />
               </div>
             )}
-            <textarea value={feedback.observation} onChange={(event) => setFeedback((prev) => ({ ...prev, observation: event.target.value }))} placeholder="Observações opcionais" />
+            <textarea value={feedback.observation} onChange={(event) => setFeedback((prev) => ({ ...prev, observation: event.target.value }))} placeholder="ObservaÃ§Ãµes opcionais" />
             <button className="metal-button light" type="button" onClick={submitFinish}>Enviar feedback</button>
           </article>
         </div>
@@ -746,9 +863,9 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
         <div className="modal-backdrop" role="dialog" aria-modal="true">
           <article className="form-modal premium-panel video-modal">
             <button className="icon-button modal-close" type="button" onClick={() => setVideoExercise(null)} aria-label="Fechar"><X size={18} /></button>
-            <span className="eyebrow">Execução</span>
+            <span className="eyebrow">Execu??o</span>
             <h3>{videoExercise.name}</h3>
-            {toYoutubeEmbedUrl(videoExercise.videoUrl).includes("youtube") ? (
+            {toYoutubeEmbedUrl(videoExercise.videoUrl).includes("youtube") ?(
               <iframe src={toYoutubeEmbedUrl(videoExercise.videoUrl)} title={videoExercise.name} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
             ) : null}
             <a className="metal-button light" href={toYoutubeWatchUrl(videoExercise.videoUrl)} target="_blank" rel="noreferrer">Abrir no YouTube</a>
@@ -758,3 +875,4 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     </main>
   );
 }
+
