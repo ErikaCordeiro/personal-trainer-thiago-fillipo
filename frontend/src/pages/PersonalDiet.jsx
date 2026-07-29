@@ -35,9 +35,9 @@ const studentRows = [
 ];
 
 const meals = [
-  { time: "07:00", name: "Caf? da manh?", student: "Erika", foods: "Aveia, whey, banana e chia", kcal: "542 kcal" },
-  { time: "13:00", name: "Almoco", student: "Erika", foods: "Frango, arroz integral, feijao e salada", kcal: "680 kcal" },
-  { time: "19:30", name: "Jantar", student: "Erika", foods: "Salmao com batata doce e legumes", kcal: "610 kcal" }
+  { time: "07:00", name: "Café da manhã", student: "Erika", foods: "Aveia, whey, banana e chia", kcal: "542 kcal" },
+  { time: "13:00", name: "Almoço", student: "Erika", foods: "Frango, arroz integral, feijao e salada", kcal: "680 kcal" },
+  { time: "19:30", name: "Jantar", student: "Erika", foods: "Salmão com batata doce e legumes", kcal: "610 kcal" }
 ];
 
 const alerts = [
@@ -48,6 +48,7 @@ const alerts = [
 export default function PersonalDiet({ students }) {
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
   const [aiMeals, setAiMeals] = useState([]);
+  const [notice, setNotice] = useState(null);
   const [plans, setPlans] = useState([
     { student: "Erika Gomes", name: "Plano definição premium", calories: "2.200", meals: "6", status: "Ativo" }
   ]);
@@ -67,6 +68,8 @@ export default function PersonalDiet({ students }) {
     setAiMeals((current) => current.map((meal, mealIndex) => mealIndex === index ? { ...meal, [field]: value } : meal));
   };
 
+  const openNotice = (title, text) => setNotice({ title, text });
+
   const savePlan = (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -82,6 +85,7 @@ export default function PersonalDiet({ students }) {
       ...current
     ]);
     setIsPlanModalOpen(false);
+    setNotice({ title: "Dieta salva", text: "O plano alimentar foi salvo e já fica disponível para revisão do aluno." });
     event.currentTarget.reset();
   };
 
@@ -120,13 +124,13 @@ export default function PersonalDiet({ students }) {
               <p className="eyebrow">Acompanhamento</p>
               <h2>Alunos e metas</h2>
             </div>
-            <button type="button">Filtrar</button>
+            <button type="button" onClick={() => openNotice("Filtros de dieta", "Filtro preparado para localizar alunos por objetivo, aderência, hidratação e status nutricional.")}>Filtrar</button>
           </div>
           <div className="nutrition-student-table">
             <div className="nutrition-table-head">
               <span>Aluno</span>
               <span>Calorias</span>
-              <span>Proteina</span>
+              <span>Proteína</span>
               <span>água</span>
               <span>Aderência</span>
               <span>Status</span>
@@ -202,7 +206,7 @@ export default function PersonalDiet({ students }) {
                   <span>{meal.student} - {meal.foods}</span>
                 </div>
                 <small>{meal.kcal}</small>
-                <button type="button">Revisar</button>
+                <button type="button" onClick={() => openNotice("Revisão de refeição", `${meal.name}: ${meal.foods}. Registro pronto para aprovação, comentário ou ajuste nutricional.`)}>Revisar</button>
               </div>
             ))}
           </div>
@@ -214,13 +218,27 @@ export default function PersonalDiet({ students }) {
           <h2>Gerar dieta, marmita ou ajuste</h2>
           <p>Use a IA para criar planos, revisar fotos de refeição, sugerir substituições e resumir a evolução alimentar.</p>
           <div className="coach-admin-actions">
-            <button type="button">Gerar dieta</button>
-            <button type="button">Criar marmita</button>
-            <button type="button">Analisar refeição</button>
+            <button type="button" onClick={() => { generateAiDiet(); setIsPlanModalOpen(true); }}>Gerar dieta</button>
+            <button type="button" onClick={() => openNotice("Marmita sugerida", "Frango grelhado, arroz integral, feijão, legumes e azeite. Você pode usar como base e editar antes de enviar.")}>Criar marmita</button>
+            <button type="button" onClick={() => openNotice("Análise alimentar", "A IA nutricional pode revisar foto, calorias e macros. A análise é estimativa e sempre editável pelo personal.")}>Analisar refeição</button>
           </div>
         </article>
       </div>
 
+
+      {notice && (
+        <div className="admin-action-modal-backdrop" role="dialog" aria-modal="true" aria-label={notice.title}>
+          <div className="admin-action-modal">
+            <button type="button" aria-label="Fechar" onClick={() => setNotice(null)}><X size={18} /></button>
+            <p className="eyebrow">Dietas</p>
+            <h3>{notice.title}</h3>
+            <p>{notice.text}</p>
+            <div>
+              <button className="metal-button inline" type="button" onClick={() => setNotice(null)}>Entendi</button>
+            </div>
+          </div>
+        </div>
+      )}
       {isPlanModalOpen && (
         <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Nova dieta">
           <form className="student-modal diet-plan-modal" onSubmit={savePlan}>
@@ -246,7 +264,7 @@ export default function PersonalDiet({ students }) {
               <label><span>Nome da dieta</span><input name="name" required placeholder="Ex: Definição premium" /></label>
               <label><span>Calorias alvo</span><input name="calories" type="number" min="800" required placeholder="2200" /></label>
               <label><span>Refeições por dia</span><input name="meals" type="number" min="1" required placeholder="6" /></label>
-              <label className="wide"><span>Macros</span><input name="macros" placeholder="Proteinas 180g, carboidratos 250g, gorduras 70g" /></label>
+              <label className="wide"><span>Macros</span><input name="macros" placeholder="Proteínas 180g, carboidratos 250g, gorduras 70g" /></label>
               <label className="wide"><span>Observações</span><textarea name="notes" rows="4" placeholder="Substituições, restrições, orientações e estratégia." /></label>
               <div className="wide ai-diet-editor">
                 <div>
@@ -275,5 +293,9 @@ export default function PersonalDiet({ students }) {
     </section>
   );
 }
+
+
+
+
 
 

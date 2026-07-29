@@ -1,4 +1,4 @@
-﻿import React, { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   AlertTriangle,
   Apple,
@@ -60,16 +60,18 @@ const insightPrompts = [
   ["Quem precisa de atenção?", "Alunos com baixa aderência", AlertTriangle],
   ["Previsão de resultados", "Projeção para os próximos meses", LineChart],
   ["Baixa aderência alimentar", "Detectar queda em dieta", Apple],
-  ["Aumento de carga", "Evolução por exercicio", Dumbbell]
+  ["Aumento de carga", "Evolução por exercício", Dumbbell]
 ];
 
 const performanceData = [52, 61, 68, 64, 72, 79, 75, 88, 91, 86, 94, 96];
 
 export default function PersonalReports({ students = [] }) {
   const [selectedReport, setSelectedReport] = useState("Relatório mensal");
+  const [actionModal, setActionModal] = useState(null);
   const [period, setPeriod] = useState("Este mês (01/05/2026 - 31/05/2026)");
   const [reportType, setReportType] = useState("Relatório mensal");
   const studentCount = students.length || 128;
+  const openReportAction = (title, text) => setActionModal({ title, text });
 
   const bars = useMemo(() => performanceData.map((value, index) => ({ label: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"][index], value })), []);
 
@@ -92,14 +94,14 @@ export default function PersonalReports({ students = [] }) {
             </select>
             <ChevronDown size={16} />
           </label>
-          <button type="button"><Download size={18} /> Exportar relatório</button>
+          <button type="button" onClick={() => openReportAction("Exportar relatório", "Seu relatório executivo será preparado em PDF com métricas, gráficos e identidade visual do Personal Thiago Fillippo.")}><Download size={18} /> Exportar relatório</button>
         </div>
       </header>
 
       <article className="reports-card reports-quick-card">
         <div className="reports-section-title">
-          <h3>Relatórios rapidos</h3>
-          <p>Atalhos executivos para gerar visoes prontas.</p>
+          <h3>Relatórios rápidos</h3>
+          <p>Atalhos executivos para gerar visões prontas.</p>
         </div>
         <div className="reports-quick-grid">
           {quickReports.map(([title, text, Icon]) => (
@@ -113,7 +115,7 @@ export default function PersonalReports({ students = [] }) {
 
       <div className="reports-kpi-grid">
         {kpis.map(([title, value, delta, Icon, trend]) => (
-          <article key={title} className="reports-kpi-card">
+          <button key={title} className="reports-kpi-card" type="button" onClick={() => openReportAction(title, `Detalhamento de ${title.toLowerCase()} pronto para análise e exportação.`)}>
             <div>
               <span>{title}</span>
               <strong>{title === "Alunos ativos" ? studentCount : value}</strong>
@@ -121,7 +123,7 @@ export default function PersonalReports({ students = [] }) {
             </div>
             <div className="reports-kpi-orb"><Icon size={24} /></div>
             <MiniTrend values={trend} />
-          </article>
+          </button>
         ))}
       </div>
 
@@ -158,7 +160,7 @@ export default function PersonalReports({ students = [] }) {
           <div className="reports-section-title horizontal">
             <div>
               <h3>Ranking premium</h3>
-              <p>Top 5 alunos do mes.</p>
+              <p>Top 5 alunos do mês.</p>
             </div>
             <Medal size={26} />
           </div>
@@ -190,9 +192,9 @@ export default function PersonalReports({ students = [] }) {
             <label>Formato<select><option>PDF</option><option>Excel</option><option>CSV</option></select></label>
           </div>
           <div className="reports-export-actions">
-            <button type="button" className="primary"><FileText size={18} /> Gerar PDF</button>
-            <button type="button"><FileSpreadsheet size={18} /> Exportar Excel</button>
-            <button type="button"><Mail size={18} /> Enviar por e-mail</button>
+            <button type="button" className="primary" onClick={() => openReportAction("Gerar PDF", `${reportType} será gerado para ${period}.`)}><FileText size={18} /> Gerar PDF</button>
+            <button type="button" onClick={() => openReportAction("Exportar Excel", "A planilha será criada com alunos, treinos, dietas, avaliações e indicadores do período selecionado.")}><FileSpreadsheet size={18} /> Exportar Excel</button>
+            <button type="button" onClick={() => openReportAction("Enviar por e-mail", "Escolha os destinatários e envie o relatório com segurança para o personal ou aluno selecionado.")}><Mail size={18} /> Enviar por e-mail</button>
           </div>
         </article>
 
@@ -202,11 +204,11 @@ export default function PersonalReports({ students = [] }) {
               <h3>Relatórios recentes</h3>
               <p>Arquivos gerados com identidade da marca.</p>
             </div>
-            <button type="button">Ver todos</button>
+            <button type="button" onClick={() => openReportAction("Relatórios recentes", "Lista completa de relatórios gerados, com download, reenvio e histórico de auditoria.")}>Ver todos</button>
           </div>
           <div className="reports-recent-list">
             {recentReports.map(([title, date, format, size]) => (
-              <button key={title} type="button">
+              <button key={title} type="button" onClick={() => openReportAction(title, `${date} • ${format} • ${size}`)}>
                 <FileText size={22} />
                 <span><strong>{title}</strong><small>{date}</small></span>
                 <em>{format}<small>{size}</small></em>
@@ -225,7 +227,7 @@ export default function PersonalReports({ students = [] }) {
           </div>
           <div className="reports-insight-grid">
             {insightPrompts.map(([title, text, Icon]) => (
-              <button key={title} type="button">
+              <button key={title} type="button" onClick={() => openReportAction(title, text)}>
                 <Icon size={23} />
                 <span><strong>{title}</strong><small>{text}</small></span>
               </button>
@@ -233,9 +235,22 @@ export default function PersonalReports({ students = [] }) {
           </div>
         </div>
         <div className="reports-ai-emblem">
-          <img src="/lion-juda-logo.png" alt="Leao de Juda" />
+          <img src="/lion-juda-logo.png" alt="Leão de Judá" />
         </div>
       </article>
+      {actionModal && (
+        <div className="admin-action-modal-backdrop" role="dialog" aria-modal="true" aria-label={actionModal.title}>
+          <div className="admin-action-modal">
+            <button type="button" aria-label="Fechar" onClick={() => setActionModal(null)}>×</button>
+            <p className="eyebrow">Relatórios</p>
+            <h3>{actionModal.title}</h3>
+            <p>{actionModal.text}</p>
+            <div>
+              <button className="metal-button inline" type="button" onClick={() => setActionModal(null)}>Concluir</button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
@@ -254,4 +269,9 @@ function MiniTrend({ values }) {
     </svg>
   );
 }
+
+
+
+
+
 

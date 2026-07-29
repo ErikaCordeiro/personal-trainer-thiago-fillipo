@@ -191,7 +191,7 @@ export default function PersonalAgenda({ students }) {
         <AgendaModal title="Insights da agenda" onClose={() => setInsightsOpen(false)}>
           <ul className="agenda-insight-list">
             <li><CheckCircle2 size={17} /> Melhor janela livre: quinta as 12:00.</li>
-            <li><CheckCircle2 size={17} /> Concentre avaliações pela manh? para reduzir pausas.</li>
+            <li><CheckCircle2 size={17} /> Concentre avaliações pela manhã para reduzir pausas.</li>
             <li><CheckCircle2 size={17} /> Erika e Amanda podem alternar horários sem conflito.</li>
           </ul>
           <button type="button" className="agenda-metal-button" onClick={() => setInsightsOpen(false)}>Aplicar sugestão</button>

@@ -20,7 +20,7 @@ import {
 const meals = [
   {
     time: "07:00",
-    name: "Caf? da manh?",
+    name: "Café da manhã",
     description: "Aveia com frutas, whey protein e chia",
     image: "https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?auto=format&fit=crop&w=520&q=80",
     calories: 542,
@@ -33,7 +33,7 @@ const meals = [
   },
   {
     time: "10:30",
-    name: "Lanche da manh?",
+    name: "Lanche da manhã",
     description: "Iogurte natural com frutas e granola",
     image: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=520&q=80",
     calories: 236,

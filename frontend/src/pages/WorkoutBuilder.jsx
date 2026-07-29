@@ -1,5 +1,5 @@
 import React from "react";
-import { Brain, Link, Plus, Save, Upload, Video } from "lucide-react";
+import { Brain, Link, Plus, Save, Trash2, Upload, Video } from "lucide-react";
 import { useMemo, useState } from "react";
 import { exerciseCatalog } from "../data/mockData.js";
 
@@ -50,6 +50,11 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
 
   const addExercise = () => setExercises((current) => [...current, { ...blankExercise, id: crypto.randomUUID() }]);
 
+  const removeExercise = (id) => {
+    setExercises((current) => current.length <= 1 ? current : current.filter((exercise) => exercise.id !== id));
+    if (activeSuggestId === id) setActiveSuggestId(null);
+  };
+
   const submit = (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -81,13 +86,13 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
             <p className="eyebrow">{editingWorkout ? "Editando treino" : "Protocolos"}</p>
             <h2>{editingWorkout ? editingWorkout.name : "Criar treino"}</h2>
           </div>
-          <button className="metal-button inline" type="submit"><Save size={18} /> {editingWorkout ? "Salvar edicao" : "Salvar treino"}</button>
+          <button className="metal-button inline" type="submit"><Save size={18} /> {editingWorkout ? "Salvar edição" : "Salvar treino"}</button>
         </div>
         <div className="form-grid">
           <label><span>Nome do treino</span><input name="name" key={`name-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.name || "Novo treino personalizado"} required /></label>
           <label><span>Aluno</span><select name="studentId" key={`student-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.studentId || students[0]?.id}>{students.map((student) => <option key={student.id} value={student.id}>{student.name}</option>)}</select></label>
           <label><span>Foco</span><input name="focus" key={`focus-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.focus || "Força, hipertrofia e cardio"} /></label>
-          <label><span>Duracao</span><input name="duration" key={`duration-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.duration || "60 min"} /></label>
+          <label><span>Duração</span><input name="duration" key={`duration-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.duration || "60 min"} /></label>
           <label><span>Dia da semana</span><select name="date" key={`date-${editingWorkout?.id || "new"}`} defaultValue={editingWorkout?.date || "Segunda"}>{["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"].map((day) => <option key={day} value={day}>{day}</option>)}</select></label>
         </div>
         <div className="exercise-builder">
@@ -101,13 +106,25 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
             return (
               <article className="exercise-row" key={exercise.id}>
                 <div className="exercise-row-title">
-                  <strong>Exercicio {index + 1}</strong>
-                  <span><Brain size={15} /> IA busca exercícios pelo nome digitado</span>
+                  <strong>Exercício {index + 1}</strong>
+                  <div className="exercise-row-title-actions">
+                    <span><Brain size={15} /> IA busca exercícios pelo nome digitado</span>
+                    <button
+                      className="exercise-remove-button"
+                      type="button"
+                      onClick={() => removeExercise(exercise.id)}
+                      disabled={exercises.length <= 1}
+                      title={exercises.length <= 1 ? "Mantenha pelo menos um exercício" : "Excluir exercício"}
+                    >
+                      <Trash2 size={16} />
+                      Excluir
+                    </button>
+                  </div>
                 </div>
                 <div className="form-grid compact">
                   <div className="exercise-search-field">
                     <input
-                      placeholder="Nome do exercicio"
+                      placeholder="Nome do exercício"
                       value={exercise.name}
                       onFocus={() => setActiveSuggestId(exercise.id)}
                       onChange={(event) => {
@@ -121,14 +138,14 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
                         {suggestions.map((suggestion) => (
                           <button key={suggestion.name} type="button" onClick={() => applySuggestion(exercise.id, suggestion)}>
                             <strong>{suggestion.name}</strong>
-                            <span>{suggestion.muscle} - Video disponível com {preferredInstructor}</span>
+                            <span>{suggestion.muscle} - Vídeo disponível com {preferredInstructor}</span>
                           </button>
                         ))}
                       </div>
                     )}
                   </div>
-                  <input placeholder="Series" type="number" value={exercise.sets} onChange={(event) => updateExercise(exercise.id, "sets", Number(event.target.value))} />
-                  <input placeholder="Repeticoes" value={exercise.reps} onChange={(event) => updateExercise(exercise.id, "reps", event.target.value)} />
+                  <input placeholder="Séries" type="number" value={exercise.sets} onChange={(event) => updateExercise(exercise.id, "sets", Number(event.target.value))} />
+                  <input placeholder="Repetições" value={exercise.reps} onChange={(event) => updateExercise(exercise.id, "reps", event.target.value)} />
                   <input placeholder="Descanso" value={exercise.rest} onChange={(event) => updateExercise(exercise.id, "rest", event.target.value)} />
                   <input placeholder="Carga" value={exercise.load} onChange={(event) => updateExercise(exercise.id, "load", event.target.value)} />
                   <label className="vivideo-input">
@@ -152,7 +169,7 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
           })}
         </div>
         <div className="builder-actions">
-          <button className="ghost-button" type="button" onClick={addExercise}><Plus size={18} /> Adicionar exercicio</button>
+          <button className="ghost-button" type="button" onClick={addExercise}><Plus size={18} /> Adicionar exercício</button>
           {editingWorkout && (
             <button className="ghost-button" type="button" onClick={() => { setEditingWorkout(null); setExercises([{ ...blankExercise, id: crypto.randomUUID() }]); }}>
               Novo treino
@@ -181,3 +198,7 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
     </section>
   );
 }
+
+
+
+
