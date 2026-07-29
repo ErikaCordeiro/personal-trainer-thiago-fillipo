@@ -53,7 +53,7 @@ const meals = [
     protein: 48,
     carbs: 72,
     fats: 18,
-    notes: "Refeicao principal para energia e recuperacao.",
+    notes: "Refeição principal para energia e recuperação.",
     substitutions: "Patinho, tilapia, feijao, batata doce ou legumes assados.",
     done: true
   },
@@ -144,7 +144,7 @@ const recipes = [
     time: "20 min",
     image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=520&q=80",
     ingredients: ["Cacau 100%", "Banana", "Aveia", "Ovo", "Whey chocolate"],
-    steps: ["Misture todos os ingredientes.", "Coloque em forma pequena.", "Asse ate firmar."]
+    steps: ["Misture todos os ingredientes.", "Coloque em forma pequena.", "Asse até firmar."]
   },
   {
     name: "Marmita fitness completa",
@@ -157,7 +157,7 @@ const recipes = [
     time: "30 min",
     image: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=520&q=80",
     ingredients: ["Frango desfiado", "Arroz integral", "Feijao", "Brocolis", "Cenoura"],
-    steps: ["Prepare a proteina em lote.", "Monte porcoes equilibradas.", "Congele por ate 7 dias."]
+    steps: ["Prepare a proteina em lote.", "Monte porcoes equilibradas.", "Congele por até 7 dias."]
   },
   {
     name: "Mousse proteico",
@@ -177,14 +177,14 @@ const recipes = [
 const lunchboxes = [
   ["Emagrecimento", "Frango, arroz integral, feijao e salada", "430 kcal", "42P / 46C / 9G"],
   ["Ganho de massa", "Patinho, batata doce, legumes e azeite", "620 kcal", "48P / 72C / 18G"],
-  ["Low carb", "Omelete, legumes, abacate e folhas", "390 kcal", "32P / 14C / 24G"],
+  ["Low carb", "Omelete, legumes, abacaté e folhas", "390 kcal", "32P / 14C / 24G"],
   ["Economica", "Ovos, arroz, feijao, cenoura e couve", "470 kcal", "28P / 62C / 12G"],
-  ["Rapida", "Atum, mandioca, tomate e pepino", "410 kcal", "35P / 44C / 8G"],
+  ["Rapida", "Atum, mandioca, tomaté e pepino", "410 kcal", "35P / 44C / 8G"],
   ["Congelavel", "Frango desfiado, pure de abobora e brocolis", "360 kcal", "38P / 30C / 8G"]
 ];
 
 const dailyStats = [
-  ["Calorias diarias", "2.450", "/ 2.600 kcal", 94, Flame],
+  ["Calorias diárias", "2.450", "/ 2.600 kcal", 94, Flame],
   ["Proteinas", "180g", "/ 195g", 92, Utensils],
   ["Carboidratos", "250g", "/ 270g", 93, Leaf],
   ["Gorduras", "70g", "/ 80g", 88, Droplets],
@@ -242,15 +242,15 @@ export default function StudentDiet({ student }) {
 
   const saveMeal = () => {
     if (!mealName.trim() || foods.length === 0) {
-      setSavedMessage("Informe o nome da refeicao e pelo menos 1 alimento.");
+      setSavedMessage("Informe o nome da refeição e pelo menos 1 alimento.");
       return;
     }
     const invalid = foods.some((food) => [food.amount, food.calories, food.protein, food.carbs, food.fats].some((value) => Number(value) < 0));
     if (invalid) {
-      setSavedMessage("Calorias, quantidade e macros precisam ser numeros positivos.");
+      setSavedMessage("Calorias, quantidade e macros precisam ser números positivos.");
       return;
     }
-    setSavedMessage("Refeicao salva no hist?rico alimentar e enviada para o personal.");
+    setSavedMessage("Refeição salva no histórico alimentar e enviada para o personal.");
     setModal(null);
   };
 
@@ -291,7 +291,7 @@ export default function StudentDiet({ student }) {
           <article className="nutrition-card meals-panel">
             <div className="section-heading">
               <div>
-                <p className="eyebrow">Suas refeicoes de hoje</p>
+                <p className="eyebrow">Suas refeições de hoje</p>
                 <h2>Plano alimentar diario</h2>
               </div>
               <button type="button" onClick={() => setModal("plan")}>Ver plano alimentar diario</button>
@@ -314,23 +314,23 @@ export default function StudentDiet({ student }) {
             </div>
             <button className="register-meal-button" type="button" onClick={() => setModal("meal") }>
               <Plus size={18} />
-              Registrar refeicao
+              Registrar refeição
             </button>
           </article>
 
           <article className="nutrition-card ai-meal-panel premium-ai-analysis">
             <div className="section-heading">
               <div>
-                <p className="eyebrow">Registrar refeicao com IA</p>
-                <h2>Analise alimentar por foto</h2>
+                <p className="eyebrow">Registrar refeição com IA</p>
+                <h2>Análise alimentar por foto</h2>
               </div>
               <Sparkles size={22} />
             </div>
-            <p className="ai-disclaimer">A analise por foto e uma estimativa. Você pode editar os alimentos e quantidades antes de salvar.</p>
+            <p className="ai-disclaimer">A análise por foto é uma estimativa. Você pode editar os alimentos e quantidades antes de salvar.</p>
             <div className={`ai-meal-grid compact-ai-preview ${mealPhoto ? "has-analysis" : "awaiting-photo"}`}>
               <div className="meal-photo-card empty-photo-card">
                 {mealPhoto ? (
-                  <img src={mealPhoto} alt="Refeicao analisada" />
+                  <img src={mealPhoto} alt="Refeição analisada" />
                 ) : (
                   <div className="empty-meal-photo">
                     <Camera size={34} />
@@ -348,7 +348,7 @@ export default function StudentDiet({ student }) {
                   <div className="ai-food-chips">
                     {foods.slice(0, 5).map((food) => <em key={food.id}>{food.name}</em>)}
                   </div>
-                  <button type="button" onClick={() => setModal("meal")}>Editar analise</button>
+                  <button type="button" onClick={() => setModal("meal")}>Editar análise</button>
                 </div>
               ) : null}
             </div>
@@ -359,7 +359,7 @@ export default function StudentDiet({ student }) {
               <div className="section-heading">
                 <div>
                   <p className="eyebrow">Evolução alimentar</p>
-                  <h2>Ultimos 7 dias</h2>
+                  <h2>últimos 7 dias</h2>
                 </div>
                 <span>Calorias</span>
               </div>
@@ -377,8 +377,8 @@ export default function StudentDiet({ student }) {
             <article className="nutrition-card tips-card">
               <p className="eyebrow">Dicas de hoje</p>
               <ul>
-                <li>Beba agua ao longo do dia, nao tudo de uma vez.</li>
-                <li>Priorize proteina em todas as refeicoes.</li>
+                <li>Beba água ao longo do dia, não tudo de uma vez.</li>
+                <li>Priorize proteína em todas as refeições.</li>
                 <li>Inclua fibras para melhorar saciedade e intestino.</li>
               </ul>
             </article>
@@ -389,33 +389,33 @@ export default function StudentDiet({ student }) {
           <article className="nutrition-card hydration-panel">
             <p className="eyebrow">Hidratação</p>
             <strong>{water.toFixed(1).replace(".", ",")} L <small>/ {waterGoal.toFixed(1).replace(".", ",")} L</small></strong>
-            <span>{waterPercent}% da meta diaria</span>
+            <span>{waterPercent}% da meta diária</span>
             <div className="water-drops">
               {Array.from({ length: 7 }).map((_, index) => <Droplets key={index} size={26} className={index < Math.round((waterPercent / 100) * 7) ? "active" : ""} />)}
             </div>
             <label>
-              <span>Registrar agua</span>
+              <span>Registrar água</span>
               <input value={waterAmount} onChange={(event) => setWaterAmount(event.target.value)} placeholder="300 ml ou 0.3 L" />
             </label>
-            <button type="button" onClick={registerWater}>Registrar agua</button>
+            <button type="button" onClick={registerWater}>Registrar água</button>
           </article>
 
           <article className="nutrition-card water-recommendation">
-            <p className="eyebrow">Recomendacao de agua</p>
+            <p className="eyebrow">Recomendacao de água</p>
             <h2>{waterGoal.toFixed(1).replace(".", ",")} L</h2>
             <span>por dia</span>
-            <p>Com base na sua avaliação física, objetivo, frequência de treino e peso atual, recomendamos esta meta diaria.</p>
+            <p>Com base na sua avaliação física, objetivo, frequência de treino e peso atual, recomendamos esta meta diária.</p>
           </article>
 
           <article className="nutrition-card food-coach-card">
             <div>
               <p className="eyebrow">Coach IA <span>Novo</span></p>
-              <h2>Seu assistente inteligente para te ajudar a evoluir na alimentacao.</h2>
+              <h2>Seu assistente inteligente para te ajudar a evoluir na alimentação.</h2>
               <ul>
                 <li>Sugerir receitas</li>
                 <li>Montar marmitas</li>
                 <li>Substituir alimentos</li>
-                <li>Calcular refeicao por foto</li>
+                <li>Calcular refeição por foto</li>
               </ul>
               <button type="button">Abrir Coach IA</button>
             </div>
@@ -423,7 +423,7 @@ export default function StudentDiet({ student }) {
           </article>
 
           <article className="nutrition-card recipe-panel">
-            <p className="eyebrow">Sugest?es para voc?</p>
+            <p className="eyebrow">Sugestões para você</p>
             <h2>Receitas gostosas e saudaveis</h2>
             <div className="recipe-list">
               {recipes.map((recipe) => (
@@ -460,7 +460,7 @@ export default function StudentDiet({ student }) {
 
       <button className="mobile-meal-cta" type="button" onClick={() => setModal("meal")}>
         <Camera size={18} />
-        Registrar refeicao
+        Registrar refeição
       </button>
 
       {modal === "plan" && (
@@ -494,8 +494,8 @@ export default function StudentDiet({ student }) {
             <button className="modal-close" type="button" onClick={() => setModal(null)} aria-label="Fechar"><X size={20} /></button>
             <div className="section-heading">
               <div>
-                <p className="eyebrow">Registrar refeicao com IA</p>
-                <h2>Analise alimentar por foto</h2>
+                <p className="eyebrow">Registrar refeição com IA</p>
+                <h2>Análise alimentar por foto</h2>
               </div>
               <Bot size={24} />
             </div>
@@ -503,12 +503,12 @@ export default function StudentDiet({ student }) {
             <div className={`meal-register-grid ${mealPhoto ? "has-analysis" : "awaiting-photo"}`}>
               <div className="meal-upload-card">
                 {mealPhoto ? (
-                  <img src={mealPhoto} alt="Imagem da refeicao" />
+                  <img src={mealPhoto} alt="Imagem da refeição" />
                 ) : (
                   <div className="empty-meal-photo modal-empty-photo">
                     <Camera size={42} />
                     <strong>Foto vazia</strong>
-                    <span>Toque no botao abaixo para enviar ou tirar a foto da refeicao.</span>
+                    <span>Toque no botão abaixo para enviar ou tirar a foto da refeição.</span>
                   </div>
                 )}
                 <label>
@@ -521,7 +521,7 @@ export default function StudentDiet({ student }) {
               <div className="meal-editor-panel">
                 <div className="meal-editor-head">
                   <label>
-                    <span>Nome da refeicao</span>
+                    <span>Nome da refeição</span>
                     <input value={mealName} onChange={(event) => setMealName(event.target.value)} />
                   </label>
                   <label>
@@ -551,7 +551,7 @@ export default function StudentDiet({ student }) {
                 </div>
                 <div className="identified-actions">
                   <button type="button" onClick={addFood}><Plus size={16} /> Adicionar alimento</button>
-                  <button type="button" onClick={saveMeal}><Save size={16} /> Salvar refeicao</button>
+                  <button type="button" onClick={saveMeal}><Save size={16} /> Salvar refeição</button>
                 </div>
               </div>
               ) : null}

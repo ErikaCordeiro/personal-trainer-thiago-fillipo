@@ -19,7 +19,7 @@ const bodyMeasures = [
   ["Ombro", "shoulder"],
   ["Peito", "chest"],
   ["Cintura", "waist"],
-  ["Abdômen", "abdomen"],
+  ["Abdômen", "abdômen"],
   ["Quadril", "hip"],
   ["Braço", "arm"],
   ["Antebraço", "forearm"],
@@ -32,7 +32,7 @@ const skinfolds = [
   ["Abdominal", "18"],
   ["Tricipital", "14"],
   ["Subescapular", "13"],
-  ["Axilar media", "14"],
+  ["Axilar média", "14"],
   ["Suprailiaca", "16"],
   ["Coxa", "15"]
 ];
@@ -83,7 +83,7 @@ export default function PersonalAssessments({ students }) {
     shoulder: "108.5",
     chest: "98.0",
     waist: "78.2",
-    abdomen: "85.4",
+    abdômen: "85.4",
     hip: "102.3",
     arm: "30.5",
     forearm: "26.1",
@@ -187,7 +187,7 @@ export default function PersonalAssessments({ students }) {
           </span>
         </div>
         <dl>
-          <div><dt>Inicio</dt><dd>03/03/2025</dd></div>
+          <div><dt>Início</dt><dd>03/03/2025</dd></div>
           <div><dt>Última avaliação</dt><dd>18/06/2025</dd></div>
           <div><dt>Próxima avaliação</dt><dd>18/09/2025</dd></div>
           <div><dt>Total</dt><dd>4 avaliações</dd></div>
@@ -229,7 +229,7 @@ export default function PersonalAssessments({ students }) {
             <div><span>Gordura corporal</span><strong>{calculations.fatPercent.toFixed(1).replace(".", ",")}%</strong><small>{classifyFat(calculations.fatPercent)}</small></div>
             <div><span>Massa magra</span><strong>{calculations.leanMass.toFixed(1).replace(".", ",")} kg</strong><small>Adequado</small></div>
             <div><span>Massa gorda</span><strong>{calculations.fatMass.toFixed(1).replace(".", ",")} kg</strong><small>Monitorar</small></div>
-            <div><span>Agua corporal</span><strong>{calculations.water.toFixed(1).replace(".", ",")} L</strong><small>Adequado</small></div>
+            <div><span>água corporal</span><strong>{calculations.water.toFixed(1).replace(".", ",")} L</strong><small>Adequado</small></div>
           </div>
           <p>* Calculos baseados em Mifflin-St Jeor, Jackson & Pollock e estimativas corporais.</p>
         </article>
@@ -250,7 +250,7 @@ export default function PersonalAssessments({ students }) {
         <article className="assessment-admin-card skinfold-card">
           <h3>4. Dobras cutâneas (adipômetro) <small>mm</small></h3>
           <div className="skinfold-layout">
-            <div className="body-illustration" aria-label="Ilustracao de pontos de medicao com adipômetro">
+            <div className="body-illustration" aria-label="Ilustração de pontos de medição com adipômetro">
               <span className="head" />
               <span className="torso" />
               <span className="arm left" />
@@ -258,7 +258,7 @@ export default function PersonalAssessments({ students }) {
               <span className="leg left" />
               <span className="leg right" />
               <i className="point chest" />
-              <i className="point abdomen" />
+              <i className="point abdômen" />
               <i className="point thigh" />
             </div>
             <div className="skinfold-list">
@@ -322,7 +322,7 @@ export default function PersonalAssessments({ students }) {
 
         <article className="assessment-admin-card notes">
           <h3>8. Observações do personal</h3>
-          <textarea defaultValue="Excelente Evolução. Reducao significativa de gordura corporal e aumento de massa magra. Continue mantendo consistencia nos treinos e na alimentacao." />
+          <textarea defaultValue="Excelente Evolução. Redução significativa de gordura corporal e aumento de massa magra. Continue mantendo consistência nos treinos e na alimentação." />
         </article>
 
         <article className="assessment-admin-card actions">

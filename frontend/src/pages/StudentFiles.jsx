@@ -27,7 +27,7 @@ const categories = [
   { id: "all", label: "Todos", icon: FolderOpen },
   { id: "exams", label: "Exames", icon: FileCheck2 },
   { id: "photos", label: "Fotos", icon: Image },
-  { id: "vídeos", label: "V?deos", icon: Video },
+  { id: "vídeos", label: "Vídeos", icon: Video },
   { id: "assessments", label: "Avaliações", icon: FileText },
   { id: "diet", label: "Dieta", icon: Pill },
   { id: "training", label: "Treino", icon: FileArchive },
@@ -47,7 +47,7 @@ const initialFiles = [
     statusType: "viewed",
     description: "Exame de sangue completo realizado em 24/05/2026.",
     preview: "document",
-    comment: "Parabens! Seus exames estao excelentes. Continue assim."
+    comment: "Parabéns! Seus exames estão excelentes. Continue assim."
   },
   {
     id: "file-2",
@@ -61,7 +61,7 @@ const initialFiles = [
     statusType: "viewed",
     description: "Foto frontal para acompanhamento visual da evolução.",
     preview: "photo",
-    comment: "?timo angulo para comparar sua pr?xima avaliação."
+    comment: "Ótimo ângulo para comparar sua próxima avaliação."
   },
   {
     id: "file-3",
@@ -75,19 +75,19 @@ const initialFiles = [
     statusType: "approved",
     description: "Relatório completo da avaliação física do ciclo atual.",
     preview: "document",
-    comment: "Aprovado. Vamos manter a estrat?gia por mais duas semanas."
+    comment: "Aprovado. Vamos manter a estratégia por mais duas semanas."
   },
   {
     id: "file-4",
     name: "Execucao Agachamento.mp4",
-    category: "V?deos",
+    category: "Vídeos",
     categoryId: "vídeos",
     date: "21/05/2026",
     time: "09:15",
     size: "25.6 MB",
     status: "Solicita revisão",
     statusType: "review",
-    description: "Video enviado para analise t?cnica da execu?o.",
+    description: "Vídeo enviado para análise técnica da execução.",
     preview: "video",
     comment: "Vamos ajustar a amplitude e o alinhamento dos joelhos."
   },
@@ -101,7 +101,7 @@ const initialFiles = [
     size: "1.2 MB",
     status: "Enviado",
     statusType: "sent",
-    description: "Documento medico anexado ao hist?rico do aluno.",
+    description: "Documento médico anexado ao histórico do aluno.",
     preview: "document",
     comment: "Ainda vou revisar esse arquivo."
   },
@@ -159,8 +159,8 @@ export default function StudentFiles({ student }) {
         status: "Enviado",
         statusType: "sent",
         description: "Arquivo enviado pelo aluno para acompanhamento do personal.",
-        preview: category.id === "photos" ? "photo" : category.id === "vídeos" ? "video" : "document",
-        comment: "Arquivo recebido. O personal ser? notificado para analisar."
+        preview: category.id === "photos" ? "photo" : category.id === "vídeos" ? "vídeo" : "document",
+        comment: "Arquivo recebido. O personal será notificado para analisar."
       };
     });
     setFiles((current) => [...mapped, ...current]);
@@ -182,7 +182,7 @@ export default function StudentFiles({ student }) {
         </div>
         <div className="student-files-safe-card">
           <ShieldCheck size={27} />
-          <span><strong>Seus arquivos s?o seguros</strong><small>Compartilhados apenas com seu personal.</small></span>
+          <span><strong>Seus arquivos são seguros</strong><small>Compartilhados apenas com seu personal.</small></span>
         </div>
       </header>
 
@@ -209,7 +209,7 @@ export default function StudentFiles({ student }) {
               </div>
             </div>
             <div className="student-upload-types">
-              <strong>Voc? pode enviar:</strong>
+              <strong>Você pode enviar:</strong>
               {allowedTypes.map((type) => <span key={type}><FileText size={16} /> {type}</span>)}
             </div>
           </article>
@@ -270,13 +270,13 @@ export default function StudentFiles({ student }) {
             </div>
 
             <article className="student-file-comments">
-              <div><h3>Coment?rios do personal</h3><button type="button">Ver todos</button></div>
+              <div><h3>Comentários do personal</h3><button type="button">Ver todos</button></div>
               <div className="student-file-comment">
-                <img src="/lion-juda-logo.png" alt="Thiago Filippo" />
-                <span><strong>Thiago Filippo <CheckCircle2 size={15} /></strong><small>24/05/2026 as 14:32</small><p>{selectedFile.comment}</p></span>
+                <img src="/lion-juda-logo.png" alt="Thiago Fillippo" />
+                <span><strong>Thiago Fillippo <CheckCircle2 size={15} /></strong><small>24/05/2026 as 14:32</small><p>{selectedFile.comment}</p></span>
               </div>
               <label>
-                <input value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Adicionar coment?rio..." />
+                <input value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Adicionar comentário..." />
                 <button type="button" onClick={() => setComment("")}><Send size={17} /></button>
               </label>
             </article>
@@ -298,12 +298,12 @@ function FilePreview({ type, name }) {
     return <div className="student-file-preview photo"><img src="/erika-gomes.jpeg" alt={name} /></div>;
   }
   if (type === "video") {
-    return <div className="student-file-preview video"><Video size={42} /><strong>Pr?via do v?deo</strong><small>{name}</small></div>;
+    return <div className="student-file-preview video"><Video size={42} /><strong>Prévia do vídeo</strong><small>{name}</small></div>;
   }
   return (
     <div className="student-file-preview document">
       <FileText size={46} />
-      <strong>Pre-visualizacao segura</strong>
+      <strong>Pré-visualização segura</strong>
       <small>{name}</small>
     </div>
   );
@@ -311,7 +311,7 @@ function FilePreview({ type, name }) {
 
 function categoryFromType(file) {
   if (file.type?.startsWith("image/")) return { id: "photos", label: "Fotos" };
-  if (file.type?.startsWith("video/")) return { id: "vídeos", label: "V?deos" };
+  if (file.type?.startsWith("video/")) return { id: "vídeos", label: "Vídeos" };
   if (file.name?.toLowerCase().includes("dieta")) return { id: "diet", label: "Dieta" };
   if (file.name?.toLowerCase().includes("treino")) return { id: "training", label: "Treino" };
   if (file.name?.toLowerCase().includes("avaliação")) return { id: "assessments", label: "Avaliações" };

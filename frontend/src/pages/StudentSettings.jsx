@@ -28,8 +28,8 @@ import {
 
 const notificationItems = [
   { id: "training", label: "Lembrete de treino", icon: Dumbbell },
-  { id: "water", label: "Lembrete de agua", icon: Droplets },
-  { id: "meal", label: "Lembrete de refeicao", icon: HeartPulse },
+  { id: "water", label: "Lembrete de água", icon: Droplets },
+  { id: "meal", label: "Lembrete de refeição", icon: HeartPulse },
   { id: "messages", label: "Novas mensagens", icon: Bell },
   { id: "assessments", label: "Avaliações", icon: Target },
   { id: "calendar", label: "Consultas agendadas", icon: CalendarDays }
@@ -76,11 +76,11 @@ export default function StudentSettings({ student }) {
       <header className="student-settings-header">
         <div>
           <h2>Configurações</h2>
-          <p>Gerencie sua conta e preferencias.</p>
+          <p>Gerencie sua conta e preferências.</p>
         </div>
         <div className="student-settings-safe-card">
           <Shield size={30} />
-          <span><strong>Seus dados estao seguros</strong><small>Compartilhados apenas com o Personal Thiago Filippo.</small></span>
+          <span><strong>Seus dados estão seguros</strong><small>Compartilhados apenas com o Personal Thiago Fillippo.</small></span>
         </div>
       </header>
 
@@ -112,7 +112,7 @@ export default function StudentSettings({ student }) {
             <div className="settings-journey-list">
               <JourneyItem icon={CalendarDays} label="Aluno desde" value="10/03/2026" />
               <JourneyItem icon={Dumbbell} label="Objetivo atual" value="Hipertrofia" />
-              <JourneyItem icon={UserRound} label="Personal" value="Thiago Filippo" />
+              <JourneyItem icon={UserRound} label="Personal" value="Thiago Fillippo" />
               <JourneyItem icon={Target} label="Dias de acompanhamento" value="187 dias" />
             </div>
             <img src="/lion-juda-logo.png" alt="Leao de Juda" />
@@ -131,7 +131,7 @@ export default function StudentSettings({ student }) {
         </article>
 
         <article className="student-settings-card notifications-card span-6">
-          <SectionTitle icon={Bell} title="Notificacoes" />
+          <SectionTitle icon={Bell} title="Notificações" />
           <div className="settings-toggle-list">
             {notificationItems.map((item) => {
               const Icon = item.icon;
@@ -143,7 +143,7 @@ export default function StudentSettings({ student }) {
               );
             })}
           </div>
-          <button className="settings-wide-button" type="button" onClick={() => requestChange("Preferencias de notificação atualizadas.")}>Gerenciar preferencias</button>
+          <button className="settings-wide-button" type="button" onClick={() => requestChange("Preferências de notificação atualizadas.")}>Gerenciar preferências</button>
         </article>
 
         <article className="student-settings-card span-4 schedule-card">
@@ -157,13 +157,13 @@ export default function StudentSettings({ student }) {
               <option>1 dia antes</option>
             </select>
           </label>
-          <p>Voce recebera um lembrete antes de cada compromisso agendado.</p>
+          <p>Você recebera um lembrete antes de cada compromisso agendado.</p>
         </article>
 
         <article className="student-settings-card span-4 hydration-card">
           <SectionTitle icon={Droplets} title="Hidratação" />
           <span className="settings-big-number">2,5 L</span>
-          <p>Meta diaria de agua calculada com base na sua avaliação física.</p>
+          <p>Meta diária de água calculada com base na sua avaliação física.</p>
           <button className="settings-wide-button" type="button" onClick={() => requestChange("Pedido de recalculo de meta enviado.")}>Solicitar recalcular meta</button>
         </article>
 
@@ -186,7 +186,7 @@ export default function StudentSettings({ student }) {
         </article>
 
         <article className="student-settings-card span-4 integrations-card">
-          <SectionTitle icon={Link2} title="Integra??es futuras" />
+          <SectionTitle icon={Link2} title="Integrações futuras" />
           <div className="settings-integration-list">
             {integrations.map((item) => {
               const Icon = item.icon;
@@ -200,26 +200,26 @@ export default function StudentSettings({ student }) {
           <div className="settings-account-lines">
             <span><small>Plano atual</small><strong>Premium</strong></span>
             <span><small>Próxima renovação</small><strong>10/06/2026</strong></span>
-            <span><small>Pr?ximo pagamento</small><strong>R$ 89,90</strong></span>
+            <span><small>Próximo pagamento</small><strong>R$ 89,90</strong></span>
           </div>
           <button className="settings-wide-button" type="button" onClick={() => requestChange("Area de assinatura preparada para integracao.")}>Gerenciar assinatura <ChevronRight size={17} /></button>
         </article>
 
         <article className="student-settings-card security-card span-12">
-          <SectionTitle icon={Shield} title="Seguran?a da conta" />
+          <SectionTitle icon={Shield} title="Segurança da conta" />
           <div className="settings-security-grid connected-devices-grid">
-            <button type="button"><Smartphone size={20} /><span><strong>Dispositivos conectados</strong><small>iPhone/PWA - sess?o atual - ?ltimo acesso hoje - localização aproximada indisponível</small></span><ChevronRight size={18} /></button>
-            <button type="button" onClick={() => requestChange("Outras sess?es ser?o encerradas quando houver m?ltiplos dispositivos conectados.")}><KeyRound size={20} /><span><strong>Encerrar todas as outras sess?es</strong><small>Mantenha somente este acesso ativo</small></span><ChevronRight size={18} /></button>
+            <button type="button"><Smartphone size={20} /><span><strong>Dispositivos conectados</strong><small>iPhone/PWA - sessão atual - último acesso hoje - localização aproximada indisponível</small></span><ChevronRight size={18} /></button>
+            <button type="button" onClick={() => requestChange("Outras sessões serão encerradas quando houver múltiplos dispositivos conectados.")}><KeyRound size={20} /><span><strong>Encerrar todas as outras sessões</strong><small>Mantenha somente este acesso ativo</small></span><ChevronRight size={18} /></button>
           </div>
         </article>
 
         <article className="student-settings-footer span-12">
           <div>
-            <p>Cada configuração e um passo para uma jornada ainda mais personalizada e resultados extraordin?rios.</p>
-            <strong>Thiago Filippo</strong>
+            <p>Cada configuração é um passo para uma jornada ainda mais personalizada e resultados extraordinários.</p>
+            <strong>Thiago Fillippo</strong>
             <small>Personal Trainer</small>
           </div>
-          <img className="settings-personal-photo" src="/lion-juda-logo.png" alt="Thiago Filippo" />
+          <img className="settings-personal-photo" src="/lion-juda-logo.png" alt="Thiago Fillippo" />
           <img className="settings-footer-lion" src="/lion-juda-logo.png" alt="" />
         </article>
       </div>

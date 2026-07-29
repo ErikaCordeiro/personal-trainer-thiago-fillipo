@@ -163,7 +163,7 @@ export default function StudentDashboard({ students, workouts, onNavigate, onSta
         <div className="progress-ring neon-ring" style={{ "--value": `${score}%` }}>
           <strong>{score}%</strong>
         </div>
-        <b>{score ?"Continue firme" : "Primeiro treino aguardando"}</b>
+        <b>{score ?"Continue firme" : "Primeiro treino Aguardando"}</b>
         <span>{completedWorkouts.length} treino(s) finalizado(s)</span>
       </section>
 
@@ -194,7 +194,7 @@ export default function StudentDashboard({ students, workouts, onNavigate, onSta
 
       <section className="student-diet-card"><p className="eyebrow">Dieta de hoje</p><div><Utensils size={26} /><strong>0 <small>kcal</small></strong></div><span>Nenhuma refeição registrada hoje</span><div className="xp-bar"><span style={{ width: "0%" }} /></div><button type="button" onClick={() => onNavigate?.("diet")}>Ver plano alimentar</button></section>
 
-      <section className="student-coach-panel"><div><p className="eyebrow">Coach IA <span>Novo</span></p><h2>Seu assistente inteligente para te ajudar a evoluir todos os dias.</h2><div>{["Tirar dúvidas", "Sugestáo de treino", "Analisar evolução", "Sugerir refeição", "Motivação"].map((action) => <button key={action} type="button" onClick={() => onNavigate?.("coach")}><Sparkles size={16} />{action}</button>)}</div></div><img src="/lion-juda-logo.png" alt="" /></section>
+      <section className="student-coach-panel"><div><p className="eyebrow">Coach IA <span>Novo</span></p><h2>Seu assistente inteligente para te ajudar a evoluir todos os dias.</h2><div>{["Tirar dúvidas", "Sugestão de treino", "Analisar evolução", "Sugerir refeição", "Motivação"].map((action) => <button key={action} type="button" onClick={() => onNavigate?.("coach")}><Sparkles size={16} />{action}</button>)}</div></div><img src="/lion-juda-logo.png" alt="" /></section>
 
       <section className="student-quick-access"><p className="eyebrow">Acessos rápidos</p><div>{[["Exercícios", Dumbbell], ["Medidas", ClipboardCheck], ["Fotos", Image], ["Relatórios", FileText], ["Avaliações", CalendarDays], ["Calendário", Camera]].map(([label, Icon]) => <button key={label} type="button"><Icon size={20} />{label}</button>)}</div></section>
 

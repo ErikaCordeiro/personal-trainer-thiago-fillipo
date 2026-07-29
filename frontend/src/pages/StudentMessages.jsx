@@ -24,18 +24,18 @@ import {
 
 const initialMessages = [
   { id: "m1", from: "student", type: "text", text: "Bom dia, professor! Tudo bem?\nHoje durante o desenvolvimento estou sentindo dor no ombro direito.", time: "10:31", read: true },
-  { id: "m2", from: "personal", type: "text", text: "Bom dia! Tudo bem e com voc??\nMe envie um v?deo da execu??o para eu analisar melhor, por favor.", time: "10:32" },
-  { id: "m3", from: "student", type: "video", text: "execu??o_ombro.mp4", detail: "0:18", time: "10:33", read: true },
-  { id: "m4", from: "personal", type: "text", text: "Otimo! Identifiquei alguns pontos de ajuste na postura e na amplitude. Vou te enviar um video explicando os detalhes e o que ajustar.", time: "10:35" },
+  { id: "m2", from: "personal", type: "text", text: "Bom dia! Tudo bem e com você\nMe envie um vídeo da execução para eu analisar melhor, por favor.", time: "10:32" },
+  { id: "m3", from: "student", type: "video", text: "execucao_ombro.mp4", detail: "0:18", time: "10:33", read: true },
+  { id: "m4", from: "personal", type: "text", text: "Ótimo! Identifiquei alguns pontos de ajuste na postura e na amplitude. Vou te enviar um vídeo explicando os detalhes e o que ajustar.", time: "10:35" },
   { id: "m5", from: "personal", type: "video", text: "ajuste_ombro_thiago.mp4", detail: "1:24", time: "10:36" },
-  { id: "m6", from: "student", type: "text", text: "Entendi! Muito obrigada, professor. Vou ajustar e te mando outro video na pr?xima semana.", time: "10:37", read: true }
+  { id: "m6", from: "student", type: "text", text: "Entendi! Muito obrigada, professor. Vou ajustar e te mando outro vídeo na próxima semana.", time: "10:37", read: true }
 ];
 
 const quickActions = [
   { id: "schedule", title: "Agendar consulta", text: "Escolha dia e horário", icon: CalendarDays, prompt: "Oi, Thiago! Quero agendar uma consulta." },
   { id: "assessment", title: "Solicitar avaliação", text: "Pedir nova avaliação", icon: ClipboardCheck, prompt: "Oi, Thiago! Gostaria de solicitar uma nova avaliação física." },
-  { id: "workout", title: "Duvida sobre treino", text: "Execucao, carga ou dor", icon: Dumbbell, prompt: "Oi, Thiago! Tenho uma duvida sobre meu treino." },
-  { id: "diet", title: "Duvida sobre dieta", text: "Refeicoes e substituicoes", icon: Utensils, prompt: "Oi, Thiago! Tenho uma duvida sobre minha dieta." }
+  { id: "workout", title: "Dúvida sobre treino", text: "Execucao, carga ou dor", icon: Dumbbell, prompt: "Oi, Thiago! Tenho uma dúvida sobre meu treino." },
+  { id: "diet", title: "Dúvida sobre dieta", text: "Refeições e substituições", icon: Utensils, prompt: "Oi, Thiago! Tenho uma dúvida sobre minha dieta." }
 ];
 
 const days = [
@@ -80,19 +80,19 @@ export default function StudentMessages({ student }) {
           <p>Converse diretamente com seu personal.</p>
         </div>
         <div>
-          <button type="button" aria-label="Notificacoes"><Bell size={21} /></button>
+          <button type="button" aria-label="Notificações"><Bell size={21} /></button>
           <button type="button" aria-label="Opcoes"><MoreHorizontal size={22} /></button>
         </div>
       </header>
 
       <article className="student-personal-card">
         <div className="student-personal-avatar-wrap">
-          <img src="/lion-juda-logo.png" alt="Personal Thiago Filippo" />
+          <img src="/lion-juda-logo.png" alt="Personal Thiago Fillippo" />
           <i />
         </div>
         <div>
           <span>Personal</span>
-          <h3>Thiago Filippo <ShieldCheck size={19} /></h3>
+          <h3>Thiago Fillippo <ShieldCheck size={19} /></h3>
           <p><i /> Online</p>
           <small>Disciplina • Foco • Propósito</small>
         </div>
@@ -127,7 +127,7 @@ export default function StudentMessages({ student }) {
           <div>
             <button type="button" aria-label="Arquivo"><Paperclip size={21} /></button>
             <button type="button" aria-label="Foto"><Image size={21} /></button>
-            <button type="button" aria-label="Video"><Camera size={21} /></button>
+            <button type="button" aria-label="Vídeo"><Camera size={21} /></button>
             <button type="button" aria-label="Audio"><Mic size={21} /></button>
             <button type="button" aria-label="Emoji"><Smile size={21} /></button>
             <button className="student-message-send" type="button" onClick={() => sendMessage()}><Send size={18} /> Enviar</button>
@@ -147,7 +147,7 @@ function StudentMessage({ message }) {
   const own = message.from === "student";
   return (
     <div className={`student-message-row ${own ? "own" : ""}`}>
-      {!own && <img src="/lion-juda-logo.png" alt="Thiago Filippo" />}
+      {!own && <img src="/lion-juda-logo.png" alt="Thiago Fillippo" />}
       <div className={`student-message-bubble ${message.type}`}>
         {message.type === "text" && <p>{message.text}</p>}
         {message.type === "video" && (
@@ -180,7 +180,7 @@ function StudentScheduleModal({ onClose, onConfirm }) {
 
         <div className="student-schedule-personal">
           <img src="/lion-juda-logo.png" alt="" />
-          <div><span>Personal</span><strong>Thiago Filippo</strong><small>Online agora</small></div>
+          <div><span>Personal</span><strong>Thiago Fillippo</strong><small>Online agora</small></div>
           <Wifi size={22} />
         </div>
 

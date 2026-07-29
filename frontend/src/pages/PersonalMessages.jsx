@@ -41,11 +41,11 @@ const conversations = [
     lastMessage: "Professor, estou sentindo dor no ombro direito...",
     metrics: { adherence: 87, workouts: "3/4", water: "2,1L / 2,5L", diet: 92 },
     messages: [
-      { id: "m1", from: "student", type: "text", text: "Professor, senti dor no ombro direito durante o desenvolvimento com halteres. E normal?", time: "10:32" },
-      { id: "m2", from: "personal", type: "text", text: "Bom dia, Erika! Tudo bem?\n\nPode ser sobrecarga ou execu??o incorreta. Vou te passar algumas orientacoes para ajustarmos isso.\n\nPode me enviar um v?deo da execu??o?", time: "10:35", read: true },
+      { id: "m1", from: "student", type: "text", text: "Professor, senti dor no ombro direito durante o desenvolvimento com halteres. ? normal?", time: "10:32" },
+      { id: "m2", from: "personal", type: "text", text: "Bom dia, Erika! Tudo bem?\n\nPode ser sobrecarga ou execução incorreta. Vou te passar algumas orientações para ajustarmos isso.\n\nPode me enviar um vídeo da execução?", time: "10:35", read: true },
       { id: "m3", from: "student", type: "text", text: "Claro! Ja ja envio aqui.", time: "10:36" },
       { id: "m4", from: "student", type: "video", text: "video_ombro.mp4", detail: "18.4 MB", time: "10:38" },
-      { id: "m5", from: "personal", type: "text", text: "Otimo video! Identifiquei alguns pontos de ajuste na postura e amplitude. Vou ajustar seu treino e te enviar um exercicio alternativo para o ombro.", time: "10:42", read: true }
+      { id: "m5", from: "personal", type: "text", text: "Ótimo vídeo! Identifiquei alguns pontos de ajuste na postura e amplitude. Vou ajustar seu treino e te enviar um exercicio alternativo para o ombro.", time: "10:42", read: true }
     ]
   },
   {
@@ -71,7 +71,7 @@ const conversations = [
     id: "conv-mariana",
     name: "Mariana Costa",
     avatar: "/erika-gomes.jpeg",
-    objective: "Definicao",
+    objective: "Definição",
     startDate: "18/01/2024",
     nextAssessment: "02/07/2026",
     plan: "Plano Premium",
@@ -137,10 +137,10 @@ const conversations = [
     unread: 0,
     pinned: false,
     archived: false,
-    lastMessage: "N?o vou conseguir treinar amanh?.",
+    lastMessage: "Não vou conseguir treinar amanhã.",
     metrics: { adherence: 72, workouts: "2/4", water: "1,8L / 2,8L", diet: 76 },
     messages: [
-      { id: "b1", from: "student", type: "text", text: "N?o vou conseguir treinar amanh?. Remarco para sexta?", time: "2 dias" }
+      { id: "b1", from: "student", type: "text", text: "Não vou conseguir treinar amanhã. Remarco para sexta?", time: "2 dias" }
     ]
   }
 ];
@@ -221,7 +221,7 @@ export default function PersonalMessages() {
           <div className="messages-filter-tabs" role="tablist" aria-label="Filtros de conversa">
             {[
               ["all", "Todas"],
-              ["unread", "Nao lidas"],
+              ["unread", "Não lidas"],
               ["archived", "Arquivadas"]
             ].map(([id, label]) => (
               <button key={id} className={filter === id ? "active" : ""} type="button" onClick={() => setFilter(id)}>{label}</button>
@@ -276,10 +276,10 @@ export default function PersonalMessages() {
 
           <article className="messages-student-summary-inline">
             <div>
-              <h4>Informacoes do aluno</h4>
+              <h4>Informações do aluno</h4>
               <p>Objetivo: {selected.objective}</p>
-              <p>Inicio: {selected.startDate}</p>
-              <p>Pr?xima avaliação: {selected.nextAssessment}</p>
+              <p>Início: {selected.startDate}</p>
+              <p>Próxima avaliação: {selected.nextAssessment}</p>
             </div>
             <button type="button" onClick={() => setMobileView("profile")}>Ver perfil completo</button>
             <div className="messages-adherence-chip">
@@ -301,7 +301,7 @@ export default function PersonalMessages() {
             <div>
               <button type="button" aria-label="Arquivo"><Paperclip size={20} /></button>
               <button type="button" aria-label="Imagem"><Image size={20} /></button>
-              <button type="button" aria-label="Video"><Camera size={20} /></button>
+              <button type="button" aria-label="Vídeo"><Camera size={20} /></button>
               <button type="button" aria-label="Emoji"><Smile size={20} /></button>
               <button type="button" aria-label="Audio"><Mic size={20} /></button>
               <button className="messages-send-button" type="button" onClick={sendMessage}><Send size={18} /> Enviar</button>
@@ -315,20 +315,20 @@ export default function PersonalMessages() {
           <h3>{selected.name}</h3>
           <p>{selected.objective}</p>
           <div className="messages-profile-details">
-            <span>Inicio<strong>{selected.startDate}</strong></span>
-            <span>Pr?xima avaliação<strong>{selected.nextAssessment}</strong></span>
+            <span>Início<strong>{selected.startDate}</strong></span>
+            <span>Próxima avaliação<strong>{selected.nextAssessment}</strong></span>
             <span>Plano atual<strong>{selected.plan}</strong></span>
           </div>
 
           <div className="messages-metric-grid">
             <span>Aderência geral<strong>{selected.metrics.adherence}%</strong></span>
             <span>Treinos da semana<strong>{selected.metrics.workouts}</strong></span>
-            <span>Agua<strong>{selected.metrics.water}</strong></span>
+            <span>água<strong>{selected.metrics.water}</strong></span>
             <span>Dieta<strong>{selected.metrics.diet}%</strong></span>
           </div>
 
           <div className="messages-quick-actions">
-            <h4>Acoes rapidas</h4>
+            <h4>Ações rápidas</h4>
             {quickActions.map(([label, Icon]) => (
               <button key={label} type="button" onClick={() => label === "Agendar consulta" && setScheduleOpen(true)}>
                 <Icon size={18} /> {label}
@@ -337,8 +337,8 @@ export default function PersonalMessages() {
           </div>
 
           <div className="messages-notification-card">
-            <h4>Notificacoes</h4>
-            <p>Alerta quando aluno enviar video, foto, PDF, solicitar consulta ou pedir remarcacao.</p>
+            <h4>Notificações</h4>
+            <p>Alerta quando aluno enviar vídeo, foto, PDF, solicitar consulta ou pedir remarcação.</p>
           </div>
         </aside>
       </div>
@@ -355,11 +355,11 @@ function MessageBubble({ message, avatar }) {
       {!own && <img src={avatar} alt="" />}
       <div className={`message-bubble ${message.type}`}>
         {message.type === "video" && (
-          <div className="message-video-card">
+          <div className="message-vivivideo-card">
             <div><Video size={42} /></div>
             <span>{message.text}</span>
             <small>{message.detail}</small>
-            <button type="button" aria-label="Baixar video"><Download size={18} /></button>
+            <button type="button" aria-label="Baixar vídeo"><Download size={18} /></button>
           </div>
         )}
         {message.type === "document" && (
@@ -395,7 +395,7 @@ function ScheduleModal({ student, onClose }) {
         </div>
         <label>Data<input type="date" value={date} onChange={(event) => setDate(event.target.value)} /></label>
         <label>Horario<input type="time" value={time} onChange={(event) => setTime(event.target.value)} /></label>
-        <label>Observacao<textarea placeholder="Orientacoes, link, local ou detalhes da consulta." /></label>
+        <label>Observação<textarea placeholder="Orientações, link, local ou detalhes da consulta." /></label>
         <div className="messages-schedule-summary">
           <span>Aluno<strong>{student.name}</strong></span>
           <span>Formato<strong>{type}</strong></span>

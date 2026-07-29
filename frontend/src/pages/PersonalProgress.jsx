@@ -19,13 +19,13 @@ import {
 
 const kpis = [
   ["Alunos ativos", "128", "↑ 12% vs mês anterior", Users],
-  ["Aderência media", "78%", "↑ 6% vs mês anterior", Award],
+  ["Aderência média", "78%", "↑ 6% vs mês anterior", Award],
   ["Peso total perdido", "-128,4 kg", "↑ 15,3 kg vs mês anterior", TrendingDown],
   ["Massa magra total ganha", "+46,7 kg", "↑ 6,3 kg vs mês anterior", Trophy],
-  ["Reducao media de gordura", "-2,4%", "↓ 0,6% vs mês anterior", Flame],
+  ["Redução média de gordura", "-2,4%", "↓ 0,6% vs mês anterior", Flame],
   ["Adesao alimentar", "74%", "↑ 8% vs mês anterior", Apple],
   ["Treinos concluidos", "2.156", "↑ 18% vs mês anterior", Dumbbell],
-  ["Hidratação media", "2,1 L", "↑ 0,3 L vs mês anterior", Droplets]
+  ["Hidratação média", "2,1 L", "↑ 0,3 L vs mês anterior", Droplets]
 ];
 
 const highlights = [
@@ -36,10 +36,10 @@ const highlights = [
 
 const alerts = [
   ["Alta", "3 alunos com queda de aderência", "Aderência abaixo de 50%"],
-  ["Media", "2 alunos nao registraram refeicoes", "Nos ultimos 2 dias"],
+  ["Média", "2 alunos não registraram refeições", "Nos últimos 2 dias"],
   ["Alta", "1 aluno aumentou gordura corporal", "Fique atento a evolução"],
-  ["Media", "Baixa hidratação geral", "Media abaixo do ideal"],
-  ["Boa", "Parabens! 12 alunos bateram meta", "Otimo trabalho"]
+  ["Média", "Baixa hidratação geral", "Média abaixo do ideal"],
+  ["Boa", "Parabéns! 12 alunos bateram meta", "Ótimo trabalho"]
 ];
 
 const ranking = [
@@ -61,8 +61,8 @@ const measureRows = [
 
 const insights = [
   "Erika Gomes e a aluna com melhor evolução do mes, com -4,2% de gordura corporal e +2,1 kg de massa magra.",
-  "Aderência alimentar aumentou 8% em relacao ao mês anterior. Excelente tendencia.",
-  "Hidratação media ainda abaixo do ideal. Sugira aumentar ingestao de agua aos alunos."
+  "Aderência alimentar aumentou 8% em relação ao mês anterior. Excelente tendência.",
+  "Hidratação média ainda abaixo do ideal. Sugira aumentar ingestão de água aos alunos."
 ];
 
 export default function PersonalProgress({ onOpenStudentProgress }) {
@@ -104,7 +104,7 @@ export default function PersonalProgress({ onOpenStudentProgress }) {
             <div>
               <h2>Progresso geral dos alunos</h2>
               <div className="progress-tabs">
-                {["Peso", "Gordura corporal", "Massa magra", "IMC", "Medidas medias"].map((tab) => (
+                {["Peso", "Gordura corporal", "Massa magra", "IMC", "Medidas médias"].map((tab) => (
                   <button type="button" key={tab}>{tab}</button>
                 ))}
               </div>
@@ -178,17 +178,17 @@ export default function PersonalProgress({ onOpenStudentProgress }) {
           <h2>Progresso da dieta</h2>
           <div className="diet-ring"><strong>74%</strong><span>Adesao alimentar</span></div>
           <ul>
-            <li><Flame size={18} /> <strong>1.812 kcal</strong> Media de calorias</li>
-            <li><Apple size={18} /> <strong>128 g</strong> Media de proteinas</li>
-            <li><BarChart3 size={18} /> <strong>5,2 refeicoes</strong> Media de refeicoes/dia</li>
-            <li><Droplets size={18} /> <strong>2,1 L</strong> Media de hidratação</li>
+            <li><Flame size={18} /> <strong>1.812 kcal</strong> Média de calorias</li>
+            <li><Apple size={18} /> <strong>128 g</strong> Média de proteínas</li>
+            <li><BarChart3 size={18} /> <strong>5,2 refeições</strong> Média de refeições/dia</li>
+            <li><Droplets size={18} /> <strong>2,1 L</strong> Média de hidratação</li>
           </ul>
         </article>
 
         <article className="progress-panel measures-progress-panel">
           <div className="section-heading">
             <h2>Evolução das medidas</h2>
-            <select defaultValue="month"><option value="month">Mes atual</option></select>
+            <select defaultValue="month"><option value="month">Mês atual</option></select>
           </div>
           {measureRows.map(([label, current, previous, diff, value]) => (
             <div className="measure-progress-row" key={label}>
@@ -276,7 +276,7 @@ export default function PersonalProgress({ onOpenStudentProgress }) {
 
       <footer className="progress-footer">
         <Trophy size={22} />
-        <span>Parabens! Voce ajudou 12 alunos a baterem suas metas este mês.</span>
+        <span>Parabéns! Você ajudou 12 alunos a baterem suas metas este mês.</span>
         <button type="button"><RefreshCw size={18} /> Atualizar</button>
       </footer>
     </section>

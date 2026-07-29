@@ -133,7 +133,7 @@ export default function StudentCalendar({ student }) {
       type: "consultation",
       date: eventDate.toISOString(),
       dateKey: toLocalDateKey(eventDate),
-      title: "Consulta com Personal Thiago Filippo",
+      title: "Consulta com Personal Thiago Fillippo",
       detail: `${serviceType} às ${selectedTime}`,
       time: selectedTime
     };
@@ -214,10 +214,10 @@ export default function StudentCalendar({ student }) {
           <button type="button" onClick={() => setScheduleOpen(true)}>Ver agenda</button>
         </div>
         <div className="calendar-return-body">
-          <img className="calendar-personal-photo" src="/personal-thiago.jpeg" alt="Personal Thiago Filippo" onError={(event) => { event.currentTarget.src = "/erika-gomes.jpeg"; }} />
+          <img className="calendar-personal-photo" src="/personal-thiago.jpeg" alt="Personal Thiago Fillippo" onError={(event) => { event.currentTarget.src = "/erika-gomes.jpeg"; }} />
           <div>
             <span>Personal</span>
-            <strong>Thiago Filippo</strong>
+            <strong>Thiago Fillippo</strong>
             <p><CalendarDays size={15} /> Sem consulta confirmada</p>
             <p><Clock size={15} /> Agende um horário</p>
             <p><Wifi size={15} /> Online ou presencial</p>
@@ -264,7 +264,7 @@ export default function StudentCalendar({ student }) {
           <h3>Mensagem do seu Personal</h3>
           <div>
             <img src="/lion-juda-logo.png" alt="" />
-            <span><strong>Thiago Filippo</strong><small>Quando você concluir treinos, dieta ou avaliações, tudo aparecerá aqui com dados reais.</small></span>
+            <span><strong>Thiago Fillippo</strong><small>Quando você concluir treinos, dieta ou avaliações, tudo aparecerá aqui com dados reais.</small></span>
           </div>
           <p>Pronto para iniciar novos registros em 24/07/2026.</p>
           <button type="button"><MessageCircle size={17} /> Enviar mensagem</button>
@@ -285,7 +285,7 @@ export default function StudentCalendar({ student }) {
         <CalendarModal title="Agendar consulta" subtitle="Escolha o melhor dia e horário para seu retorno." onClose={() => setScheduleOpen(false)}>
           <div className="schedule-personal-card">
             <img src="/personal-thiago.jpeg" alt="" onError={(event) => { event.currentTarget.src = "/lion-juda-logo.png"; }} />
-            <div><span>Personal</span><strong>Thiago Filippo</strong></div>
+            <div><span>Personal</span><strong>Thiago Fillippo</strong></div>
             <img src="/lion-juda-logo.png" alt="" />
           </div>
 
@@ -322,7 +322,7 @@ export default function StudentCalendar({ student }) {
             <h4>3. Resumo da consulta</h4>
             <p><span>Data</span><strong>{selectedDate}</strong></p>
             <p><span>Horário</span><strong>{selectedTime}</strong></p>
-            <p><span>Profissional</span><strong>Personal Thiago Filippo</strong></p>
+            <p><span>Profissional</span><strong>Personal Thiago Fillippo</strong></p>
             <p><span>Tipo de atendimento</span><strong>{serviceType}</strong></p>
           </div>
 

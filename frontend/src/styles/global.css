@@ -1033,12 +1033,12 @@ select {
   font-size: 0.78rem;
 }
 
-.video-input {
+.vivideo-input {
   display: grid;
   gap: 8px;
 }
 
-.video-input span {
+.vivideo-input span {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1046,7 +1046,7 @@ select {
   font-size: 0.78rem;
 }
 
-.recommended-video-link {
+.recommended-vivideo-link {
   min-height: 34px;
   display: inline-flex;
   align-items: center;
@@ -1061,7 +1061,7 @@ select {
   font-weight: 900;
 }
 
-.recommended-video-link:hover {
+.recommended-vivideo-link:hover {
   box-shadow: 0 0 20px rgba(229, 229, 229, 0.24);
   transform: translateY(-1px);
 }
@@ -1125,7 +1125,7 @@ select {
   justify-content: flex-start;
 }
 
-.video-panel {
+.vivideo-panel {
   min-height: 580px;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -1134,13 +1134,13 @@ select {
   box-shadow: var(--shadow);
 }
 
-.video-panel iframe {
+.vivideo-panel iframe {
   width: 100%;
   height: 100%;
   border: 0;
 }
 
-.video-fallback {
+.vivideo-fallback {
   min-height: 340px;
   display: grid;
   place-items: center;
@@ -1150,16 +1150,16 @@ select {
   text-align: center;
 }
 
-.video-fallback strong {
+.vivideo-fallback strong {
   font-size: 1.35rem;
 }
 
-.video-fallback span {
+.vivideo-fallback span {
   max-width: 360px;
   color: var(--muted);
 }
 
-.video-fallback a {
+.vivideo-fallback a {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -1397,7 +1397,7 @@ select {
     grid-template-columns: 1fr;
   }
 
-  .video-panel {
+  .vivideo-panel {
     min-height: 340px;
   }
 
@@ -3414,7 +3414,7 @@ select {
   margin-left: 20px;
 }
 
-.body-illustration .point.abdomen {
+.body-illustration .point.abdômen {
   top: 112px;
   margin-left: -16px;
 }
@@ -5450,7 +5450,7 @@ body {
   font-weight: 800;
 }
 
-.exercise-video-mini {
+.exercise-vivideo-mini {
   display: grid;
   grid-template-columns: minmax(150px, 220px) auto;
   align-items: center;
@@ -5458,7 +5458,7 @@ body {
   margin-top: 14px;
 }
 
-.exercise-video-mini iframe {
+.exercise-vivideo-mini iframe {
   width: 100%;
   aspect-ratio: 16 / 9;
   border: 1px solid rgba(229, 229, 229, 0.16);
@@ -5467,7 +5467,7 @@ body {
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.42);
 }
 
-.exercise-video-mini a {
+.exercise-vivideo-mini a {
   min-height: 40px;
   display: inline-flex;
   align-items: center;
@@ -5483,7 +5483,7 @@ body {
   white-space: nowrap;
 }
 
-.exercise-video-mini a:hover {
+.exercise-vivideo-mini a:hover {
   box-shadow: 0 0 22px rgba(229, 229, 229, 0.28);
   transform: translateY(-1px);
 }
@@ -8265,11 +8265,11 @@ body,
     order: -1;
   }
 
-  .exercise-video-mini {
+  .exercise-vivideo-mini {
     grid-template-columns: 1fr;
   }
 
-  .exercise-video-mini a {
+  .exercise-vivideo-mini a {
     width: 100%;
   }
 }
@@ -13790,12 +13790,12 @@ body,
   color: rgba(245,245,245,.55);
 }
 
-.message-video-card,
+.message-vivivideo-card,
 .message-file-card {
   min-width: min(320px, 65vw);
 }
 
-.message-video-card > div {
+.message-vivivideo-card > div {
   height: 168px;
   border-radius: 16px;
   display: grid;
@@ -13807,15 +13807,15 @@ body,
   overflow: hidden;
 }
 
-.message-video-card span,
-.message-video-card small,
+.message-vivivideo-card span,
+.message-vivivideo-card small,
 .message-file-card span,
 .message-file-card small {
   display: block;
   margin-top: 8px;
 }
 
-.message-video-card button,
+.message-vivivideo-card button,
 .message-file-card button {
   margin-top: 10px;
   width: 42px;
@@ -17775,7 +17775,7 @@ body,
   padding: 12px;
 }
 
-.video-modal iframe {
+.vivideo-modal iframe {
   width: 100%;
   aspect-ratio: 16 / 9;
   border: 0;
@@ -18137,7 +18137,7 @@ body,
 }
 
 
-/* Final polish: treino do dia e historico de treinos */
+/* Final polish: treino do dia e histórico de treinos */
 .student-workout-hero {
   grid-template-columns: minmax(240px, 1fr) minmax(150px, 230px) !important;
   min-width: 0;
@@ -18796,20 +18796,20 @@ body,
 .dashboard-empty-note,
 .calendar-empty-message,
 .empty-history-text,
-.empty-history-state {
+.empty-history-stat {
   color: rgba(245, 245, 245, 0.72);
   font-size: 0.95rem;
   line-height: 1.45;
 }
 
-.empty-history-state {
+.empty-history-stat {
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 18px;
   padding: 18px;
   background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025));
 }
 
-.empty-history-state strong {
+.empty-history-stat strong {
   display: block;
   color: #f5f5f5;
   margin-bottom: 6px;

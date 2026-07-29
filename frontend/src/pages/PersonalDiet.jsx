@@ -15,10 +15,10 @@ import {
 
 const nutritionStats = [
   { label: "Planos ativos", value: "1", detail: "Erika", icon: Apple },
-  { label: "Aderência media", value: "91%", detail: "+8% vs mês anterior", icon: CheckCircle2 },
-  { label: "Refeicoes registradas", value: "18", detail: "ultimos 7 dias", icon: Utensils },
-  { label: "Hidratação media", value: "72%", detail: "meta diaria", icon: Droplets },
-  { label: "Alertas nutricionais", value: "3", detail: "precisam de atencao", icon: AlertTriangle }
+  { label: "Aderência média", value: "91%", detail: "+8% vs mês anterior", icon: CheckCircle2 },
+  { label: "Refeições registradas", value: "18", detail: "últimos 7 dias", icon: Utensils },
+  { label: "Hidratação média", value: "72%", detail: "meta diária", icon: Droplets },
+  { label: "Alertas nutricionais", value: "3", detail: "precisam de atenção", icon: AlertTriangle }
 ];
 
 const studentRows = [
@@ -42,14 +42,14 @@ const meals = [
 
 const alerts = [
   "Erika ficou abaixo da meta de fibras",
-  "1 refeicao enviada por foto aguarda revisão"
+  "1 refeição enviada por foto águarda revisão"
 ];
 
 export default function PersonalDiet({ students }) {
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
   const [aiMeals, setAiMeals] = useState([]);
   const [plans, setPlans] = useState([
-    { student: "Erika Gomes", name: "Plano definicao premium", calories: "2.200", meals: "6", status: "Ativo" }
+    { student: "Erika Gomes", name: "Plano definição premium", calories: "2.200", meals: "6", status: "Ativo" }
   ]);
 
   const generateAiDiet = () => {
@@ -89,9 +89,9 @@ export default function PersonalDiet({ students }) {
     <section className="personal-diet-page">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">Gestao nutricional</p>
+          <p className="eyebrow">Gestão nutricional</p>
           <h2>Dietas dos alunos</h2>
-          <span>Crie planos, acompanhe refeicoes e revise registros alimentares em tempo real.</span>
+          <span>Crie planos, acompanhe refeições e revise registros alimentares em tempo real.</span>
         </div>
         <button className="nutrition-admin-button" type="button" onClick={() => setIsPlanModalOpen(true)}>
           <Plus size={18} />
@@ -127,7 +127,7 @@ export default function PersonalDiet({ students }) {
               <span>Aluno</span>
               <span>Calorias</span>
               <span>Proteina</span>
-              <span>Agua</span>
+              <span>água</span>
               <span>Aderência</span>
               <span>Status</span>
             </div>
@@ -177,7 +177,7 @@ export default function PersonalDiet({ students }) {
             <div key={`${plan.student}-${plan.name}`}>
               <strong>{plan.name}</strong>
               <span>{plan.student}</span>
-              <small>{plan.calories} kcal - {plan.meals} refeicoes</small>
+              <small>{plan.calories} kcal - {plan.meals} refeições</small>
               <mark>{plan.status}</mark>
             </div>
           ))}
@@ -189,7 +189,7 @@ export default function PersonalDiet({ students }) {
           <div className="section-heading">
             <div>
               <p className="eyebrow">Registros recentes</p>
-              <h2>Refeicoes enviadas</h2>
+              <h2>Refeições enviadas</h2>
             </div>
             <Camera size={22} />
           </div>
@@ -212,11 +212,11 @@ export default function PersonalDiet({ students }) {
           <Sparkles size={24} />
           <p className="eyebrow">Coach IA nutricional</p>
           <h2>Gerar dieta, marmita ou ajuste</h2>
-          <p>Use a IA para criar planos, revisar fotos de refeicao, sugerir substituicoes e resumir a evolução alimentar.</p>
+          <p>Use a IA para criar planos, revisar fotos de refeição, sugerir substituições e resumir a evolução alimentar.</p>
           <div className="coach-admin-actions">
             <button type="button">Gerar dieta</button>
             <button type="button">Criar marmita</button>
-            <button type="button">Analisar refeicao</button>
+            <button type="button">Analisar refeição</button>
           </div>
         </article>
       </div>
@@ -243,9 +243,9 @@ export default function PersonalDiet({ students }) {
                   ))}
                 </select>
               </label>
-              <label><span>Nome da dieta</span><input name="name" required placeholder="Ex: Definicao premium" /></label>
+              <label><span>Nome da dieta</span><input name="name" required placeholder="Ex: Definição premium" /></label>
               <label><span>Calorias alvo</span><input name="calories" type="number" min="800" required placeholder="2200" /></label>
-              <label><span>Refeicoes por dia</span><input name="meals" type="number" min="1" required placeholder="6" /></label>
+              <label><span>Refeições por dia</span><input name="meals" type="number" min="1" required placeholder="6" /></label>
               <label className="wide"><span>Macros</span><input name="macros" placeholder="Proteinas 180g, carboidratos 250g, gorduras 70g" /></label>
               <label className="wide"><span>Observações</span><textarea name="notes" rows="4" placeholder="Substituições, restrições, orientações e estratégia." /></label>
               <div className="wide ai-diet-editor">

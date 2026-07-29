@@ -29,7 +29,7 @@ export default function CoachIA({ role = "student", student, onClose }) {
       from: "coach",
       text: isPersonal
         ? "Pronto, Thiago. Posso gerar ideias, relatórios e insights editáveis para você aprovar."
-        : "Pronta para ajudar, " + (student?.name?.split(" ")[0] || "Erika") + ". Eu explico execução, músculos, nutrição e avaliação física. Não altero seus treinos: qualquer mudança precisa ser aprovada pelo Personal Thiago Filippo."
+        : "Pronta para ajudar, " + (student?.name?.split(" ")[0] || "Erika") + ". Eu explico execução, músculos, nutrição e avaliação física. Não altero seus treinos: qualquer mudança precisa ser aprovada pelo Personal Thiago Fillippo."
     }
   ].map((item) => ({ ...item, text: decode(item.text) })));
   const [input, setInput] = useState("");
@@ -85,7 +85,7 @@ export default function CoachIA({ role = "student", student, onClose }) {
             <span><Wand2 size={18} /> {isPersonal ? "Análise" : "Conceitos"}</span>
             <span><MessageCircle size={18} /> {isPersonal ? "Feedback" : "Dúvidas"}</span>
           </div>
-          {!isPersonal && <p className="assistant-priority-note">Eu respondo perguntas e explico conceitos. Não altero treino, dieta ou avaliação sem o Personal Thiago Filippo.</p>}
+          {!isPersonal && <p className="assistant-priority-note">Eu respondo perguntas e explico conceitos. Não altero treino, dieta ou avaliação sem o Personal Thiago Fillippo.</p>}
         </aside>
       </div>
     </section>
@@ -94,12 +94,12 @@ export default function CoachIA({ role = "student", student, onClose }) {
 
 function buildResponse(prompt, role) {
   const lower = prompt.toLowerCase();
-  if (lower.includes("supino")) return "No supino, mantenha os pés firmes, escápulas encaixadas para trás e para baixo, punhos alinhados e desça a barra com controle até perto do peito. Suba sem perder estabilidade. Se houver dor no ombro, pare e avise o Personal Thiago Filippo.";
+  if (lower.includes("supino")) return "No supino, mantenha os pés firmes, escápulas encaixadas para trás e para baixo, punhos alinhados e desça a barra com controle até perto do peito. Suba sem perder estabilidade. Se houver dor no ombro, pare e avise o Personal Thiago Fillippo.";
   if (lower.includes("hipertrofia")) return "Hipertrofia é o aumento de massa muscular. Ela acontece com treino bem executado, progressão de carga, alimentação adequada, descanso e constância.";
   if (lower.includes("deficit") || lower.includes("déficit")) return "Déficit calórico é consumir menos calorias do que o corpo gasta. Ele ajuda na perda de gordura, mas precisa preservar proteínas, treino de força e saúde.";
-  if (lower.includes("dor") || lower.includes("ombro")) return "Dor no ombro não deve ser ignorada. Pare o exercício se for dor aguda, forte ou com perda de força. Grave a execução se puder e envie ao Personal Thiago Filippo para ele avaliar.";
+  if (lower.includes("dor") || lower.includes("ombro")) return "Dor no ombro não deve ser ignorada. Pare o exercício se for dor aguda, forte ou com perda de força. Grave a execução se puder e envie ao Personal Thiago Fillippo para ele avaliar.";
   if (lower.includes("imc")) return "IMC relaciona peso e altura. Ele ajuda como indicador geral, mas não mostra tudo: massa magra, gordura corporal, medidas e fotos também precisam ser analisadas.";
-  if (lower.includes("treino") || lower.includes("carga") || lower.includes("exerc")) return role === "personal" ? "Posso sugerir uma análise, mas a alteração final deve ser salva por você no treino do aluno." : "Posso explicar a execução e os músculos trabalhados, mas não altero seu treino. Mudanças só com o Personal Thiago Filippo.";
+  if (lower.includes("treino") || lower.includes("carga") || lower.includes("exerc")) return role === "personal" ? "Posso sugerir uma análise, mas a alteração final deve ser salva por você no treino do aluno." : "Posso explicar a execução e os músculos trabalhados, mas não altero seu treino. Mudanças só com o Personal Thiago Fillippo.";
   if (lower.includes("dieta") || lower.includes("refei") || lower.includes("calor")) return role === "personal" ? "Posso gerar uma sugestão editável de dieta para você revisar antes de enviar ao aluno." : "Posso explicar alimentos, macros e calorias, mas não altero sua dieta. Use como apoio e confirme ajustes com o personal.";
-  return role === "personal" ? "Boa pergunta. Posso transformar isso em uma sugestão prática para você revisar antes de aplicar." : "Boa pergunta. Vou te orientar de forma educativa, sem alterar seu treino ou dieta. As decisões finais ficam com o Personal Thiago Filippo.";
+  return role === "personal" ? "Boa pergunta. Posso transformar isso em uma sugestão prática para você revisar antes de aplicar." : "Boa pergunta. Vou te orientar de forma educativa, sem alterar seu treino ou dieta. As decisões finais ficam com o Personal Thiago Fillippo.";
 }

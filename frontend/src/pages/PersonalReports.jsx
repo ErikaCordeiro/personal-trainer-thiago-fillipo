@@ -32,9 +32,9 @@ const quickReports = [
 
 const kpis = [
   ["Alunos ativos", "128", "+12% vs mês anterior", Users, [30, 42, 38, 50, 58, 72]],
-  ["Evolução media", "87%", "+8% vs mês anterior", LineChart, [28, 35, 48, 55, 70, 87]],
+  ["Evolução média", "87%", "+8% vs mês anterior", LineChart, [28, 35, 48, 55, 70, 87]],
   ["Receita mensal", "R$ 24.580", "+15% vs mês anterior", Wallet, [16, 21, 19, 25, 28, 34]],
-  ["Aderência media", "89%", "+7% vs mês anterior", CheckCircle2, [62, 70, 68, 76, 82, 89]],
+  ["Aderência média", "89%", "+7% vs mês anterior", CheckCircle2, [62, 70, 68, 76, 82, 89]],
   ["Avaliações realizadas", "42", "+20% vs mês anterior", FileText, [18, 24, 25, 31, 35, 42]]
 ];
 
@@ -56,9 +56,9 @@ const ranking = [
 
 const insightPrompts = [
   ["Gerar resumo mensal", "Resumo completo do mês atual", Sparkles],
-  ["Quais alunos mais evoluiram?", "Analise dos melhores resultados", Trophy],
-  ["Quem precisa de atencao?", "Alunos com baixa aderência", AlertTriangle],
-  ["Previsão de resultados", "Projecao para os pr?ximos meses", LineChart],
+  ["Quais alunos mais evoluíram?", "Análise dos melhores resultados", Trophy],
+  ["Quem precisa de atenção?", "Alunos com baixa aderência", AlertTriangle],
+  ["Previsão de resultados", "Projeção para os próximos meses", LineChart],
   ["Baixa aderência alimentar", "Detectar queda em dieta", Apple],
   ["Aumento de carga", "Evolução por exercicio", Dumbbell]
 ];
@@ -78,17 +78,17 @@ export default function PersonalReports({ students = [] }) {
       <header className="reports-admin-header">
         <div>
           <h2>Relatórios</h2>
-          <p>Visão geral dos resultados do seu neg?cio e da evolução dos seus alunos.</p>
+          <p>Visão geral dos resultados do seu negócio e da evolução dos seus alunos.</p>
         </div>
         <div className="reports-header-actions">
-          <button type="button" aria-label="Notificacoes"><Bell size={20} /><span>3</span></button>
+          <button type="button" aria-label="Notificações"><Bell size={20} /><span>3</span></button>
           <label>
             <CalendarDays size={18} />
             <select value={period} onChange={(event) => setPeriod(event.target.value)}>
               <option>Este mês (01/05/2026 - 31/05/2026)</option>
-              <option>Ultimos 30 dias</option>
-              <option>Ultimos 3 meses</option>
-              <option>Ultimos 12 meses</option>
+              <option>últimos 30 dias</option>
+              <option>últimos 3 meses</option>
+              <option>últimos 12 meses</option>
             </select>
             <ChevronDown size={16} />
           </label>
@@ -133,7 +133,7 @@ export default function PersonalReports({ students = [] }) {
               <p>Evolução de alunos, aderência e resultado financeiro.</p>
             </div>
             <select>
-              <option>Ultimos 6 meses</option>
+              <option>últimos 6 meses</option>
               <option>30 dias</option>
               <option>3 meses</option>
               <option>12 meses</option>
@@ -182,7 +182,7 @@ export default function PersonalReports({ students = [] }) {
             <p>Selecione os filtros abaixo para gerar seu relatório personalizado.</p>
           </div>
           <div className="reports-form-grid">
-            <label>Periodo<input value="01/05/2026 - 31/05/2026" readOnly /></label>
+            <label>Período<input value="01/05/2026 - 31/05/2026" readOnly /></label>
             <label>Aluno<select><option>Todos os alunos</option><option>Erika Gomes</option><option>Lucas Almeida</option></select></label>
             <label>Tipo de relatório<select value={reportType} onChange={(event) => setReportType(event.target.value)}>{quickReports.map(([title]) => <option key={title}>{title}</option>)}</select></label>
             <label>Status<select><option>Todos</option><option>Ativos</option><option>Atenção</option></select></label>
@@ -221,7 +221,7 @@ export default function PersonalReports({ students = [] }) {
         <div>
           <div className="reports-section-title">
             <h3>Coach IA para relatórios</h3>
-            <p>Use inteligencia artificial para gerar insights e analises avancadas.</p>
+            <p>Use inteligência artificial para gerar insights e análises avançadas.</p>
           </div>
           <div className="reports-insight-grid">
             {insightPrompts.map(([title, text, Icon]) => (

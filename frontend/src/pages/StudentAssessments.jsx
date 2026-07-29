@@ -26,7 +26,7 @@ const summary = [
   { label: "Massa magra", value: "54,1 kg", status: "Adequado", delta: "↑ 1,4 kg desde 20/05", icon: Trophy },
   { label: "Massa gorda", value: "18,3 kg", status: "Moderado", delta: "↓ 1,1 kg desde 20/05", icon: Scale },
   { label: "TMB", value: "1.680 kcal", status: "por dia", delta: "Taxa metabolica basal", icon: Flame },
-  { label: "Agua corporal", value: "39,6 L", status: "Adequado", delta: "↑ 0,8 L desde 20/05", icon: Droplets }
+  { label: "água corporal", value: "39,6 L", status: "Adequado", delta: "↑ 0,8 L desde 20/05", icon: Droplets }
 ];
 
 const measurements = [
@@ -47,7 +47,7 @@ const skinfolds = [
   ["Abdominal", "18 mm"],
   ["Tricipital", "14 mm"],
   ["Subescapular", "13 mm"],
-  ["Axilar media", "14 mm"],
+  ["Axilar média", "14 mm"],
   ["Suprailiaca", "16 mm"],
   ["Coxa", "15 mm"]
 ];
@@ -57,7 +57,7 @@ const evolution = [
   ["Gordura corporal (%)", "24,3%", "↓ 2,1%"],
   ["Massa magra (kg)", "54,1 kg", "↑ 1,4 kg"],
   ["IMC", "25,6", "↓ 1,0"],
-  ["Medidas (media)", "-2,3 cm", "↓"]
+  ["Medidas (média)", "-2,3 cm", "↓"]
 ];
 
 const history = [
@@ -89,8 +89,8 @@ export default function StudentAssessments({ student }) {
       <div className="student-assessment-intro">
         <div>
           <p className="eyebrow">Última avaliação</p>
-          <h2>Você esta evoluindo de verdade, {name.split(" ")[0]}.</h2>
-          <span>Acompanhe sua evolução e veja o quanto voc? esta avancando.</span>
+          <h2>Você está evoluindo de verdade, {name.split(" ")[0]}.</h2>
+          <span>Acompanhe sua evolução e veja o quanto você esta avançando.</span>
         </div>
         <div className="student-assessment-date">
           <CalendarDays size={20} />
@@ -131,7 +131,7 @@ export default function StudentAssessments({ student }) {
               </div>
             ))}
           </div>
-          <button type="button" onClick={() => openDetail("measures", "Medidas corporais", "10 medidas", "Evolução media de -2,3 cm")}>Ver todas as medidas</button>
+          <button type="button" onClick={() => openDetail("measures", "Medidas corporais", "10 medidas", "Evolução média de -2,3 cm")}>Ver todas as medidas</button>
         </article>
 
         <article className="student-assessment-card skinfold">
@@ -149,7 +149,7 @@ export default function StudentAssessments({ student }) {
                 <span className="leg left" />
                 <span className="leg right" />
                 <i className="point chest" />
-                <i className="point abdomen" />
+                <i className="point abdômen" />
                 <i className="point thigh" />
               </div>
               <div className="body-illustration back" aria-hidden="true">
@@ -160,7 +160,7 @@ export default function StudentAssessments({ student }) {
                 <span className="leg left" />
                 <span className="leg right" />
                 <i className="point chest" />
-                <i className="point abdomen" />
+                <i className="point abdômen" />
                 <i className="point thigh" />
               </div>
             </div>
@@ -241,17 +241,17 @@ export default function StudentAssessments({ student }) {
         </article>
 
         <article className="student-assessment-card personal-notes">
-          <h2>Observacoes do seu personal</h2>
-          <span>Thiago Filippo - 18/06/2025</span>
+          <h2>Observações do seu personal</h2>
+          <span>Thiago Fillippo - 18/06/2025</span>
           <p>
-            Excelente evolução. Reducao significativa de gordura corporal e aumento de massa magra.
-            Continue mantendo consistencia nos treinos e na alimentacao. Proximo objetivo: reduzir gordura para abaixo de 20%.
+            Excelente evolução. Redução significativa de gordura corporal e aumento de massa magra.
+            Continue mantendo consistência nos treinos e na alimentação. Proximo objetivo: reduzir gordura para abaixo de 20%.
           </p>
-          <button type="button" onClick={() => openDetail("notes", "Observacoes do personal", "Proximo objetivo", "Reduzir gordura corporal para abaixo de 20%")}>Ver todas as observacoes</button>
+          <button type="button" onClick={() => openDetail("notes", "Observações do personal", "Proximo objetivo", "Reduzir gordura corporal para abaixo de 20%")}>Ver todas as observações</button>
         </article>
 
         <article className="student-assessment-card quick-actions">
-          <h2>Acoes rapidas</h2>
+          <h2>Ações rápidas</h2>
           {quickActions.map(([label, Icon]) => (
             <button key={label} type="button">
               <Icon size={17} />
@@ -268,7 +268,7 @@ export default function StudentAssessments({ student }) {
 
       <div className="student-assessment-quote">
         <Activity size={22} />
-        <span>Disciplina hoje, resultado amanh?. Você esta no caminho certo.</span>
+        <span>Disciplina hoje, resultado amanhã. Você está no caminho certo.</span>
       </div>
 
       {detailModal && (
@@ -291,7 +291,7 @@ export default function StudentAssessments({ student }) {
               <circle cx="302" cy="112" r="5" />
             </svg>
             <p>
-              Essa evolução compara sua avaliação atual com os registros anteriores. O objetivo e mostrar tendencia,
+              Essa evolução compara sua avaliação atual com os registros anteriores. O objetivo é mostrar tendência,
               constancia e onde ajustar treino, dieta e hidratação.
             </p>
             <button className="metal-button inline" type="button" onClick={() => setDetailModal(null)}>Entendi</button>

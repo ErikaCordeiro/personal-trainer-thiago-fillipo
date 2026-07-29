@@ -19,10 +19,10 @@ export default function PersonalLayout({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const handleCoachCapture = (event) => {
-    const button = event.target.closest?.("button");
+    const button = event.target.closest("button");
     if (!button) return;
     const text = button.textContent || "";
-    const coachArea = button.closest?.(".coach-card, .coach-ia-panel, .coach-admin-actions, .assessment-coach-card, .ai-insights-student");
+    const coachArea = button.closest(".coach-card, .coach-ia-panel, .coach-admin-actions, .assessment-coach-card, .ai-insights-student");
     if (coachArea || /coach ia|conversar|perguntar/i.test(text)) {
       event.preventDefault();
       onNavigate("coach");
@@ -38,7 +38,7 @@ export default function PersonalLayout({
         mobileOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         onCollapsedChange={setSidebarCollapsed}
-        profileName="Thiago Filippo"
+        profileName="Thiago Fillippo"
         profileRole="Personal trainer"
         profileInitials="TF"
         onLogout={onLogout}

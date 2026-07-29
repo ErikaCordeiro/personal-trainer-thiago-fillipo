@@ -57,7 +57,7 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
       id: editingWorkout?.id || crypto.randomUUID(),
       name: form.get("name"),
       studentId: form.get("studentId"),
-      status: "Historico",
+      status: "Histórico",
       focus: form.get("focus"),
       duration: form.get("duration"),
       date: form.get("date") || "Segunda",
@@ -102,7 +102,7 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
               <article className="exercise-row" key={exercise.id}>
                 <div className="exercise-row-title">
                   <strong>Exercicio {index + 1}</strong>
-                  <span><Brain size={15} /> IA busca exercicios pelo nome digitado</span>
+                  <span><Brain size={15} /> IA busca exercícios pelo nome digitado</span>
                 </div>
                 <div className="form-grid compact">
                   <div className="exercise-search-field">
@@ -121,7 +121,7 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
                         {suggestions.map((suggestion) => (
                           <button key={suggestion.name} type="button" onClick={() => applySuggestion(exercise.id, suggestion)}>
                             <strong>{suggestion.name}</strong>
-                            <span>{suggestion.muscle} - Video disponivel com {preferredInstructor}</span>
+                            <span>{suggestion.muscle} - Video disponível com {preferredInstructor}</span>
                           </button>
                         ))}
                       </div>
@@ -131,22 +131,22 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
                   <input placeholder="Repeticoes" value={exercise.reps} onChange={(event) => updateExercise(exercise.id, "reps", event.target.value)} />
                   <input placeholder="Descanso" value={exercise.rest} onChange={(event) => updateExercise(exercise.id, "rest", event.target.value)} />
                   <input placeholder="Carga" value={exercise.load} onChange={(event) => updateExercise(exercise.id, "load", event.target.value)} />
-                  <label className="video-input">
+                  <label className="vivideo-input">
                     <span><Link size={15} /> Link do YouTube</span>
                     <input placeholder="https://youtube.com/..." value={exercise.videoUrl} onChange={(event) => updateExercise(exercise.id, "videoUrl", event.target.value)} />
                     {exercise.videoUrl && (
-                      <a className="recommended-video-link" href={exercise.videoUrl} target="_blank" rel="noreferrer">
-                        Video recomendado disponivel - {preferredInstructor}
+                      <a className="recommended-vivideo-link" href={exercise.videoUrl} target="_blank" rel="noreferrer">
+                        Vídeo recomendado disponível - {preferredInstructor}
                       </a>
                     )}
                   </label>
-                  <label className="video-input">
-                    <span><Upload size={15} /> Upload de video</span>
+                  <label className="vivideo-input">
+                    <span><Upload size={15} /> Upload de vídeo</span>
                     <input type="file" accept="video/*" onChange={(event) => updateExercise(exercise.id, "videoFile", event.target.files?.[0]?.name || "")} />
                   </label>
-                  <textarea placeholder="Observacoes e execu??o" value={exercise.explanation} onChange={(event) => updateExercise(exercise.id, "explanation", event.target.value)} />
+                  <textarea placeholder="Observações e execução" value={exercise.explanation} onChange={(event) => updateExercise(exercise.id, "explanation", event.target.value)} />
                 </div>
-                {exercise.videoFile && <small className="upload-name">Video selecionado: {exercise.videoFile}</small>}
+                {exercise.videoFile && <small className="upload-name">Vídeo selecionado: {exercise.videoFile}</small>}
               </article>
             );
           })}
@@ -161,8 +161,8 @@ export default function WorkoutBuilder({ students, workouts, onOpenExercise, onS
         </div>
       </form>
       <aside className="workout-list">
-        <p className="eyebrow">Historico</p>
-        <h2>Historico de treinos</h2>
+        <p className="eyebrow">Histórico</p>
+        <h2>Histórico de treinos</h2>
         {workoutHistory.map((workout) => (
           <article key={workout.id} className={`workout-card ${editingWorkout?.id === workout.id ? "active-edit" : ""}`}>
             <div className="workout-card-header" onClick={() => editWorkout(workout)} role="button" tabIndex="0">

@@ -62,7 +62,7 @@ function playRestDoneSound() {
     });
     window.setTimeout(() => context.close?.(), 700);
   } catch {
-    // Som pode ser bloqueado pelo navegador ate uma interacao do usuario.
+    // Som pode ser bloqueado pelo navegador até uma interacao do usuario.
   }
 }
 
@@ -271,7 +271,7 @@ function saveHistory(execution, workout, duration, finishStatus) {
     const source = workout.exercises.find((exercise) => exercise.id === item.exerciseId);
     return {
       exerciseId: item.exerciseId,
-      name: source?.name || "ExercÃ­cio",
+      name: source?.name || "Exercício",
       status: item.status,
       sets: item.sets,
       maxLoad: maxLoadText(item)
@@ -338,7 +338,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     feeling: "Bem",
     difficulty: "Moderado",
     rating: 5,
-    hadPain: "NÃ£o",
+    hadPain: "Não",
     painArea: "",
     painIntensity: "0",
     observation: ""
@@ -357,10 +357,10 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     try {
       setSaving("Salvando...");
       window.localStorage.setItem(getExecutionKey(workout.id), JSON.stringify({ ...execution, updatedAt: nowIso() }));
-      const id = window.setTimeout(() => setSaving(navigator.onLine ?"Salvo" : "Sem conexÃ£o - os dados serÃ£o sincronizados"), 250);
+      const id = window.setTimeout(() => setSaving(navigator.onLine ?"Salvo" : "Sem conexão - os dados serão sincronizados"), 250);
       return () => window.clearTimeout(id);
     } catch {
-      setSaving("Sem conexÃ£o - os dados serÃ£o sincronizados");
+      setSaving("Sem conexão - os dados serão sincronizados");
     }
     return undefined;
   }, [execution, workout.id]);
@@ -370,7 +370,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
       try {
         window.localStorage.setItem(getExecutionKey(workout.id), JSON.stringify({ ...execution, updatedAt: nowIso() }));
       } catch {
-        // localStorage can fail in private browsing; the UI keeps the in-memory state.
+        // localStorage can fail in privaté browsing; the UI keeps the in-memory state.
       }
     };
     window.addEventListener("pagehide", persist);
@@ -390,7 +390,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
   const currentExecution = execution.exercises.find((item) => item.exerciseId === execution.currentExerciseId) || execution.exercises[0];
   const currentExercise = workout.exercises.find((item) => item.id === currentExecution?.exerciseId) || workout.exercises[0];
   const currentSet = currentExecution?.sets.find((set) => set.status === "em_andamento") || currentExecution?.sets.find((set) => set.status === "pendente") || currentExecution?.sets.at(-1);
-  const restSeconds = execution.rest?.status === "em_andamento" ?Math.max(0, Math.ceil((new Date(execution.rest.restEndsAt).getTime() - Date.now()) / 1000)) : 0;
+  const restSeconds = execution.rest?.status === "em_andamento" ?Math.max(0, Math.ceil((new Date(execution.rest?.restEndsAt).getTime() - Date.now()) / 1000)) : 0;
 
   useEffect(() => {
     if (execution.rest?.status === "em_andamento" && restSeconds <= 0) {
@@ -400,7 +400,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
       window.setTimeout(() => setRestFinishedNotice(false), 2800);
       setExecution((prev) => ({
         ...prev,
-        rest: { ...prev.rest, status: "concluido", completedAt: nowIso(), completedRestSeconds: prev.rest.selectedSeconds },
+        rest: { ...prev.rest, status: "concluido", completedAt: nowIso(), completedRestSeconds: prev.rest?.selectedSeconds },
         updatedAt: nowIso()
       }));
     }
@@ -569,7 +569,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
   function adjustRest(delta) {
     setExecution((prev) => {
       if (!prev.rest) return prev;
-      const next = Math.max(15, (prev.rest.selectedSeconds || 60) + delta);
+      const next = Math.max(15, (prev.rest?.selectedSeconds || 60) + delta);
       return {
         ...prev,
         rest: { ...prev.rest, selectedSeconds: next, restEndsAt: new Date(Date.now() + next * 1000).toISOString(), status: "em_andamento" },
@@ -619,8 +619,8 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
 
   const stats = [
     ["Tempo do treino", formatTime(elapsed), Clock],
-    ["ExercÃ­cios", `${exercises.done}/${exercises.total}`, Dumbbell],
-    ["SÃ©ries", `${sets.done}/${sets.total}`, CheckCircle2],
+    ["Exercícios", `${exercises.done}/${exercises.total}`, Dumbbell],
+    ["Séries", `${sets.done}/${sets.total}`, CheckCircle2],
     ["Progresso", `${percent}%`, Save]
   ];
 
@@ -634,7 +634,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
             <h2>{workout.name}</h2>
             <p>{workout.focus || "Treino personalizado"}</p>
           </div>
-          <span className={`status-pill status-${execution.status}`}>{execution.status.replace("nao_iniciado", "nÃ£o iniciado").replace("em_andamento", "em andamento")}</span>
+          <span className={`status-pill status-${execution.status}`}>{execution.status.replace("nao_iniciado", "não iniciado").replace("em_andamento", "em andamento")}</span>
         </header>
 
         <section className="execution-v2-stats">
@@ -657,10 +657,10 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
 
         <section className="execution-v2-grid">
           <aside className="execution-v2-current premium-panel">
-            <span className="eyebrow">ExercÃ­cio atual</span>
+            <span className="eyebrow">Exercício atual</span>
             <h3>{currentExecution?.position || 1} de {workout.exercises.length}</h3>
             <h2>{currentExercise?.name}</h2>
-            <p>{currentSet ?`SÃ©rie ${currentSet.setNumber} de ${currentExecution.sets.length} â€¢ ${currentSet.prescribedReps || currentExercise?.reps || "repetiÃ§Ãµes"}` : "Selecione um exercÃ­cio"}</p>
+            <p>{currentSet ?`Série ${currentSet.setNumber} de ${currentExecution.sets.length} ? ${currentSet.prescribedReps || currentExercise?.reps || "repetições"}` : "Selecione um exercício"}</p>
             <div className="current-prescription">
               <span>Descanso: {currentExercise?.rest || "60s"}</span>
               <span>Carga sugerida: {currentExercise?.load || "Livre"}</span>
@@ -672,22 +672,22 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
                 <button className="metal-button ghost" type="button" onClick={pauseWorkout} disabled={execution.status !== "em_andamento"}><Pause size={18} /> Pausar</button>
               )}
               <button className="metal-button" type="button" onClick={() => startSet()} disabled={!currentSet || currentSet.status !== "pendente" || execution.status === "pausado" || execution.rest?.status === "em_andamento"}>
-                <Play size={18} /> Iniciar sÃ©rie
+                <Play size={18} /> Iniciar série
               </button>
               <button className="metal-button" type="button" onClick={() => openCompleteSetModal()} disabled={!currentSet || currentSet.status !== "em_andamento"}>
-                <CheckCircle2 size={18} /> Concluir sÃ©rie
+                <CheckCircle2 size={18} /> Concluir série
               </button>
               <button className="metal-button light" type="button" onClick={requestFinish}>Finalizar treino</button>
             </div>
           </aside>
 
-          <section className="execution-v2-list" aria-label="ExercÃ­cios do treino">
+          <section className="execution-v2-list" aria-label="Exercícios do treino">
             <div className="section-heading compact-heading">
               <div>
-                <span className="eyebrow">ExercÃ­cios</span>
-                <h3>{exercises.done} de {exercises.total} concluÃ­dos</h3>
+                <span className="eyebrow">Exercícios</span>
+                <h3>{exercises.done} de {exercises.total} concluídos</h3>
               </div>
-              <strong>{sets.done}/{sets.total} sÃ©ries</strong>
+              <strong>{sets.done}/{sets.total} séries</strong>
             </div>
             {execution.exercises.map((exerciseExecution) => {
               const source = workout.exercises.find((exercise) => exercise.id === exerciseExecution.exerciseId);
@@ -700,7 +700,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
                     <span className="exercise-check">{complete ?<CheckCircle2 size={22} /> : exerciseExecution.position}</span>
                     <span>
                       <strong>{source?.name}</strong>
-                      <small>{complete ?`${localSets.done}/${localSets.total} sÃ©ries concluÃ­das â€¢ Carga mÃ¡xima: ${maxLoadText(exerciseExecution)}` : `${source?.sets} â€¢ ${source?.reps}`}</small>
+                      <small>{complete ?`${localSets.done}/${localSets.total} séries concluídas ? Carga máxima: ${maxLoadText(exerciseExecution)}` : `${source?.sets} ? ${source?.reps}`}</small>
                     </span>
                     {exerciseExecution.expanded ?<ChevronUp size={18} /> : <ChevronDown size={18} />}
                   </button>
@@ -713,7 +713,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
                         <span>Carga sugerida: {source?.load || "Livre"}</span>
                       </div>
                       {source?.videoUrl && (
-                        <button className="video-link-button" type="button" onClick={() => setVideoExercise(source)}><Video size={16} /> Ver execuÃ§Ã£o do exercÃ­cio</button>
+                        <button className="video-link-button" type="button" onClick={() => setVideoExercise(source)}><Video size={16} /> Ver execução do exercício</button>
                       )}
                       <div className="set-list">
                         {exerciseExecution.sets.map((set) => (
@@ -723,7 +723,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
                             type="button"
                             onClick={() => handleSetClick(exerciseExecution.exerciseId, set.setNumber)}
                           >
-                            <span>SÃ©rie {set.setNumber}</span>
+                            <span>Série {set.setNumber}</span>
                             <span>{set.completedReps || set.prescribedReps || "-"}</span>
                             <span>{set.usedLoad || set.prescribedLoad || "-"}</span>
                             {set.status === "concluida" ?<CheckCircle2 size={18} /> : <span className="set-dot" />}
@@ -741,8 +741,8 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
 
       {restFinishedNotice && (
         <div className="rest-finished-toast" role="status">
-          <strong>Descanso concluÃ­do!</strong>
-          <span>Vamos para a prÃ³xima sÃ©rie.</span>
+          <strong>Descanso concluído!</strong>
+          <span>Vamos para a próxima série.</span>
         </div>
       )}
 
@@ -750,16 +750,16 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
         <div className="modal-backdrop rest-overlay" role="dialog" aria-modal="true">
           <article className="rest-card premium-panel">
             <span className="eyebrow">Descanso</span>
-            <div className="rest-ring" style={{ "--value": `${execution.rest.status === "concluido" ?100 : Math.max(0, 100 - (restSeconds / Math.max(1, execution.rest.selectedSeconds)) * 100)}%` }}>
+            <div className="rest-ring" style={{ "--value": `${execution.rest?.status === "concluido" ?100 : Math.max(0, 100 - (restSeconds / Math.max(1, execution.rest?.selectedSeconds)) * 100)}%` }}>
               <strong>{formatTime(restSeconds)}</strong>
-              <span>{execution.rest.status === "concluido" ?"Pronto" : "entre sÃ©ries"}</span>
+              <span>{execution.rest?.status === "concluido" ?"Pronto" : "entre séries"}</span>
             </div>
-            <p>Descanso recomendado: {execution.rest.prescribedSeconds}s</p>
+            <p>Descanso recomendado: {execution.rest?.prescribedSeconds}s</p>
             <div className="rest-controls">
               <button type="button" onClick={() => adjustRest(-15)}><Minus size={16} /> 15s</button>
               <button type="button" onClick={() => adjustRest(15)}><Plus size={16} /> 15s</button>
             </div>
-            <button className="metal-button light" type="button" onClick={skipRest}>{execution.rest.status === "concluido" ?"Iniciar prÃ³xima sÃ©rie" : "Pular descanso"}</button>
+            <button className="metal-button light" type="button" onClick={skipRest}>{execution.rest?.status === "concluido" ?"Iniciar próxima série" : "Pular descanso"}</button>
           </article>
         </div>
       )}
@@ -768,15 +768,15 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
         <div className="modal-backdrop" role="dialog" aria-modal="true">
           <article className="form-modal premium-panel workout-set-modal">
             <button className="icon-button modal-close" type="button" onClick={() => setSetModal(null)} aria-label="Fechar"><X size={18} /></button>
-            <span className="eyebrow">Concluir sÃ©rie</span>
-            <h3>Registre o que vocÃª fez</h3>
+            <span className="eyebrow">Concluir série</span>
+            <h3>Registre o que você fez</h3>
             <label>Carga usada</label>
             <input value={setModal.usedLoad} onChange={(event) => setSetModal((prev) => ({ ...prev, usedLoad: event.target.value }))} placeholder="Ex: 22,5 kg ou peso corporal" />
-            <label>RepetiÃ§Ãµes realizadas</label>
+            <label>Repetições realizadas</label>
             <input value={setModal.completedReps} onChange={(event) => setSetModal((prev) => ({ ...prev, completedReps: event.target.value }))} placeholder="Ex: 12" />
-            <label>ObservaÃ§Ã£o opcional</label>
-            <textarea value={setModal.observation} onChange={(event) => setSetModal((prev) => ({ ...prev, observation: event.target.value }))} placeholder="Como foi a sÃ©rie?" />
-            <button className="metal-button light" type="button" onClick={completeSet}>Salvar e concluir sÃ©rie</button>
+            <label>Observação opcional</label>
+            <textarea value={setModal.observation} onChange={(event) => setSetModal((prev) => ({ ...prev, observation: event.target.value }))} placeholder="Como foi a série?" />
+            <button className="metal-button light" type="button" onClick={completeSet}>Salvar e concluir série</button>
           </article>
         </div>
       )}
@@ -797,7 +797,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
 
       {setModal && activePicker === "reps" && (
         <NumberPickerSheet
-          title="RepetiÃ§Ãµes"
+          title="Repetições"
           unit=" reps"
           values={repOptions}
           value={String(parseFirstNumber(setModal.completedReps) || 12)}
@@ -813,7 +813,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
         <div className="modal-backdrop" role="dialog" aria-modal="true">
           <article className="form-modal premium-panel">
             <h3>Treino incompleto</h3>
-            <p>VocÃª ainda possui exercÃ­cios ou sÃ©ries pendentes. Deseja realmente encerrar o treino como incompleto?</p>
+            <p>Você ainda possui exercícios ou séries pendentes. Deseja realmente encerrar o treino como incompleto?</p>
             <div className="modal-actions">
               <button className="metal-button ghost" type="button" onClick={() => setConfirmIncomplete(false)}>Continuar treino</button>
               <button className="metal-button light" type="button" onClick={openIncompleteFeedback}>Encerrar como incompleto</button>
@@ -828,13 +828,13 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
             <button className="icon-button modal-close" type="button" onClick={() => setFinishOpen(false)} aria-label="Fechar"><X size={18} /></button>
             <span className="eyebrow">Feedback final</span>
             <h3>Como foi seu treino hoje?</h3>
-            <label>Como vocÃª se sentiu?</label>
+            <label>Como você se sentiu?</label>
             <select value={feedback.feeling} onChange={(event) => setFeedback((prev) => ({ ...prev, feeling: event.target.value }))}>
               {(["Muito bem", "Bem", "Cansado", "Com dor", "Desmotivado"]).map((option) => <option key={option}>{option}</option>)}
             </select>
             <label>Dificuldade</label>
             <select value={feedback.difficulty} onChange={(event) => setFeedback((prev) => ({ ...prev, difficulty: event.target.value }))}>
-              {(["FÃ¡cil", "Moderado", "DifÃ­cil", "Muito difÃ­cil"]).map((option) => <option key={option}>{option}</option>)}
+              {(["Fácil", "Moderado", "Difícil", "Muito difícil"]).map((option) => <option key={option}>{option}</option>)}
             </select>
             <label>Nota</label>
             <div className="rating-row">
@@ -844,16 +844,16 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
             </div>
             <label>Sentiu dor ou desconforto?</label>
             <select value={feedback.hadPain} onChange={(event) => setFeedback((prev) => ({ ...prev, hadPain: event.target.value }))}>
-              <option>NÃ£o</option>
+              <option>Não</option>
               <option>Sim</option>
             </select>
             {feedback.hadPain === "Sim" && (
               <div className="form-grid compact">
-                <input value={feedback.painArea} onChange={(event) => setFeedback((prev) => ({ ...prev, painArea: event.target.value }))} placeholder="RegiÃ£o do corpo" />
+                <input value={feedback.painArea} onChange={(event) => setFeedback((prev) => ({ ...prev, painArea: event.target.value }))} placeholder="Região do corpo" />
                 <input value={feedback.painIntensity} onChange={(event) => setFeedback((prev) => ({ ...prev, painIntensity: event.target.value }))} placeholder="Intensidade 0 a 10" />
               </div>
             )}
-            <textarea value={feedback.observation} onChange={(event) => setFeedback((prev) => ({ ...prev, observation: event.target.value }))} placeholder="ObservaÃ§Ãµes opcionais" />
+            <textarea value={feedback.observation} onChange={(event) => setFeedback((prev) => ({ ...prev, observation: event.target.value }))} placeholder="Observações opcionais" />
             <button className="metal-button light" type="button" onClick={submitFinish}>Enviar feedback</button>
           </article>
         </div>
@@ -861,9 +861,9 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
 
       {videoExercise && (
         <div className="modal-backdrop" role="dialog" aria-modal="true">
-          <article className="form-modal premium-panel video-modal">
+          <article className="form-modal premium-panel vivideo-modal">
             <button className="icon-button modal-close" type="button" onClick={() => setVideoExercise(null)} aria-label="Fechar"><X size={18} /></button>
-            <span className="eyebrow">Execu??o</span>
+            <span className="eyebrow">Execução</span>
             <h3>{videoExercise.name}</h3>
             {toYoutubeEmbedUrl(videoExercise.videoUrl).includes("youtube") ?(
               <iframe src={toYoutubeEmbedUrl(videoExercise.videoUrl)} title={videoExercise.name} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />

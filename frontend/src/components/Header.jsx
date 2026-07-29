@@ -53,7 +53,7 @@ export default function Header({
           <button
             className="icon-button"
             type="button"
-            aria-label="Notifica??es"
+            aria-label="Notificações"
             aria-expanded={notificationsOpen}
             onClick={() => setNotificationsOpen((value) => !value)}
           >
@@ -61,10 +61,10 @@ export default function Header({
             {notifications.length > 0 ? <span className="notification-dot">{notifications.length}</span> : null}
           </button>
           {notificationsOpen && (
-            <div className="notification-popover" role="dialog" aria-label="Notifica??es">
+            <div className="notification-popover" role="dialog" aria-label="Notificações">
               <div className="notification-popover-header">
                 <div>
-                  <p className="eyebrow">Notifica??es</p>
+                  <p className="eyebrow">Notificações</p>
                   <strong>{variant === "student" ? "Avisos do aluno" : "Central de aprovação"}</strong>
                 </div>
                 <button type="button" onClick={() => setNotificationsOpen(false)}>Fechar</button>
@@ -137,7 +137,7 @@ export default function Header({
 
 function activeSentence(title, subtitle) {
   if (title === "Dashboard do Personal") {
-    return "Disciplina hoje, liberdade amanh?.";
+    return "Disciplina hoje, liberdade amanhã.";
   }
   return subtitle;
 }

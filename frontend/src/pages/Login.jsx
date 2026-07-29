@@ -35,13 +35,13 @@ export default function Login({ onLogin, onSignup }) {
     const isSafari = /safari/.test(userAgent) && !/chrome|crios|android/.test(userAgent);
 
     if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone) {
-      return "O app j? est? instalado neste dispositivo.";
+      return "O app já está instalado neste dispositivo.";
     }
 
     if (isIOS) {
       return isSafari
-        ? "No iPhone/iPad: abra no Safari, toque no ?cone Compartilhar e escolha Adicionar a Tela de In?cio. O iOS não permite instalar por bot?o direto."
-        : "No iPhone/iPad: copie/abra este link no Safari, toque em Compartilhar e depois em Adicionar a Tela de In?cio.";
+        ? "No iPhone/iPad: abra no Safari, toque no ícone Compartilhar e escolha Adicionar a Tela de Início. O iOS não permite instalar por botão direto."
+        : "No iPhone/iPad: copie/abra este link no Safari, toque em Compartilhar e depois em Adicionar a Tela de Início.";
     }
 
     if (isAndroid) {
@@ -50,7 +50,7 @@ export default function Login({ onLogin, onSignup }) {
         : "No Android: abra este link no Chrome e toque em Instalar app ou Adicionar a Tela inicial.";
     }
 
-    return "No computador: use Chrome/Edge e clique no ?cone de instalar na barra de endere?o ou no menu do navegador > Instalar Thiago Filippo.";
+    return "No computador: use Chrome/Edge e clique no ícone de instalar na barra de endereço ou no menu do navegador > Instalar Thiago Fillippo.";
   };
 
   const installApp = async () => {
@@ -64,7 +64,7 @@ export default function Login({ onLogin, onSignup }) {
     setInstallPrompt(null);
     setInstallMessage(
       choice.outcome === "accepted"
-        ? "Instalação iniciada. O app Thiago Filippo deve aparecer na tela inicial ou na lista de aplicativos."
+        ? "Instalação iniciada. O app Thiago Fillippo deve aparecer na tela inicial ou na lista de aplicativos."
         : getInstallFallbackMessage()
     );
   };
@@ -97,7 +97,7 @@ export default function Login({ onLogin, onSignup }) {
       objective: form.get("objective"),
       notes: form.get("notes")
     });
-    setSignupMessage("Cadastro enviado. Aguarde aprovação do personal para liberar seu acesso.");
+    setSignupMessage("Cadastro enviado. águarde aprovação do personal para liberar seu acesso.");
     setSignupOpen(false);
     event.currentTarget.reset();
   };
@@ -204,8 +204,8 @@ export default function Login({ onLogin, onSignup }) {
               <label><span>Altura</span><input name="height" type="number" min="1" max="2.5" step="0.01" required placeholder="1.67" /></label>
               <label><span>Objetivo</span><input name="objective" required placeholder="Emagrecimento, hipertrofia..." /></label>
               <label className="wide">
-                <span>Observa??es</span>
-                <textarea name="notes" rows="4" placeholder="Les?es, rotina, restri??es, preferencias ou objetivo principal." />
+                <span>Observações</span>
+                <textarea name="notes" rows="4" placeholder="Lesões, rotina, restrições, preferências ou objetivo principal." />
               </label>
             </div>
             <button className="metal-button inline" type="submit">

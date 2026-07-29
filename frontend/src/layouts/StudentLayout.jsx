@@ -19,10 +19,10 @@ export default function StudentLayout({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const handleCoachCapture = (event) => {
-    const button = event.target.closest?.("button");
+    const button = event.target.closest("button");
     if (!button) return;
     const text = button.textContent || "";
-    const coachArea = button.closest?.(".coach-card, .student-coach-panel, .food-coach-card, .assessment-coach-card, .student-coach-question, .ai-insights-student");
+    const coachArea = button.closest(".coach-card, .student-coach-panel, .food-coach-card, .assessment-coach-card, .student-coach-question, .ai-insights-student");
     if (coachArea || /coach ia|assistente fitness|conversar|perguntar/i.test(text)) {
       event.preventDefault();
       onNavigate("coach");

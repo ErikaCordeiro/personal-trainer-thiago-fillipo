@@ -13,7 +13,7 @@ function toYoutubeWatchUrl(videoUrl) {
 export default function ExerciseDetail({ exercise }) {
   return (
     <section className="exercise-detail">
-      <div className="video-panel">
+      <div className="vivideo-panel">
         {canEmbedYoutube(exercise.videoUrl) ? (
           <iframe
             src={exercise.videoUrl}
@@ -22,10 +22,10 @@ export default function ExerciseDetail({ exercise }) {
             allowFullScreen
           />
         ) : (
-          <div className="video-fallback">
-            <strong>Video recomendado disponivel</strong>
+          <div className="vivideo-fallback">
+            <strong>Vídeo recomendado disponível</strong>
             <span>Abra no YouTube para assistir a recomendacao do instrutor.</span>
-            <a href={toYoutubeWatchUrl(exercise.videoUrl)} target="_blank" rel="noreferrer">Abrir video</a>
+            <a href={toYoutubeWatchUrl(exercise.videoUrl)} target="_blank" rel="noreferrer">Abrir vídeo</a>
           </div>
         )}
       </div>

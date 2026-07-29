@@ -13,7 +13,7 @@ export default function StudentCard({ student, onOpen, onOpenProgress, onDelete 
           <span>{student.age} anos - {student.weight} kg - {student.height} m</span>
         </div>
         <span className={`student-access-badge ${hasAccess ? "approved" : "pending"}`}>
-          {hasAccess ? "Acesso liberado" : "Aguardando liberacao"}
+          {hasAccess ? "Acesso liberado" : "Aguardando liberação"}
         </span>
         <p><Target size={15} /> {student.objective}</p>
         <p><Mail size={15} /> {student.email}</p>

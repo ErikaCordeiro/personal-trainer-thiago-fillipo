@@ -31,9 +31,9 @@ import {
   Users
 } from "lucide-react";
 
-const studentConfig = ["Aprovacao automatica de alunos", "Exigir avaliação inicial", "Exigir foto de evolução", "Permitir agendamento online", "Permitir remarcacao"];
+const studentConfig = ["Aprovação automática de alunos", "Exigir avaliação inicial", "Exigir foto de evolução", "Permitir agendamento online", "Permitir remarcação"];
 const adminNotifications = ["Novo aluno", "Consulta agendada", "Consulta remarcada", "Novo pagamento", "Novo arquivo enviado", "Nova mensagem"];
-const aiSettings = ["Habilitar Coach IA", "Analise de progresso", "Analise financeira", "Recomendacoes inteligentes", "Insights de alunos"];
+const aiSettings = ["Habilitar Coach IA", "Análise de progresso", "Análise financeira", "Recomendações inteligentes", "Insights de alunos"];
 const privacySettings = ["Consentimento obrigatorio (LGPD)", "Compartilhamento de dados", "Armazenamento de exames"];
 
 export default function PersonalSettings() {
@@ -74,11 +74,11 @@ export default function PersonalSettings() {
       <header className="admin-settings-header">
         <div>
           <h2>Configurações</h2>
-          <p>Gerencie todas as configurações do seu neg?cio.</p>
+          <p>Gerencie todas as configurações do seu negócio.</p>
         </div>
         <div className="admin-settings-header-actions">
-          <button type="button" aria-label="Notificacoes"><Bell size={21} /><i>3</i></button>
-          <button type="button" className="admin-settings-admin-chip"><img src="/lion-juda-logo.png" alt="" /><span><strong>Thiago Filippo</strong><small>Administrador</small></span><ChevronRight size={17} /></button>
+          <button type="button" aria-label="Notificações"><Bell size={21} /><i>3</i></button>
+          <button type="button" className="admin-settings-admin-chip"><img src="/lion-juda-logo.png" alt="" /><span><strong>Thiago Fillippo</strong><small>Administrador</small></span><ChevronRight size={17} /></button>
         </div>
       </header>
 
@@ -87,7 +87,7 @@ export default function PersonalSettings() {
       <article className="admin-settings-hero">
         <div>
           <small>Personal</small>
-          <h3>Thiago Filippo</h3>
+          <h3>Thiago Fillippo</h3>
           <span className="admin-plan-chip"><Trophy size={16} /> Plano Premium</span>
           <p>Disciplina - Foco - Propósito</p>
         </div>
@@ -100,9 +100,9 @@ export default function PersonalSettings() {
       <div className="admin-settings-grid">
         <SettingsCard number="1" title="Perfil Profissional" icon={UserRound} className="profile">
           <div className="admin-profile-card-body">
-            <div className="admin-profile-photo"><img src="/lion-juda-logo.png" alt="Thiago Filippo" /><button type="button"><Upload size={15} /></button></div>
+            <div className="admin-profile-photo"><img src="/lion-juda-logo.png" alt="Thiago Fillippo" /><button type="button"><Upload size={15} /></button></div>
             <div className="admin-profile-lines">
-              <strong>Thiago Filippo</strong>
+              <strong>Thiago Fillippo</strong>
               <span>CREF: 123456-G/SP</span>
               <span>thiagofilippo@personal.com</span>
               <span>(11) 98765-4321</span>
@@ -117,7 +117,7 @@ export default function PersonalSettings() {
           <div className="admin-brand-body">
             <div className="admin-brand-logo"><img src="/lion-juda-logo.png" alt="Logo" /></div>
             <div className="admin-brand-lines">
-              <span><small>Nome do app</small><strong>Thiago Filippo App</strong></span>
+              <span><small>Nome do app</small><strong>Thiago Fillippo App</strong></span>
               <span><small>Cor principal</small><i className="swatch dark" /></span>
               <span><small>Cor secundaria</small><i className="swatch silver" /></span>
               <span><small>Favicon</small><button type="button"><Image size={15} /></button></span>
@@ -129,7 +129,7 @@ export default function PersonalSettings() {
 
         <SettingsCard number="3" title="Configuração de Alunos" icon={Users}>
           <ToggleList labels={studentConfig} keys={["automaticApproval", "initialAssessment", "progressPhoto", "onlineSchedule", "reschedule"]} toggles={toggles} onToggle={toggle} />
-          <label className="admin-settings-inline-select"><span>Limite de remarcacoes</span><select value={remakeLimit} onChange={(event) => setRemakeLimit(event.target.value)}><option>1</option><option>2</option><option>3</option><option>Sem limite</option></select></label>
+          <label className="admin-settings-inline-select"><span>Limite de remarcações</span><select value={remakeLimit} onChange={(event) => setRemakeLimit(event.target.value)}><option>1</option><option>2</option><option>3</option><option>Sem limite</option></select></label>
           <button className="admin-settings-wide" type="button" onClick={() => notify("Configurações de alunos salvas.")}>Salvar configurações</button>
         </SettingsCard>
 
@@ -145,16 +145,16 @@ export default function PersonalSettings() {
             <span><small>Pix</small><em>Ativado</em></span>
             <span><small>Mercado Pago</small><em>Ativado</em></span>
             <span><small>Stripe</small><b>Em breve</b></span>
-            <span><small>Plano padrao</small><select defaultValue="mensal"><option value="mensal">Mensal</option><option value="trimestral">Trimestral</option></select></span>
+            <span><small>Plano padrão</small><select defaultValue="mensal"><option value="mensal">Mensal</option><option value="trimestral">Trimestral</option></select></span>
             <span><small>Plano mensal</small><strong>R$ 149,90</strong></span>
             <span><small>Plano trimestral</small><strong>R$ 399,90</strong></span>
           </div>
           <button className="admin-settings-wide" type="button" onClick={() => notify("Configuração de pagamentos aberta.")}>Configurar pagamentos</button>
         </SettingsCard>
 
-        <SettingsCard number="6" title="Notificacoes" icon={Bell}>
+        <SettingsCard number="6" title="Notificações" icon={Bell}>
           <ToggleList labels={adminNotifications} keys={["newStudent", "appointment", "rescheduled", "payment", "file", "message"]} toggles={toggles} onToggle={toggle} />
-          <button className="admin-settings-wide" type="button" onClick={() => notify("Preferencias de notificação atualizadas.")}>Gerenciar notifica??es</button>
+          <button className="admin-settings-wide" type="button" onClick={() => notify("Preferências de notificação atualizadas.")}>Gerenciar notificações</button>
         </SettingsCard>
 
         <SettingsCard number="7" title="Coach IA" icon={Bot}>
@@ -165,14 +165,14 @@ export default function PersonalSettings() {
         <SettingsCard number="8" title="Aplicativo" icon={Smartphone}>
           <span className="admin-settings-label">Tema</span>
           <div className="admin-settings-segment"><button className={theme === "dark" ? "active" : ""} type="button" onClick={() => setTheme("dark")}><Moon size={17} /> Escuro</button><button className={theme === "light" ? "active" : ""} type="button" onClick={() => setTheme("light")}><Sun size={17} /> Claro</button></div>
-          <label className="admin-settings-select"><span>Idioma</span><select defaultValue="pt"><option value="pt">Portugu?s (Brasil)</option></select></label>
-          <button className="admin-settings-wide" type="button" onClick={() => notify("Preferencias do aplicativo salvas.")}>Salvar prefer?ncias</button>
+          <label className="admin-settings-select"><span>Idioma</span><select defaultValue="pt"><option value="pt">Português (Brasil)</option></select></label>
+          <button className="admin-settings-wide" type="button" onClick={() => notify("Preferências do aplicativo salvas.")}>Salvar preferências</button>
         </SettingsCard>
 
-        <SettingsCard number="9" title="Seguran?a" icon={Lock}>
+        <SettingsCard number="9" title="Segurança" icon={Lock}>
           <div className="admin-security-lines connected-devices-grid">
-            <button type="button"><Smartphone size={17} /> Dispositivos conectados <small>Navegador/PWA - sess?o atual - ?ltimo acesso hoje</small><ChevronRight size={16} /></button>
-            <button type="button"><Globe2 size={17} /> Encerrar todas as outras sess?es <small>Dispon?vel quando houver m?ltiplos acessos</small><ChevronRight size={16} /></button>
+            <button type="button"><Smartphone size={17} /> Dispositivos conectados <small>Navegador/PWA - sessão atual - último acesso hoje</small><ChevronRight size={16} /></button>
+            <button type="button"><Globe2 size={17} /> Encerrar todas as outras sessões <small>Disponível quando houver múltiplos acessos</small><ChevronRight size={16} /></button>
             <button type="button"><ShieldCheck size={17} /> Autenticação em duas etapas <em>Estrutura preparada</em><ChevronRight size={16} /></button>
           </div>
         </SettingsCard>
@@ -182,7 +182,7 @@ export default function PersonalSettings() {
           <AdminLine label="Exportar avaliações" action="Exportar" onClick={() => notify("Exportação de avaliações iniciada.")} />
           <AdminLine label="Exportar financeiro" action="Exportar" onClick={() => notify("Exportação financeira iniciada.")} />
           <AdminLine label="Backup completo" action="Realizar backup" onClick={() => notify("Backup completo iniciado.")} />
-          <p>?ltimo backup: 24/05/2026 ?s 03:15</p>
+          <p>último backup: 24/05/2026 ?s 03:15</p>
         </SettingsCard>
 
         <SettingsCard number="11" title="Termos e Privacidade" icon={FileText}>
@@ -204,16 +204,16 @@ export default function PersonalSettings() {
         </SettingsCard>
 
         <article className="admin-settings-danger-zone">
-          <h3>13. Zona de Seguran?a</h3>
+          <h3>13. Zona de Segurança</h3>
           <div>
-            <DangerAction icon={Trash2} title="Excluir conta" text="Esta ação não poder? ser desfeita." armed={armedAction === "delete"} onClick={() => setArmedAction(armedAction === "delete" ? null : "delete")} />
-            <DangerAction icon={RefreshCcw} title="Resetar sistema" text="Todos os dados ser?o removidos." armed={armedAction === "reset"} onClick={() => setArmedAction(armedAction === "reset" ? null : "reset")} />
+            <DangerAction icon={Trash2} title="Excluir conta" text="Esta ação não poderá ser desfeita." armed={armedAction === "delete"} onClick={() => setArmedAction(armedAction === "delete" ? null : "delete")} />
+            <DangerAction icon={RefreshCcw} title="Resetar sistema" text="Todos os dados serão removidos." armed={armedAction === "reset"} onClick={() => setArmedAction(armedAction === "reset" ? null : "reset")} />
           </div>
         </article>
 
         <article className="admin-settings-footer">
-          <img src="/lion-juda-logo.png" alt="Thiago Filippo" />
-          <div><p>Voc? est? no controle do seu neg?cio. Cada configuração e um passo para transformar vidas e gerar resultados.</p><strong>Thiago Filippo</strong><small>Personal Trainer</small></div>
+          <img src="/lion-juda-logo.png" alt="Thiago Fillippo" />
+          <div><p>Você está no controle do seu negócio. Cada configuração é um passo para transformar vidas e gerar resultados.</p><strong>Thiago Fillippo</strong><small>Personal Trainer</small></div>
           <img src="/lion-juda-logo.png" alt="" />
         </article>
       </div>

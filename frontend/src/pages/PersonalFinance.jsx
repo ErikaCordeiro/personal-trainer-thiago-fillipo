@@ -47,7 +47,7 @@ const pendingCharges = [
 const dueGroups = [
   { label: "Hoje", total: "R$ 398,00", items: [["Juliana Costa", "Plano Premium", "R$ 199,00"], ["Lucas Martins", "Plano Basico", "R$ 199,00"]] },
   { label: "Esta semana", total: "R$ 597,00", items: [["Amanda Lima", "Plano Elite", "R$ 249,00"], ["+ 2 alunos", "Vencimentos futuros", "R$ 348,00"]] },
-  { label: "Este mês", total: "R$ 1.892,00", items: [["8 alunos", "Renovacoes previstas", "R$ 1.892,00"]] }
+  { label: "Este mês", total: "R$ 1.892,00", items: [["8 alunos", "Renovações previstas", "R$ 1.892,00"]] }
 ];
 
 const cashFlow = [
@@ -61,13 +61,13 @@ export default function PersonalFinance() {
 
   const modalContent = useMemo(() => {
     const content = {
-      period: ["Per?odo financeiro", "Aqui voc? podera trocar o intervalo do relatório. A estrutura j? est? pronta para receber filtros reais."],
+      period: ["Período financeiro", "Aqui você poderá trocar o intervalo do relatório. A estrutura já está pronta para receber filtros reais."],
       export: ["Exportar relatório", "O PDF financeiro sera gerado quando o modulo de relatórios estiver conectado ao backend."],
-      analysis: ["Analise da IA", "Seu neg?cio esta saudavel: receita crescendo, boa renovacao e margem alta. Prioridade: reduzir os 7 inadimplentes."],
+      analysis: ["Análise da IA", "Seu negócio está saudável: receita crescendo, boa renovação e margem alta. Prioridade: reduzir os 7 inadimplentes."],
       allCharges: ["Cobrancas pendentes", "Lista completa de inadimplentes preparada para filtro por plano, atraso e ultima tentativa de contato."],
-      charge: ["Cobrar aluno", "Mensagem de cobranca preparada para WhatsApp/e-mail com link de pagamento."],
-      chargeAll: ["Cobrar todos", "Acoes em lote serao enviadas para alunos inadimplentes com tom profissional e nao agressivo."],
-      due: ["Vencimentos", "Detalhes do vencimento selecionado com plano, valor, hist?rico e acoes rapidas."],
+      charge: ["Cobrar aluno", "Mensagem de cobrança preparada para WhatsApp/e-mail com link de pagamento."],
+      chargeAll: ["Cobrar todos", "Ações em lote serão enviadas para alunos inadimplentes com tom profissional e não agressivo."],
+      due: ["Vencimentos", "Detalhes do vencimento selecionado com plano, valor, histórico e ações rápidas."],
       coach: ["Coach IA Financeiro", "A IA sugeriu recuperar R$ 4.200 reduzindo inadimplencia e migrando 12 alunos para o Plano Premium."],
       flow: ["Fluxo financeiro", "Comparativo do mês atual com receitas, despesas, lucro e previsão de fechamento."]
     };
@@ -80,7 +80,7 @@ export default function PersonalFinance() {
         <div>
           <span className="eyebrow">Painel administrativo</span>
           <h2>Financeiro</h2>
-          <p>Visão geral da sa?de financeira do seu neg?cio.</p>
+          <p>Visão geral da saúde financeira do seu negócio.</p>
         </div>
         <div className="finance-toolbar">
           <button type="button" onClick={() => setModal("period")}><CalendarDays size={18} /> 01/06/2025 - 30/06/2025</button>
@@ -97,8 +97,8 @@ export default function PersonalFinance() {
           <div>
             <p className="eyebrow">Saude financeira</p>
             <h3>Excelente!</h3>
-            <span>Seu neg?cio esta em otima sa?de financeira.</span>
-            <button type="button" onClick={() => setModal("analysis")}><Brain size={15} /> Ver analise da IA</button>
+            <span>Seu negócio está em ótima saúde financeira.</span>
+            <button type="button" onClick={() => setModal("analysis")}><Brain size={15} /> Ver análise da IA</button>
           </div>
         </article>
 
@@ -123,7 +123,7 @@ export default function PersonalFinance() {
         <div className="section-heading">
           <div>
             <span className="eyebrow">Receita</span>
-            <h2>Ultimos 12 meses</h2>
+            <h2>últimos 12 meses</h2>
           </div>
           <button type="button" onClick={() => setModal("flow")}>Mensal</button>
         </div>
@@ -152,11 +152,11 @@ export default function PersonalFinance() {
             </div>
           </div>
           <aside className="finance-period-summary">
-            <p>Resumo do periodo</p>
+            <p>Resumo do período</p>
             <strong>Receita total <span>R$ 24.870,00</span></strong>
-            <strong>Receita media/mes <span>R$ 20.725,00</span></strong>
+            <strong>Receita média/mês <span>R$ 20.725,00</span></strong>
             <strong>Maior receita <span>R$ 28.430,00</span><small>Maio/2025</small></strong>
-            <strong className="forecast">Previsão pr?ximo mes <span>R$ 26.300,00</span></strong>
+            <strong className="forecast">Previsão próximo mês <span>R$ 26.300,00</span></strong>
           </aside>
         </div>
       </article>
@@ -188,7 +188,7 @@ export default function PersonalFinance() {
 
         <article className="finance-card">
           <div className="section-heading">
-            <h2>Proximos vencimentos</h2>
+            <h2>Próximos vencimentos</h2>
             <button type="button" onClick={() => setModal("due")}>Ver todas</button>
           </div>
           <div className="finance-due-list">
@@ -214,11 +214,11 @@ export default function PersonalFinance() {
         <div className="finance-ai-insights">
           <h2>Coach IA Financeiro</h2>
           <p><TrendingUp size={16} /> Faturamento cresceu 18% este mês.</p>
-          <p><AlertTriangle size={16} /> 7 alunos estao inadimplentes.</p>
+          <p><AlertTriangle size={16} /> 7 alunos estão inadimplentes.</p>
           <p><ShieldCheck size={16} /> Plano Premium e o mais lucrativo.</p>
           <p><Wallet size={16} /> Potencial de recuperar R$ 4.200 este mês.</p>
         </div>
-        <button type="button" onClick={() => setModal("coach")}><Brain size={18} /> Analisar neg?cio</button>
+        <button type="button" onClick={() => setModal("coach")}><Brain size={18} /> Analisar negócio</button>
       </article>
 
       <article className="finance-flow-card">
@@ -259,7 +259,7 @@ export default function PersonalFinance() {
           <div className="finance-modal" role="dialog" aria-modal="true" aria-label={modalContent[0]} onClick={(event) => event.stopPropagation()}>
             <button type="button" className="finance-modal-close" aria-label="Fechar" onClick={() => setModal(null)}><X size={18} /></button>
             <img src="/lion-juda-logo.png" alt="" />
-            <span className="eyebrow">Personal Thiago Filippo</span>
+            <span className="eyebrow">Personal Thiago Fillippo</span>
             <h3>{modalContent[0]}</h3>
             <p>{modalContent[1]}</p>
             <button type="button" className="finance-wide-button" onClick={() => setModal(null)}>Entendi</button>

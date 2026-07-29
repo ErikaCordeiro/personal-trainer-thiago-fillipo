@@ -46,12 +46,12 @@ export default function StudentPayments({ student }) {
     const content = {
       pay: {
         title: "Pagar mensalidade",
-        text: "Sua pr?xima cobranca esta em dia. Quando houver boleto, PIX ou cartao disponivel, o link de pagamento aparece aqui.",
+        text: "Sua próxima cobrança está em dia. Quando houver boleto, PIX ou cartão disponível, o link de pagamento aparece aqui.",
         action: "Entendi"
       },
       method: {
         title: "Metodo de pagamento",
-        text: "Na V1, esta area j? est? preparada para integrar cartao, PIX, boleto, Mercado Pago, Stripe, Asaas ou PagSeguro.",
+        text: "Na V1, esta área já está preparada para integrar cartão, PIX, boleto, Mercado Pago, Stripe, Asaas ou PagSeguro.",
         action: "Fechar"
       },
       plan: {
@@ -61,7 +61,7 @@ export default function StudentPayments({ student }) {
       },
       support: {
         title: "Suporte financeiro",
-        text: "Envie uma mensagem para ajustar vencimento, atualizar metodo de pagamento ou tirar duvidas sobre sua assinatura.",
+        text: "Envie uma mensagem para ajustar vencimento, atualizar metodo de pagamento ou tirar dúvidas sobre sua assinatura.",
         action: "Abrir suporte"
       },
       receipt: {
@@ -70,7 +70,7 @@ export default function StudentPayments({ student }) {
         action: "Ok"
       },
       history: {
-        title: "Historico completo",
+        title: "Histórico completo",
         text: "Aqui ficara a lista completa de pagamentos, faturas, comprovantes e reenvio por e-mail.",
         action: "Fechar"
       }
@@ -84,7 +84,7 @@ export default function StudentPayments({ student }) {
         <div>
           <span className="eyebrow">Assinatura premium</span>
           <h2>Pagamentos</h2>
-          <p>Acompanhe suas cobran?as, faturas e hist?rico.</p>
+          <p>Acompanhe suas cobranças, faturas e histórico.</p>
         </div>
         <button type="button" onClick={() => setModal("support")}>
           <Headphones size={18} />
@@ -95,7 +95,7 @@ export default function StudentPayments({ student }) {
       <article className="payment-main-card">
         <div className="payment-main-grid">
           <div className="payment-charge">
-            <span>Pr?xima cobranca</span>
+            <span>Próxima cobrança</span>
             <strong>R$ 199,00</strong>
             <div className="payment-plan-pill">
               <Crown size={24} />
@@ -182,7 +182,7 @@ export default function StudentPayments({ student }) {
 
       <article className="payments-card payment-history-card">
         <div className="payments-card-title">
-          <h3>Historico de pagamentos</h3>
+          <h3>Histórico de pagamentos</h3>
           <button type="button" onClick={() => setModal("history")}>Ver todos</button>
         </div>
         <div className="payment-history-list">
@@ -235,7 +235,7 @@ export default function StudentPayments({ student }) {
               <X size={18} />
             </button>
             <img src="/lion-juda-logo.png" alt="" />
-            <span className="eyebrow">Personal Thiago Filippo</span>
+            <span className="eyebrow">Personal Thiago Fillippo</span>
             <h3>{modalContent.title}</h3>
             <p>{modalContent.text}</p>
             <button type="button" className="metal-button" onClick={() => setModal(null)}>

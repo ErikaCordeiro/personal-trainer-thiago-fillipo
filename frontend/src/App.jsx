@@ -36,7 +36,7 @@ import { clearDemoActivityDataOnce } from "./utils/activityData.js";
 const pageMeta = {
   dashboard: ["Dashboard", "Disciplina hoje, liberdade amanhã."],
   students: ["Alunos", "Visualize, encontre e edite seus atletas com rapidez."],
-  "workout-builder": ["Treinos", "Monte protocolos personalizados com vídeo, carga e descanso."],
+  "workout-builder": ["Treinos", "Monte protocolos personalizados com víVideo, carga e descanso."],
   exercise: ["Exercício", "Execução guiada com parâmetros claros e vídeo incorporado."],
   "student-view": ["Treino", "Treino do dia, check-ins e registro de carga."],
   diet: ["Dietas", "Gestão alimentar, hidratação e registros nutricionais dos alunos."],
@@ -53,7 +53,7 @@ const pageMeta = {
   progress: ["Progresso", "Histórico, evolução e indicadores de consistência."],
   "student-progress-detail": ["Progresso individual", "Central individual de performance do aluno."],
   coach: ["Coach IA", "Seu assistente inteligente para treino, dieta e evolução."],
-  "about-personal": ["Sobre o Personal", "Conheça a metodologia, experiência e filosofia do Thiago Filippo."]
+  "about-personal": ["Sobre o Personal", "Conheça a metodologia, experiência e filosofia do Thiago Fillippo."]
 };
 
 const rolePath = {
@@ -127,7 +127,7 @@ export default function App() {
   const [selectedStudentId, setSelectedStudentId] = useState(mockStudents[0]?.id);
   const [focusedPendingStudentId, setFocusedPendingStudentId] = useState(null);
   const [personalProfile, setPersonalProfile] = useState({
-    name: "Thiago Filippo",
+    name: "Thiago Fillippo",
     bio: "Personal trainer focado em força, disciplina, performance e transformação real. Une estratégia, técnica e acompanhamento próximo para cada aluno evoluir com segurança.",
     specialty: "Hipertrofia, emagrecimento e performance",
     experience: "10+ anos de atuação",
@@ -323,7 +323,7 @@ export default function App() {
   const personalNotifications = pendingStudents.map((student) => ({
     id: `pending-${student.id}`,
     type: "student-signup",
-    title: "Novo aluno aguardando aprovação",
+    title: "Novo aluno Aguardando aprovação",
     message: `${student.name} solicitou acesso ao app.`,
     student,
     actionLabel: "Ver aluno"

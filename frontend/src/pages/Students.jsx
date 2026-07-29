@@ -71,7 +71,7 @@ export default function Students({
       <section className="content-section">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Gestao de alunos</p>
+            <p className="eyebrow">Gestão de alunos</p>
             <h2>Lista de alunos</h2>
           </div>
           <div className="section-actions">
@@ -102,7 +102,7 @@ export default function Students({
           <div className="section-heading">
             <div>
               <p className="eyebrow">Aprovacao de acesso</p>
-              <h2>Cadastros aguardando aprovacao</h2>
+              <h2>Cadastros Aguardando aprovacao</h2>
               <span>Revise os dados enviados pelo aluno e aprove para liberar o uso do app.</span>
             </div>
           </div>
@@ -164,7 +164,7 @@ export default function Students({
               <div><span>Peso</span><strong>{pendingDetail.weight} kg</strong></div>
               <div><span>Altura</span><strong>{pendingDetail.height} m</strong></div>
               <div><span>Objetivo</span><strong>{pendingDetail.objective}</strong></div>
-              <div className="wide"><span>Observacoes</span><p>{pendingDetail.notes || "Sem observacoes informadas."}</p></div>
+              <div className="wide"><span>Observações</span><p>{pendingDetail.notes || "Sem observações informadas."}</p></div>
             </div>
 
             <label className="wide access-toggle-card approval-check-card">
@@ -207,7 +207,7 @@ export default function Students({
               <label><span>Idade</span><input name="age" type="number" min="12" max="100" required defaultValue={editingStudent?.age || ""} /></label>
               <label><span>Peso</span><input name="weight" type="number" min="30" step="0.1" required defaultValue={editingStudent?.weight || ""} /></label>
               <label><span>Altura</span><input name="height" type="number" min="1" max="2.5" step="0.01" required defaultValue={editingStudent?.height || ""} /></label>
-              <label><span>Objetivo</span><input name="objective" required placeholder="Hipertrofia, definicao, performance..." defaultValue={editingStudent?.objective || ""} /></label>
+              <label><span>Objetivo</span><input name="objective" required placeholder="Hipertrofia, definição, performance..." defaultValue={editingStudent?.objective || ""} /></label>
               <div className="wide field-block">
                 <span>Treinos do aluno</span>
                 <div className="multi-workout-picker">
@@ -233,12 +233,12 @@ export default function Students({
                 />
                 <span>
                   <strong>Liberar acesso ao app do aluno</strong>
-                  <small>Quando ativo, o aluno consegue entrar na area dele. Cadastros novos podem ficar aguardando aprovacao.</small>
+                  <small>Quando ativo, o aluno consegue entrar na área dele. Cadastros novos podem ficar Aguardando aprovacao.</small>
                 </span>
               </label>
               <label className="wide">
-                <span>Observacoes</span>
-                <textarea name="notes" rows="4" placeholder="Lesoes, limitacoes, rotina, preferencias e estrat?gia." defaultValue={editingStudent?.notes || ""} />
+                <span>Observações</span>
+                <textarea name="notes" rows="4" placeholder="Lesões, limitações, rotina, preferências e estratégia." defaultValue={editingStudent?.notes || ""} />
               </label>
             </div>
             <div className="modal-actions">

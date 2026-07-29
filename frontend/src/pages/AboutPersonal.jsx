@@ -72,7 +72,7 @@ export default function AboutPersonal({ profile, editable = false, onSave }) {
       </section>
 
       <section className="about-contact-card">
-        <div><Dumbbell size={22} /><span>Personal Thiago Filippo</span></div>
+        <div><Dumbbell size={22} /><span>Personal Thiago Fillippo</span></div>
         <div><Mail size={20} /><span>{data.email}</span></div>
         <div><Instagram size={20} /><span>{data.instagram}</span></div>
       </section>

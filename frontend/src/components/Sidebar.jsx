@@ -60,7 +60,7 @@ export default function Sidebar({
   onClose,
   onCollapsedChange,
   navItems = personalNavItems,
-  profileName = "Thiago Filippo",
+  profileName = "Thiago Fillippo",
   profileRole = "Personal trainer",
   profileInitials = "TF",
   onLogout
@@ -71,7 +71,7 @@ export default function Sidebar({
   const inactive = new Set(["profile"]);
   const assistantName = isStudentMenu ? "Assistente Fitness" : "Coach IA";
   const assistantText = isStudentMenu
-    ? "Tire dúvidas sobre execu??o, músculos, dieta e avaliação."
+    ? "Tire dúvidas sobre execução, músculos, dieta e avaliação."
     : "Pergunte sobre treinos, dieta, evolução e mais.";
   const handleNavigate = (item) => {
     onNavigate(inactive.has(item.id) ? "dashboard" : item.id);
@@ -137,7 +137,7 @@ export default function Sidebar({
 
           <div className="sidebar-account-menu" aria-label="Menu do perfil">
             <button type="button" onClick={() => onNavigate("about-personal")}><UserCircle size={17} /><span>Meu Perfil</span></button>
-            <button type="button" onClick={() => onNavigate("settings")}><Settings size={17} /><span>Configura?es</span></button>
+            <button type="button" onClick={() => onNavigate("settings")}><Settings size={17} /><span>Configurações</span></button>
             <button type="button" onClick={() => onNavigate("coach")}><Bot size={17} /><span>Ajuda</span></button>
             <button type="button" onClick={() => onNavigate("about-personal")}><Info size={17} /><span>Sobre</span></button>
             <button className="logout-menu-button" type="button" onClick={onLogout}><LogOut size={17} /><span>Sair da conta</span></button>
