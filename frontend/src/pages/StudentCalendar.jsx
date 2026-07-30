@@ -78,6 +78,9 @@ export default function StudentCalendar({ student }) {
   const [serviceType, setServiceType] = useState("Online");
   const [selectedDay, setSelectedDay] = useState(1);
   const [selectedTime, setSelectedTime] = useState("18:00");
+  const [goalOpen, setGoalOpen] = useState(false);
+  const [monthlyGoalState, setMonthlyGoalState] = useState(() => getMonthlyWorkoutGoal() || 12);
+  const [goalDraft, setGoalDraft] = useState(() => String(getMonthlyWorkoutGoal() || 12));
 
   useEffect(() => {
     const refresh = () => {
@@ -107,7 +110,7 @@ export default function StudentCalendar({ student }) {
   const currentStreak = useMemo(() => calculateCurrentWorkoutStreak(history), [history]);
   const bestStreak = useMemo(() => calculateBestWorkoutStreak(history), [history]);
   const monthWorkouts = useMemo(() => completedWorkoutsInMonth(history, monthDate), [history, monthDate]);
-  const monthlyGoal = getMonthlyWorkoutGoal();
+  const monthlyGoal = monthlyGoalState;
   const selectedEvents = eventsByDay.get(selectedKey) || [];
   const selectedDate = useMemo(() => `${availableDays[selectedDay][1]}/07/2026`, [selectedDay]);
 
@@ -124,6 +127,14 @@ export default function StudentCalendar({ student }) {
   function openDay(day) {
     setSelectedKey(day.dateKey);
     setDayDetail({ ...day, events: eventsByDay.get(day.dateKey) || [] });
+  }
+
+  function saveMonthlyGoal() {
+    const value = Math.max(1, Math.min(60, Number(goalDraft) || 12));
+    window.localStorage.setItem("ptf_monthly_workout_goal", String(value));
+    setMonthlyGoalState(value);
+    setGoalDraft(String(value));
+    setGoalOpen(false);
   }
 
   function confirmSchedule() {
@@ -164,7 +175,7 @@ export default function StudentCalendar({ student }) {
         </div>
         <div className="calendar-streak-side">
           <p><Trophy size={16} /> Melhor sequência <strong>{bestStreak} {bestStreak === 1 ? "dia" : "dias"}</strong></p>
-          <p><Target size={16} /> Meta do mês <strong>{monthlyGoal ? `${monthWorkouts.length}/${monthlyGoal} treinos` : "Meta mensal não definida"}</strong></p>
+          <p><Target size={16} /> Meta do mês <strong>{monthWorkouts.length}/{monthlyGoal} treinos</strong></p>
         </div>
       </article>
 
@@ -240,13 +251,15 @@ export default function StudentCalendar({ student }) {
           <p>{monthWorkouts.length ? "Seu calendário já está registrando atividades reais." : "Seu progresso começará a aparecer após o primeiro treino."}</p>
         </article>
 
-        <article className="calendar-mini-card goals">
-          <h3>Metas do mês</h3>
-          {monthlyGoal ? (
-            <GoalLine label="Treinos" value={`${monthWorkouts.length}/${monthlyGoal}`} progress={`${Math.min(100, Math.round((monthWorkouts.length / monthlyGoal) * 100))}%`} className="workout" />
-          ) : (
-            <p className="calendar-empty-message">Meta mensal não definida.</p>
-          )}
+        <article className="calendar-mini-card goals editable-month-goals">
+          <div className="mini-card-title-row">
+            <h3>Metas do mês</h3>
+            <button type="button" onClick={() => setGoalOpen(true)}><Pencil size={15} /> Editar</button>
+          </div>
+          <GoalLine label="Treinos" value={`${monthWorkouts.length}/${monthlyGoal}`} progress={`${Math.min(100, Math.round((monthWorkouts.length / monthlyGoal) * 100))}%`} className="workout" />
+          <GoalLine label="Água" value="0/30 dias" progress="0%" className="diet" />
+          <GoalLine label="Check-ins" value="0/8" progress="0%" className="assessment" />
+          <p className="calendar-empty-message">Você pode ajustar sua meta de treinos sempre que precisar.</p>
         </article>
 
         <article className="calendar-mini-card events">
@@ -281,6 +294,19 @@ export default function StudentCalendar({ student }) {
         </CalendarModal>
       )}
 
+
+      {goalOpen && (
+        <CalendarModal title="Editar metas do mês" subtitle="Defina uma meta realista para acompanhar sua consistência." onClose={() => setGoalOpen(false)}>
+          <div className="calendar-goal-editor">
+            <label>
+              <span>Meta de treinos no mês</span>
+              <input type="number" min="1" max="60" value={goalDraft} onChange={(event) => setGoalDraft(event.target.value)} />
+            </label>
+            <p>Use essa meta para acompanhar sua aderência no calendário. As atividades só contam quando o treino é finalizado.</p>
+            <button className="calendar-metal-button" type="button" onClick={saveMonthlyGoal}>Salvar meta</button>
+          </div>
+        </CalendarModal>
+      )}
       {scheduleOpen && (
         <CalendarModal title="Agendar consulta" subtitle="Escolha o melhor dia e horário para seu retorno." onClose={() => setScheduleOpen(false)}>
           <div className="schedule-personal-card">

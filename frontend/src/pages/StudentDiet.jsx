@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Apple,
   Bot,
@@ -183,18 +183,43 @@ const lunchboxes = [
   ["Congelavel", "Frango desfiado, pure de abobora e brocolis", "360 kcal", "38P / 30C / 8G"]
 ];
 
-const dailyStats = [
-  ["Calorias diárias", "2.450", "/ 2.600 kcal", 94, Flame],
-  ["Proteinas", "180g", "/ 195g", 92, Utensils],
-  ["Carboidratos", "250g", "/ 270g", 93, Leaf],
-  ["Gorduras", "70g", "/ 80g", 88, Droplets],
-  ["Fibras", "28g", "/ 30g", 93, Apple]
+const NUTRITION_GOALS_KEY = "ptf_student_nutrition_goals_v1";
+const MEAL_LOGS_KEY = "ptf_student_meal_logs_v1";
+const WATER_LOG_KEY = "ptf_student_water_today_v1";
+
+const defaultGoals = {
+  calories: "",
+  protein: "",
+  carbs: "",
+  fats: "",
+  fiber: ""
+};
+
+const metricConfig = [
+  ["Calorias diárias", "calories", "kcal", Flame],
+  ["Proteínas", "protein", "g", Utensils],
+  ["Carboidratos", "carbs", "g", Leaf],
+  ["Gorduras", "fats", "g", Droplets],
+  ["Fibras", "fiber", "g", Apple]
 ];
 
+function readStorage(key, fallback) {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const value = window.localStorage.getItem(key);
+    return value ? JSON.parse(value) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 export default function StudentDiet({ student }) {
-  const [water, setWater] = useState(2.1);
+  const [water, setWater] = useState(() => Number(readStorage(WATER_LOG_KEY, 0)) || 0);
   const [waterAmount, setWaterAmount] = useState("300");
   const [foods, setFoods] = useState([]);
+  const [mealLogs, setMealLogs] = useState(() => readStorage(MEAL_LOGS_KEY, []));
+  const [nutritionGoals, setNutritionGoals] = useState(() => readStorage(NUTRITION_GOALS_KEY, defaultGoals));
+  const [goalDraft, setGoalDraft] = useState(() => readStorage(NUTRITION_GOALS_KEY, defaultGoals));
   const [mealName, setMealName] = useState("Almoco");
   const [mealTime, setMealTime] = useState("13:00");
   const [mealPhoto, setMealPhoto] = useState("");
@@ -207,10 +232,36 @@ export default function StudentDiet({ student }) {
     return Math.max(2.6, Math.min(3.5, weightGoal + 0.35));
   }, [student]);
   const waterPercent = Math.min(100, Math.round((water / waterGoal) * 100));
+  const loggedTotals = mealLogs.reduce((totals, meal) => {
+    totals.calories += Number(meal.calories || 0);
+    totals.protein += Number(meal.protein || 0);
+    totals.carbs += Number(meal.carbs || 0);
+    totals.fats += Number(meal.fats || 0);
+    totals.fiber += Number(meal.fiber || 0);
+    return totals;
+  }, { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 });
+  const dailyStats = metricConfig.map(([label, key, unit, Icon]) => {
+    const value = loggedTotals[key] || 0;
+    const goal = Number(nutritionGoals[key] || 0);
+    const percent = goal > 0 ? Math.min(100, Math.round((value / goal) * 100)) : 0;
+    return [label, value ? `${value.toLocaleString("pt-BR")}${unit === "kcal" ? "" : unit}` : "0", goal ? `/ ${goal.toLocaleString("pt-BR")} ${unit}` : "/ defina a meta", percent, Icon];
+  });
   const totalCalories = foods.reduce((sum, food) => sum + Number(food.calories || 0), 0);
   const totalProtein = foods.reduce((sum, food) => sum + Number(food.protein || 0), 0);
   const totalCarbs = foods.reduce((sum, food) => sum + Number(food.carbs || 0), 0);
   const totalFats = foods.reduce((sum, food) => sum + Number(food.fats || 0), 0);
+
+  useEffect(() => {
+    window.localStorage.setItem(MEAL_LOGS_KEY, JSON.stringify(mealLogs));
+  }, [mealLogs]);
+
+  useEffect(() => {
+    window.localStorage.setItem(NUTRITION_GOALS_KEY, JSON.stringify(nutritionGoals));
+  }, [nutritionGoals]);
+
+  useEffect(() => {
+    window.localStorage.setItem(WATER_LOG_KEY, JSON.stringify(water));
+  }, [water]);
 
   const updateFood = (id, field, value) => {
     setFoods((current) => current.map((food) => food.id === id ? { ...food, [field]: value } : food));
@@ -250,7 +301,29 @@ export default function StudentDiet({ student }) {
       setSavedMessage("Calorias, quantidade e macros precisam ser números positivos.");
       return;
     }
+    const log = {
+      id: crypto.randomUUID(),
+      name: mealName.trim(),
+      time: mealTime,
+      photo: mealPhoto,
+      foods,
+      calories: totalCalories,
+      protein: totalProtein,
+      carbs: totalCarbs,
+      fats: totalFats,
+      fiber: 0,
+      createdAt: new Date().toISOString()
+    };
+    setMealLogs((current) => [log, ...current].slice(0, 20));
     setSavedMessage("Refeição salva no histórico alimentar e enviada para o personal.");
+    setFoods([]);
+    setMealPhoto("");
+    setModal(null);
+  };
+
+  const saveGoals = () => {
+    setNutritionGoals(goalDraft);
+    setSavedMessage("Metas nutricionais atualizadas.");
     setModal(null);
   };
 
@@ -281,7 +354,7 @@ export default function StudentDiet({ student }) {
             <strong>{value}</strong>
             <small>{goal}</small>
             <div className="nutrition-progress"><span style={{ width: `${percent}%` }} /></div>
-            <em>{percent}% da meta</em>
+            <em>{percent ? `${percent}% da meta` : "aguardando registro"}</em>
           </article>
         ))}
       </section>
@@ -292,25 +365,31 @@ export default function StudentDiet({ student }) {
             <div className="section-heading">
               <div>
                 <p className="eyebrow">Suas refeições de hoje</p>
-                <h2>Plano alimentar diario</h2>
+                <h2>Plano alimentar diário</h2>
               </div>
-              <button type="button" onClick={() => setModal("plan")}>Ver plano alimentar diario</button>
+              <button type="button" onClick={() => setModal("goals")}>Definir metas</button>
             </div>
-            <div className="meal-list">
-              {meals.map((meal) => (
-                <article key={meal.name} className="meal-card">
+            <div className="meal-list empty-student-meals">
+              {mealLogs.length ? mealLogs.map((meal) => (
+                <article key={meal.id} className="meal-card logged-meal-card">
                   <time>{meal.time}</time>
-                  <img src={meal.image} alt={meal.name} />
+                  {meal.photo ? <img src={meal.photo} alt={meal.name} /> : <div className="meal-placeholder-icon"><Utensils size={24} /></div>}
                   <div>
                     <h3>{meal.name}</h3>
-                    <p>{meal.description}</p>
+                    <p>{meal.foods.length} alimento(s) registrados</p>
                     <span>{meal.calories} kcal - {meal.protein}g P - {meal.carbs}g C - {meal.fats}g G</span>
                   </div>
                   <button type="button" aria-label={`Detalhes de ${meal.name}`} onClick={() => setModal("plan")}>
-                    {meal.done ? <CheckCircle2 size={23} /> : <Pencil size={21} />}
+                    <CheckCircle2 size={23} />
                   </button>
                 </article>
-              ))}
+              )) : (
+                <div className="nutrition-empty-state">
+                  <Utensils size={30} />
+                  <strong>Nenhuma refeição registrada hoje</strong>
+                  <p>Use o botão abaixo para adicionar sua primeira refeição com foto ou manualmente.</p>
+                </div>
+              )}
             </div>
             <button className="register-meal-button" type="button" onClick={() => setModal("meal") }>
               <Plus size={18} />
@@ -470,19 +549,24 @@ export default function StudentDiet({ student }) {
             <p className="eyebrow">Plano alimentar completo</p>
             <h2>Seu dia nutricional</h2>
             <div className="daily-plan-list">
-              {meals.map((meal) => (
-                <div key={meal.name} className="daily-plan-meal">
+              {mealLogs.length ? mealLogs.map((meal) => (
+                <div key={meal.id} className="daily-plan-meal">
                   <time>{meal.time}</time>
-                  <img src={meal.image} alt={meal.name} />
+                  {meal.photo ? <img src={meal.photo} alt={meal.name} /> : <div className="meal-placeholder-icon"><Utensils size={24} /></div>}
                   <div>
                     <strong>{meal.name}</strong>
-                    <p>{meal.description}</p>
+                    <p>{meal.foods.map((food) => food.name).join(", ") || "Registro criado pelo aluno."}</p>
                     <span>{meal.calories} kcal - {meal.protein}g P - {meal.carbs}g C - {meal.fats}g G</span>
-                    <small>Obs: {meal.notes}</small>
-                    <small>Substituicoes: {meal.substitutions}</small>
+                    <small>Registro salvo no histórico alimentar.</small>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="nutrition-empty-state">
+                  <Utensils size={30} />
+                  <strong>Plano alimentar ainda vazio</strong>
+                  <p>Defina suas metas e registre uma refeição para montar seu dia nutricional.</p>
+                </div>
+              )}
             </div>
           </article>
         </div>
@@ -560,6 +644,25 @@ export default function StudentDiet({ student }) {
         </div>
       )}
 
+
+      {modal === "goals" && (
+        <div className="nutrition-modal-backdrop" role="presentation" onMouseDown={() => setModal(null)}>
+          <article className="nutrition-modal nutrition-goals-modal" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
+            <button className="modal-close" type="button" onClick={() => setModal(null)} aria-label="Fechar"><X size={20} /></button>
+            <p className="eyebrow">Metas do dia</p>
+            <h2>Defina seus números</h2>
+            <div className="nutrition-goal-grid">
+              {metricConfig.map(([label, key, unit]) => (
+                <label key={key}>
+                  <span>{label}</span>
+                  <input type="number" min="0" value={goalDraft[key] || ""} placeholder={unit} onChange={(event) => setGoalDraft((current) => ({ ...current, [key]: event.target.value }))} />
+                </label>
+              ))}
+            </div>
+            <button className="calendar-metal-button" type="button" onClick={saveGoals}>Salvar metas</button>
+          </article>
+        </div>
+      )}
       {modal === "recipe" && selectedRecipe && (
         <div className="nutrition-modal-backdrop" role="presentation" onMouseDown={() => setModal(null)}>
           <article className="nutrition-modal recipe-detail-modal" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>

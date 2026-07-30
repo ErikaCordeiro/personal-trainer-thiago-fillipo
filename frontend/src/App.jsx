@@ -39,7 +39,7 @@ const pageMeta = {
   "workout-builder": ["Treinos", "Monte protocolos personalizados com víVideo, carga e descanso."],
   exercise: ["Exercício", "Execução guiada com parâmetros claros e vídeo incorporado."],
   "student-view": ["Treino", "Treino do dia, check-ins e registro de carga."],
-  diet: ["Dietas", "Gestão alimentar, hidratação e registros nutricionais dos alunos."],
+  diet: ["Dieta", "Registre sua alimentação, hidratação e metas do dia."],
   finance: ["Financeiro", "Visão geral da saúde financeira do seu negócio."],
   agenda: ["Agenda", "Organize seus alunos e compromissos."],
   chat: ["Mensagens", "Converse com seus alunos e acompanhe todas as mensagens."],

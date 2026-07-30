@@ -19423,3 +19423,244 @@ body.theme-light span {
     justify-content: flex-start;
   }
 }
+
+/* Student mobile polish: diet, calendar and progress fixes */
+.nutrition-empty-state,
+.meal-placeholder-icon {
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.nutrition-empty-state {
+  min-height: 190px;
+  gap: 10px;
+  padding: 26px;
+  border: 1px dashed rgba(245, 245, 245, 0.22);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(245, 245, 245, 0.72);
+}
+
+.nutrition-empty-state strong {
+  color: #f5f5f5;
+  font-size: 1.1rem;
+}
+
+.meal-placeholder-icon {
+  width: 86px;
+  height: 76px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.075);
+  color: #f5f5f5;
+}
+
+.nutrition-goal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.nutrition-goal-grid label,
+.calendar-goal-editor label {
+  display: grid;
+  gap: 8px;
+  color: rgba(245, 245, 245, 0.72);
+  font-weight: 800;
+}
+
+.nutrition-goal-grid input,
+.calendar-goal-editor input {
+  min-height: 48px;
+  border: 1px solid rgba(245, 245, 245, 0.14);
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.42);
+  color: #f5f5f5;
+  padding: 0 14px;
+  font: inherit;
+}
+
+.mini-card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.mini-card-title-row button {
+  width: auto !important;
+  min-height: 36px !important;
+  padding: 0 12px !important;
+  border-radius: 999px !important;
+  color: #050505 !important;
+  background: var(--metal) !important;
+  font-size: .78rem !important;
+}
+
+.calendar-goal-editor {
+  display: grid;
+  gap: 14px;
+}
+
+.calendar-goal-editor p {
+  margin: 0;
+  color: rgba(245,245,245,.68);
+}
+
+.student-progress-kpi strong {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .student-layout-shell .student-diet-page,
+  .student-layout-shell .student-calendar-page,
+  .student-layout-shell .student-progress-premium,
+  .student-layout-shell .student-progress-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    padding-bottom: calc(138px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .student-diet-page,
+  .student-calendar-page,
+  .student-progress-premium {
+    gap: 14px !important;
+  }
+
+  .nutrition-kpi-grid,
+  .student-progress-kpis {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .nutrition-kpi-card,
+  .student-progress-kpi,
+  .calendar-streak-card,
+  .calendar-month-card,
+  .calendar-return-card,
+  .calendar-mini-card,
+  .student-progress-card {
+    border-radius: 22px !important;
+    padding: 20px !important;
+  }
+
+  .nutrition-kpi-card {
+    min-height: 146px !important;
+  }
+
+  .nutrition-main-grid,
+  .student-calendar-grid,
+  .student-progress-grid,
+  .student-progress-grid-top,
+  .student-progress-grid-middle,
+  .student-progress-grid-bottom {
+    grid-template-columns: 1fr !important;
+    display: grid !important;
+  }
+
+  .student-calendar-header {
+    align-items: flex-start !important;
+  }
+
+  .student-calendar-header h2 {
+    font-size: clamp(2.15rem, 11vw, 3.2rem) !important;
+  }
+
+  .calendar-streak-card {
+    grid-template-columns: 1fr !important;
+    text-align: left !important;
+  }
+
+  .calendar-lion-ring {
+    width: 74px !important;
+    height: 74px !important;
+  }
+
+  .calendar-lion-ring img {
+    width: 54px !important;
+    height: 54px !important;
+  }
+
+  .calendar-streak-side {
+    border-left: 0 !important;
+    border-top: 1px solid rgba(245,245,245,.12) !important;
+    padding-left: 0 !important;
+    padding-top: 14px !important;
+  }
+
+  .calendar-contribution-grid {
+    gap: 8px !important;
+  }
+
+  .calendar-day {
+    min-height: 46px !important;
+    border-radius: 14px !important;
+  }
+
+  .calendar-legend {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .calendar-return-body {
+    grid-template-columns: 64px 1fr !important;
+  }
+
+  .calendar-return-lion {
+    display: none !important;
+  }
+
+  .nutrition-goal-grid,
+  .meal-editor-head,
+  .food-table-labels,
+  .food-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .food-table-labels {
+    display: none !important;
+  }
+
+  .food-row {
+    gap: 8px !important;
+    padding: 12px !important;
+  }
+
+  .mobile-meal-cta {
+    bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+    right: 18px !important;
+    left: 18px !important;
+    width: auto !important;
+    justify-content: center !important;
+  }
+
+  .student-progress-hero {
+    grid-template-columns: 1fr !important;
+    min-height: auto !important;
+    overflow: hidden !important;
+  }
+
+  .student-progress-lion {
+    position: relative !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: min(76vw, 320px) !important;
+    justify-self: center !important;
+    opacity: .84 !important;
+  }
+
+  .student-progress-profile {
+    position: relative !important;
+    right: auto !important;
+    top: auto !important;
+    width: 100% !important;
+  }
+
+  .student-progress-kpi strong {
+    font-size: clamp(1.65rem, 8vw, 2.3rem) !important;
+  }
+}
