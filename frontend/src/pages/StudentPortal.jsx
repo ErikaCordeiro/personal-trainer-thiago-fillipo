@@ -185,7 +185,7 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
               {(historyDetail.exercises || []).map((exercise) => (
                 <div key={exercise.exerciseId}>
                   <strong>{exercise.name}</strong>
-                  <span>{exercise.sets?.filter((set) => set.status === "concluida").length || 0}/{exercise.sets?.length || 0} séries ? carga máxima {exercise.maxLoad || "-"}</span>
+                  <span>{exercise.sets?.filter((set) => set.status === "concluida").length || 0}/{exercise.sets?.length || 0} séries • carga máxima {exercise.maxLoad || "-"}</span>
                 </div>
               ))}
             </div>

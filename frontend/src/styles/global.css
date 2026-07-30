@@ -19664,3 +19664,78 @@ body.theme-light span {
     font-size: clamp(1.65rem, 8vw, 2.3rem) !important;
   }
 }
+
+/* Final mobile fix: keep the rest timer inside the circle. */
+.rest-ring {
+  width: 220px !important;
+  height: 220px !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.rest-ring strong {
+  position: relative !important;
+  z-index: 3 !important;
+  width: 76% !important;
+  max-width: 76% !important;
+  margin: 0 auto !important;
+  transform: translateY(-10px) !important;
+  font-size: 2.35rem !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.rest-ring span {
+  position: absolute !important;
+  left: 50% !important;
+  top: 66% !important;
+  z-index: 3 !important;
+  width: 78% !important;
+  margin: 0 !important;
+  transform: translate(-50%, -50%) !important;
+  font-size: 1rem !important;
+  line-height: 1.15 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 430px) {
+  .rest-card {
+    width: min(88vw, 380px) !important;
+    padding: 30px 22px !important;
+    gap: 18px !important;
+  }
+
+  .rest-ring {
+    width: 198px !important;
+    height: 198px !important;
+  }
+
+  .rest-ring strong {
+    width: 72% !important;
+    max-width: 72% !important;
+    font-size: 2rem !important;
+    transform: translateY(-8px) !important;
+  }
+
+  .rest-ring span {
+    top: 66% !important;
+    font-size: .92rem !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .rest-ring {
+    width: 182px !important;
+    height: 182px !important;
+  }
+
+  .rest-ring strong {
+    font-size: 1.82rem !important;
+  }
+}

@@ -33,6 +33,15 @@ function formatTime(totalSeconds) {
   return `${h}:${m}:${s}`;
 }
 
+function formatPrescription(sets, reps) {
+  const cleanSets = String(sets || "").trim();
+  const cleanReps = String(reps || "").trim();
+  if (cleanSets && cleanReps) return `${cleanSets} • ${cleanReps}`;
+  if (cleanSets) return `${cleanSets} séries`;
+  if (cleanReps) return cleanReps;
+  return "Séries a definir";
+}
+
 function shortDate(date = new Date()) {
   return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(date);
 }
@@ -660,7 +669,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
             <span className="eyebrow">Exercício atual</span>
             <h3>{currentExecution?.position || 1} de {workout.exercises.length}</h3>
             <h2>{currentExercise?.name}</h2>
-            <p>{currentSet ?`Série ${currentSet.setNumber} de ${currentExecution.sets.length} ? ${currentSet.prescribedReps || currentExercise?.reps || "repetições"}` : "Selecione um exercício"}</p>
+            <p>{currentSet ?`Série ${currentSet.setNumber} de ${currentExecution.sets.length} • ${currentSet.prescribedReps || currentExercise?.reps || "repetições"}` : "Selecione um exercício"}</p>
             <div className="current-prescription">
               <span>Descanso: {currentExercise?.rest || "60s"}</span>
               <span>Carga sugerida: {currentExercise?.load || "Livre"}</span>
@@ -700,7 +709,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
                     <span className="exercise-check">{complete ?<CheckCircle2 size={22} /> : exerciseExecution.position}</span>
                     <span>
                       <strong>{source?.name}</strong>
-                      <small>{complete ?`${localSets.done}/${localSets.total} séries concluídas ? Carga máxima: ${maxLoadText(exerciseExecution)}` : `${source?.sets} ? ${source?.reps}`}</small>
+                      <small>{complete ?`${localSets.done}/${localSets.total} séries concluídas • Carga máxima: ${maxLoadText(exerciseExecution)}` : formatPrescription(source?.sets, source?.reps)}</small>
                     </span>
                     {exerciseExecution.expanded ?<ChevronUp size={18} /> : <ChevronDown size={18} />}
                   </button>
@@ -875,4 +884,5 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     </main>
   );
 }
+
 
