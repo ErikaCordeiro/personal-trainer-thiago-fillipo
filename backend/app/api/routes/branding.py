@@ -1,3 +1,5 @@
+import re
+import unicodedata
 import uuid
 from pathlib import Path
 
@@ -23,13 +25,33 @@ def platform_branding():
     return {**FITLAND_BRANDING, "is_fallback": True, "initials": "FT"}
 
 
+def _brand_slug(value: str) -> str:
+    normalized = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii").lower()
+    normalized = re.sub(r"^personal[\s-]+", "", normalized)
+    return re.sub(r"[^a-z0-9]+", "-", normalized).strip("-")
+
+
 @router.get("/public")
-def public_branding(email: str = Query(min_length=5, max_length=255), db: Session = Depends(get_db)):
-    normalized_email = email.strip().lower()
-    personal = db.scalar(select(User).where(func.lower(User.email) == normalized_email, User.role == UserRole.PERSONAL))
-    if not personal:
-        student_user = db.scalar(select(User).where(func.lower(User.email) == normalized_email, User.role == UserRole.STUDENT))
-        personal = personal_for_user(db, student_user) if student_user else None
+def public_branding(
+    email: str | None = Query(default=None, min_length=5, max_length=255),
+    slug: str | None = Query(default=None, min_length=2, max_length=100),
+    db: Session = Depends(get_db),
+):
+    personal = None
+    if slug:
+        requested_slug = _brand_slug(slug)
+        rows = db.execute(
+            select(User, PersonalBranding)
+            .join(PersonalBranding, PersonalBranding.personal_id == User.id)
+            .where(User.role == UserRole.PERSONAL, User.is_active.is_(True))
+        ).all()
+        personal = next((user for user, brand in rows if _brand_slug(brand.display_name) == requested_slug), None)
+    elif email:
+        normalized_email = email.strip().lower()
+        personal = db.scalar(select(User).where(func.lower(User.email) == normalized_email, User.role == UserRole.PERSONAL))
+        if not personal:
+            student_user = db.scalar(select(User).where(func.lower(User.email) == normalized_email, User.role == UserRole.STUDENT))
+            personal = personal_for_user(db, student_user) if student_user else None
     if not personal:
         return {**FITLAND_BRANDING, "is_fallback": True, "initials": "FT"}
     return get_personal_branding(db, personal)

@@ -3,7 +3,7 @@ import { Apple, Chrome, Download, Eye, EyeOff, Lock, Mail, UserPlus, X } from "l
 import LionLogo from "../components/LionLogo.jsx";
 import { apiRequest, login as apiLogin } from "../services/api.js";
 
-export default function Login({ onLogin, onSignup, context = "platform", branding: initialBranding = null }) {
+export default function Login({ onLogin, onSignup, context = "platform", branding: initialBranding = null, brandSlug = "" }) {
   const [credentials, setCredentials] = useState({
     email: "",
     password: ""
@@ -19,11 +19,13 @@ export default function Login({ onLogin, onSignup, context = "platform", brandin
   const isOwnerContext = context === "owner";
 
   useEffect(() => {
-    if (!isOwnerContext) return;
-    apiRequest("/branding/platform", { skipAuthRefresh: true })
+    const endpoint = isOwnerContext || !brandSlug
+      ? "/branding/platform"
+      : `/branding/public?slug=${encodeURIComponent(brandSlug)}`;
+    apiRequest(endpoint, { skipAuthRefresh: true })
       .then(setBranding)
       .catch(() => setBranding({ display_name: "Fitland", initials: "FT", is_fallback: true }));
-  }, [isOwnerContext]);
+  }, [isOwnerContext, brandSlug]);
 
   const resolvePersonalBrand = async () => {
     if (isOwnerContext || !credentials.email) return;

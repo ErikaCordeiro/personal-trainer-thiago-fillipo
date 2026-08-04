@@ -223,9 +223,12 @@ export default function App() {
   }
 
   if (!session) {
+    const loginPath = window.location.pathname.toLowerCase();
+    const personalLoginMatch = loginPath.match(/^\/personal\/([^/]+)\/login\/?$/);
     return (
       <Login
-        context={window.location.pathname.toLowerCase().startsWith("/owner") ? "owner" : "personal"}
+        context={loginPath.startsWith("/owner") ? "owner" : "personal"}
+        brandSlug={personalLoginMatch?.[1] || ""}
         branding={branding}
         onSignup={(student) => {
           setPendingStudents((current) => [
