@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     OWNER_INITIAL_NAME: str | None = None
     OWNER_INITIAL_EMAIL: str | None = None
     OWNER_INITIAL_PASSWORD: str | None = None
+    OWNER_FORCE_PASSWORD_RESET: bool = False
 
     @field_validator("DATABASE_URL")
     @classmethod
