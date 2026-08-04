@@ -5,19 +5,25 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    APP_NAME: str = "Personal Thiago Filippo API"
+    APP_NAME: str = "Fitland API"
     ENVIRONMENT: str = "development"
     DATABASE_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5432/personal_thiago_filippo"
     SECRET_KEY: str = Field(default="dev-change-this-secret-key-before-production", min_length=32)
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
-    REFRESH_COOKIE_NAME: str = "ptf_refresh_token"
-    CORS_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"
+    REFRESH_COOKIE_NAME: str = "fitland_refresh_token"
+    CORS_ORIGINS: str = (
+        "http://localhost:5173,http://127.0.0.1:5173,"
+        "http://localhost:4173,http://127.0.0.1:4173"
+    )
     SEED_PERSONAL_EMAIL: str | None = None
     SEED_PERSONAL_PASSWORD: str | None = None
     SEED_STUDENT_EMAIL: str | None = None
     SEED_STUDENT_PASSWORD: str | None = None
+    OWNER_INITIAL_NAME: str | None = None
+    OWNER_INITIAL_EMAIL: str | None = None
+    OWNER_INITIAL_PASSWORD: str | None = None
 
     @field_validator("DATABASE_URL")
     @classmethod

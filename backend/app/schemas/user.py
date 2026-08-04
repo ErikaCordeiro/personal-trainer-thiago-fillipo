@@ -19,6 +19,10 @@ class UserRead(BaseModel):
     email: EmailStr
     role: UserRole
     is_active: bool
+    account_status: str = "active"
+    must_change_password: bool = False
+    avatar_url: str | None = None
+    theme_preference: str = "auto"
     created_at: datetime
 
     model_config = {"from_attributes": True}

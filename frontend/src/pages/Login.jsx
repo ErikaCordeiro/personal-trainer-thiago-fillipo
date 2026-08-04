@@ -3,7 +3,7 @@ import { Apple, Chrome, Download, Eye, EyeOff, Lock, Mail, UserPlus, X } from "l
 import LionLogo from "../components/LionLogo.jsx";
 import { apiRequest, login as apiLogin } from "../services/api.js";
 
-export default function Login({ onLogin, onSignup }) {
+export default function Login({ onLogin, onSignup, context = "platform", branding: initialBranding = null }) {
   const [credentials, setCredentials] = useState({
     email: "",
     password: ""
@@ -15,6 +15,25 @@ export default function Login({ onLogin, onSignup }) {
   const [showPassword, setShowPassword] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
   const [signupMessage, setSignupMessage] = useState("");
+  const [branding, setBranding] = useState(initialBranding);
+  const isOwnerContext = context === "owner";
+
+  useEffect(() => {
+    if (!isOwnerContext) return;
+    apiRequest("/branding/platform", { skipAuthRefresh: true })
+      .then(setBranding)
+      .catch(() => setBranding({ display_name: "Fitland", initials: "FT", is_fallback: true }));
+  }, [isOwnerContext]);
+
+  const resolvePersonalBrand = async () => {
+    if (isOwnerContext || !credentials.email) return;
+    try {
+      const data = await apiRequest(`/branding/public?email=${encodeURIComponent(credentials.email)}`, { skipAuthRefresh: true });
+      setBranding(data);
+    } catch {
+      setBranding({ display_name: "Fitland", initials: "FT", is_fallback: true });
+    }
+  };
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (event) => {
@@ -50,7 +69,7 @@ export default function Login({ onLogin, onSignup }) {
         : "No Android: abra este link no Chrome e toque em Instalar app ou Adicionar a Tela inicial.";
     }
 
-    return "No computador: use Chrome/Edge e clique no ícone de instalar na barra de endereço ou no menu do navegador > Instalar Thiago Fillippo.";
+    return "No computador: use Chrome/Edge e clique no ícone de instalar na barra de endereço ou no menu do navegador > Instalar Fitland.";
   };
 
   const installApp = async () => {
@@ -64,7 +83,7 @@ export default function Login({ onLogin, onSignup }) {
     setInstallPrompt(null);
     setInstallMessage(
       choice.outcome === "accepted"
-        ? "Instalação iniciada. O app Thiago Fillippo deve aparecer na tela inicial ou na lista de aplicativos."
+        ? "Instalação iniciada. O app Fitland deve aparecer na tela inicial ou na lista de aplicativos."
         : getInstallFallbackMessage()
     );
   };
@@ -106,12 +125,12 @@ export default function Login({ onLogin, onSignup }) {
     <main className="login-screen">
       <div className="login-orbit" aria-hidden="true" />
       <section className="login-showcase">
-        <LionLogo hero />
+        <LionLogo hero branding={branding} platform={isOwnerContext} />
       </section>
       <section className="phone-frame" aria-label="Tela de login">
         <div className="phone-speaker" />
         <form className="login-card" onSubmit={submit}>
-          <LionLogo hero />
+          <LionLogo hero branding={branding} platform={isOwnerContext} />
           <p className="welcome-copy">Bem-vindo</p>
           <label>
             <span>Email</span>
@@ -123,6 +142,7 @@ export default function Login({ onLogin, onSignup }) {
                 placeholder="E-mail"
                 value={credentials.email}
                 onChange={(event) => setCredentials((current) => ({ ...current, email: event.target.value }))}
+                onBlur={resolvePersonalBrand}
                 required
               />
             </div>
@@ -174,12 +194,12 @@ export default function Login({ onLogin, onSignup }) {
             <button type="button" aria-label="Entrar com Google"><Chrome size={22} /></button>
             <button type="button" aria-label="Entrar com Apple"><Apple size={23} /></button>
           </div>
-          <small>
+          {!isOwnerContext && <small>
             Não tem uma conta?{" "}
             <button className="signup-link-button" type="button" onClick={() => setSignupOpen(true)}>
               Cadastre-se
             </button>
-          </small>
+          </small>}
           {signupMessage ? <p className="signup-success-message">{signupMessage}</p> : null}
         </form>
       </section>

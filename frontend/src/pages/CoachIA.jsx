@@ -22,14 +22,16 @@ function decode(text) {
   return text.replace(/\\u([0-9a-fA-F]{4})/g, (_, code) => String.fromCharCode(parseInt(code, 16)));
 }
 
-export default function CoachIA({ role = "student", student, onClose }) {
+export default function CoachIA({ role = "student", student, onClose, branding }) {
   const isPersonal = role === "personal";
+  const personalName = branding?.display_name || "seu personal";
+  const brandImage = branding?.logo_url || branding?.icon_url || "/fitland-icon.svg";
   const [messages, setMessages] = useState([
     {
       from: "coach",
       text: isPersonal
-        ? "Pronto, Thiago. Posso gerar ideias, relatórios e insights editáveis para você aprovar."
-        : "Pronta para ajudar, " + (student?.name?.split(" ")[0] || "Erika") + ". Eu explico execução, músculos, nutrição e avaliação física. Não altero seus treinos: qualquer mudança precisa ser aprovada pelo Personal Thiago Fillippo."
+        ? `Pronto. Posso gerar ideias, relatórios e insights editáveis para ${personalName}.`
+        : `Pronta para ajudar, ${student?.name?.split(" ")[0] || "aluno"}. Eu explico execução, músculos, nutrição e avaliação física. Não altero seus treinos: qualquer mudança precisa ser aprovada por ${personalName}.`
     }
   ].map((item) => ({ ...item, text: decode(item.text) })));
   const [input, setInput] = useState("");
@@ -40,7 +42,7 @@ export default function CoachIA({ role = "student", student, onClose }) {
     setMessages((current) => [
       ...current,
       { from: "user", text: clean },
-      { from: "coach", text: buildResponse(clean, role) }
+      { from: "coach", text: buildResponse(clean, role, personalName) }
     ]);
     setInput("");
   };
@@ -57,7 +59,7 @@ export default function CoachIA({ role = "student", student, onClose }) {
           <h2>{isPersonal ? "Central inteligente do personal" : "Seu assistente fitness pessoal"}</h2>
           <span>{isPersonal ? "Crie ideias e análises para revisar antes de aplicar." : "Tire dúvidas com segurança, sem substituir as orientações do seu personal."}</span>
         </div>
-        <img src="/lion-juda-logo.png" alt="Leão de Judá" />
+        <img src={brandImage} alt={`Marca ${personalName}`} />
       </article>
 
       <div className="coach-grid-premium">
@@ -85,21 +87,21 @@ export default function CoachIA({ role = "student", student, onClose }) {
             <span><Wand2 size={18} /> {isPersonal ? "Análise" : "Conceitos"}</span>
             <span><MessageCircle size={18} /> {isPersonal ? "Feedback" : "Dúvidas"}</span>
           </div>
-          {!isPersonal && <p className="assistant-priority-note">Eu respondo perguntas e explico conceitos. Não altero treino, dieta ou avaliação sem o Personal Thiago Fillippo.</p>}
+          {!isPersonal && <p className="assistant-priority-note">Eu respondo perguntas e explico conceitos. Não altero treino, dieta ou avaliação sem a aprovação de {personalName}.</p>}
         </aside>
       </div>
     </section>
   );
 }
 
-function buildResponse(prompt, role) {
+function buildResponse(prompt, role, personalName) {
   const lower = prompt.toLowerCase();
-  if (lower.includes("supino")) return "No supino, mantenha os pés firmes, escápulas encaixadas para trás e para baixo, punhos alinhados e desça a barra com controle até perto do peito. Suba sem perder estabilidade. Se houver dor no ombro, pare e avise o Personal Thiago Fillippo.";
+  if (lower.includes("supino")) return `No supino, mantenha os pés firmes, escápulas encaixadas para trás e para baixo, punhos alinhados e desça a barra com controle até perto do peito. Suba sem perder estabilidade. Se houver dor no ombro, pare e avise ${personalName}.`;
   if (lower.includes("hipertrofia")) return "Hipertrofia é o aumento de massa muscular. Ela acontece com treino bem executado, progressão de carga, alimentação adequada, descanso e constância.";
   if (lower.includes("deficit") || lower.includes("déficit")) return "Déficit calórico é consumir menos calorias do que o corpo gasta. Ele ajuda na perda de gordura, mas precisa preservar proteínas, treino de força e saúde.";
-  if (lower.includes("dor") || lower.includes("ombro")) return "Dor no ombro não deve ser ignorada. Pare o exercício se for dor aguda, forte ou com perda de força. Grave a execução se puder e envie ao Personal Thiago Fillippo para ele avaliar.";
+  if (lower.includes("dor") || lower.includes("ombro")) return `Dor no ombro não deve ser ignorada. Pare o exercício se for dor aguda, forte ou com perda de força. Grave a execução se puder e envie para ${personalName} avaliar.`;
   if (lower.includes("imc")) return "IMC relaciona peso e altura. Ele ajuda como indicador geral, mas não mostra tudo: massa magra, gordura corporal, medidas e fotos também precisam ser analisadas.";
-  if (lower.includes("treino") || lower.includes("carga") || lower.includes("exerc")) return role === "personal" ? "Posso sugerir uma análise, mas a alteração final deve ser salva por você no treino do aluno." : "Posso explicar a execução e os músculos trabalhados, mas não altero seu treino. Mudanças só com o Personal Thiago Fillippo.";
+  if (lower.includes("treino") || lower.includes("carga") || lower.includes("exerc")) return role === "personal" ? "Posso sugerir uma análise, mas a alteração final deve ser salva por você no treino do aluno." : `Posso explicar a execução e os músculos trabalhados, mas não altero seu treino. Mudanças somente com ${personalName}.`;
   if (lower.includes("dieta") || lower.includes("refei") || lower.includes("calor")) return role === "personal" ? "Posso gerar uma sugestão editável de dieta para você revisar antes de enviar ao aluno." : "Posso explicar alimentos, macros e calorias, mas não altero sua dieta. Use como apoio e confirme ajustes com o personal.";
-  return role === "personal" ? "Boa pergunta. Posso transformar isso em uma sugestão prática para você revisar antes de aplicar." : "Boa pergunta. Vou te orientar de forma educativa, sem alterar seu treino ou dieta. As decisões finais ficam com o Personal Thiago Fillippo.";
+  return role === "personal" ? "Boa pergunta. Posso transformar isso em uma sugestão prática para você revisar antes de aplicar." : `Boa pergunta. Vou orientar de forma educativa, sem alterar seu treino ou dieta. As decisões finais ficam com ${personalName}.`;
 }

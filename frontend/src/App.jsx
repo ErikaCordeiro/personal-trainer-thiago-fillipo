@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useMemo, useState } from "react";
 import PersonalLayout from "./layouts/PersonalLayout.jsx";
 import StudentLayout from "./layouts/StudentLayout.jsx";
+import OwnerLayout from "./layouts/OwnerLayout.jsx";
 import Login from "./pages/Login.jsx";
 import StudentDashboard from "./pages/Dashboard.jsx";
 import PersonalDashboard from "./pages/PersonalDashboard.jsx";
@@ -29,9 +30,11 @@ import PersonalProgress from "./pages/PersonalProgress.jsx";
 import PersonalStudentProgress from "./pages/PersonalStudentProgress.jsx";
 import CoachIA from "./pages/CoachIA.jsx";
 import AboutPersonal from "./pages/AboutPersonal.jsx";
+import OwnerPortal from "./pages/OwnerPortal.jsx";
 import { students as mockStudents, workouts as mockWorkouts } from "./data/mockData.js";
 import { apiRequest, clearToken, getToken, logoutSession, refreshSession } from "./services/api.js";
 import { clearDemoActivityDataOnce } from "./utils/activityData.js";
+import { getRecommendedWorkout } from "./utils/workoutSchedule.js";
 
 const pageMeta = {
   dashboard: ["Dashboard", "Disciplina hoje, liberdade amanhã."],
@@ -53,16 +56,17 @@ const pageMeta = {
   progress: ["Progresso", "Histórico, evolução e indicadores de consistência."],
   "student-progress-detail": ["Progresso individual", "Central individual de performance do aluno."],
   coach: ["Coach IA", "Seu assistente inteligente para treino, dieta e evolução."],
-  "about-personal": ["Sobre o Personal", "Conheça a metodologia, experiência e filosofia do Thiago Fillippo."]
+  "about-personal": ["Sobre o Personal", "Conheça a metodologia, a experiência e a filosofia do seu personal."]
 };
 
 const rolePath = {
+  owner: "/owner/dashboard",
   personal: "/dashboard/personal",
   student: "/dashboard/aluno"
 };
 
 function normalizeSessionUser(user) {
-  const normalizedRole = user?.role === "student" || user?.role === "aluno" ? "student" : "personal";
+  const normalizedRole = user?.role === "owner" || user?.role === "superuser" ? "owner" : user?.role === "student" || user?.role === "aluno" ? "student" : "personal";
   return { ...user, role: normalizedRole };
 }
 
@@ -95,6 +99,14 @@ function pageFromPath(pathname, role) {
     "/personal/coach-ia": "coach",
     "/personal/sobre-o-personal": "about-personal"
   };
+  const ownerRoutes = {
+    "/owner/dashboard": "dashboard",
+    "/owner/personals": "personals",
+    "/owner/logs": "logs",
+    "/owner/configuracoes": "settings",
+    "/owner/seguranca": "security"
+  };
+  if (role === "owner") return ownerRoutes[path] || "dashboard";
   if (role === "student") return studentRoutes[path] || "dashboard";
   return personalRoutes[path] || "dashboard";
 }
@@ -108,6 +120,7 @@ export default function App() {
     clearDemoActivityDataOnce();
   }, []);
   const [session, setSession] = useState(null);
+  const [branding, setBranding] = useState({ display_name: "Fitland", initials: "FT", is_fallback: true });
   const [authReady, setAuthReady] = useState(false);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [activePage, setActivePage] = useState("dashboard");
@@ -127,7 +140,7 @@ export default function App() {
   const [selectedStudentId, setSelectedStudentId] = useState(mockStudents[0]?.id);
   const [focusedPendingStudentId, setFocusedPendingStudentId] = useState(null);
   const [personalProfile, setPersonalProfile] = useState({
-    name: "Thiago Fillippo",
+    name: "Seu personal",
     bio: "Personal trainer focado em força, disciplina, performance e transformação real. Une estratégia, técnica e acompanhamento próximo para cada aluno evoluir com segurança.",
     specialty: "Hipertrofia, emagrecimento e performance",
     experience: "10+ anos de atuação",
@@ -139,7 +152,12 @@ export default function App() {
   });
 
   const meta = pageMeta[activePage] || pageMeta.dashboard;
-  const activeWorkout = useMemo(() => workouts[0], [workouts]);
+  const activeWorkout = useMemo(() => getRecommendedWorkout(workouts, new Date()) || workouts[0], [workouts]);
+
+  useEffect(() => {
+    if (!branding?.display_name) return;
+    setPersonalProfile((current) => ({ ...current, name: branding.display_name }));
+  }, [branding?.display_name]);
 
   useEffect(() => {
     let mounted = true;
@@ -163,9 +181,13 @@ export default function App() {
         if (!mounted) return;
         const normalizedUser = normalizeSessionUser(user);
         setSession(normalizedUser);
-        const requestedPage = pageFromPath(window.location.pathname, normalizedUser.role);
+        const requestedPage = normalizedUser.role === "owner" && normalizedUser.must_change_password
+          ? "security"
+          : pageFromPath(window.location.pathname, normalizedUser.role);
         setActivePage(requestedPage);
-        if (window.location.pathname === "/") {
+        if (normalizedUser.role === "owner" && normalizedUser.must_change_password) {
+          window.history.replaceState(null, "", "/owner/seguranca");
+        } else if (window.location.pathname === "/") {
           pushRoute(normalizedUser.role);
         }
       } catch {
@@ -185,6 +207,13 @@ export default function App() {
     localStorage.setItem("ptf_pending_students", JSON.stringify(pendingStudents));
   }, [pendingStudents]);
 
+  useEffect(() => {
+    if (!session) return;
+    apiRequest("/branding/me")
+      .then(setBranding)
+      .catch(() => setBranding({ display_name: "Fitland", initials: "FT", is_fallback: true }));
+  }, [session?.id, session?.role]);
+
   if (!authReady) {
     return (
       <main className="login-screen login-loading-screen">
@@ -196,6 +225,8 @@ export default function App() {
   if (!session) {
     return (
       <Login
+        context={window.location.pathname.toLowerCase().startsWith("/owner") ? "owner" : "personal"}
+        branding={branding}
         onSignup={(student) => {
           setPendingStudents((current) => [
             { ...student, id: crypto.randomUUID(), status: "pending", requestedAt: new Date().toISOString() },
@@ -206,9 +237,13 @@ export default function App() {
           const normalizedUser = normalizeSessionUser(user);
           const normalizedRole = normalizedUser.role;
           setSession(normalizedUser);
-          const requestedPage = pageFromPath(window.location.pathname, normalizedRole);
+          const requestedPage = normalizedRole === "owner" && normalizedUser.must_change_password
+            ? "security"
+            : pageFromPath(window.location.pathname, normalizedRole);
           setActivePage(requestedPage);
-          if (requestedPage === "dashboard") {
+          if (normalizedRole === "owner" && normalizedUser.must_change_password) {
+            window.history.replaceState(null, "", "/owner/seguranca");
+          } else if (requestedPage === "dashboard") {
             pushRoute(normalizedRole);
           }
         }}
@@ -217,13 +252,17 @@ export default function App() {
   }
 
   const isStudent = session.role === "student";
+  const isOwner = session.role === "owner";
   const navigate = (page) => {
     setActivePage(page);
     setSidebarOpen(false);
     if (page !== "workout-execution") {
       setExecutionWorkoutId(null);
     }
-    if (page === "coach") {
+    if (isOwner) {
+      const ownerPaths = { dashboard: "/owner/dashboard", personals: "/owner/personals", logs: "/owner/logs", settings: "/owner/configuracoes", security: "/owner/seguranca" };
+      window.history.replaceState(null, "", ownerPaths[page] || "/owner/dashboard");
+    } else if (page === "coach") {
       window.history.replaceState(null, "", isStudent ? "/aluno/coach-ia" : "/personal/coach-ia");
     } else if (page === "about-personal") {
       window.history.replaceState(null, "", isStudent ? "/aluno/sobre-o-personal" : "/personal/sobre-o-personal");
@@ -356,7 +395,8 @@ export default function App() {
         window.history.replaceState(null, "", "/dashboard/personal");
       }
     },
-    onApproveStudent: approvePendingStudent
+    onApproveStudent: approvePendingStudent,
+    branding
   };
 
   const sharedPages = (
@@ -398,12 +438,14 @@ export default function App() {
         <CoachIA
           role={isStudent ? "student" : "personal"}
           student={students[0]}
+          branding={branding}
           onClose={() => navigate("dashboard")}
         />
       )}
       {activePage === "about-personal" && (
         <AboutPersonal
           profile={personalProfile}
+          branding={branding}
           editable={!isStudent}
           onSave={setPersonalProfile}
         />
@@ -434,6 +476,17 @@ export default function App() {
     </div>
   ) : null;
 
+  if (isOwner) {
+    return (
+      <>
+        <OwnerLayout session={session} activePage={activePage} onNavigate={navigate} onLogout={() => setLogoutConfirmOpen(true)}>
+          <OwnerPortal activePage={activePage} onNavigate={navigate} session={session} onSession={setSession} />
+        </OwnerLayout>
+        {logoutModal}
+      </>
+    );
+  }
+
   if (isStudent) {
     return (
       <>
@@ -442,10 +495,10 @@ export default function App() {
         {activePage === "diet" && <StudentDiet student={students[0]} />}
         {activePage === "assessments" && <StudentAssessments student={students[0]} />}
         {activePage === "payments" && <StudentPayments student={students[0]} />}
-        {activePage === "calendar" && <StudentCalendar student={students[0]} />}
-        {activePage === "messages" && <StudentMessages student={students[0]} />}
+        {activePage === "calendar" && <StudentCalendar student={students[0]} workouts={workouts} onStartWorkout={openWorkoutExecution} branding={branding} />}
+        {activePage === "messages" && <StudentMessages student={students[0]} branding={branding} />}
         {activePage === "files" && <StudentFiles student={students[0]} />}
-        {activePage === "settings" && <StudentSettings student={students[0]} />}
+        {activePage === "settings" && <StudentSettings student={students[0]} branding={branding} />}
         {sharedPages}
       </StudentLayout>
       {logoutModal}

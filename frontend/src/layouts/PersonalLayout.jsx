@@ -14,7 +14,8 @@ export default function PersonalLayout({
   student,
   notifications,
   onNotificationAction,
-  onApproveStudent
+  onApproveStudent,
+  branding
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -30,7 +31,7 @@ export default function PersonalLayout({
   };
 
   return (
-    <div className={`app-shell personal-layout ${sidebarCollapsed ? "sidebar-is-collapsed" : ""}`}>
+    <div className={`app-shell personal-layout ${sidebarCollapsed ? "sidebar-is-collapsed" : ""}`} style={{ "--brand-primary": branding?.primary_color || "#050505", "--brand-secondary": branding?.secondary_color || "#C0C0C0" }}>
       <Sidebar
         activePage={activePage}
         navItems={personalNavItems}
@@ -38,7 +39,8 @@ export default function PersonalLayout({
         mobileOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         onCollapsedChange={setSidebarCollapsed}
-        profileName="Thiago Fillippo"
+        profileName={branding?.display_name || session?.name || "Personal"}
+        branding={branding}
         profileRole="Personal trainer"
         profileInitials="TF"
         onLogout={onLogout}
@@ -62,7 +64,9 @@ export default function PersonalLayout({
           <button type="button" onClick={() => onNavigate("dashboard")}>Home</button>
           <button type="button" onClick={() => onNavigate("students")}>Alunos</button>
           <button className="mobile-coach" type="button" onClick={() => onNavigate("coach")}>
-            <img src="/lion-juda-logo.png" alt="" />
+            {branding?.icon_url || branding?.logo_url
+              ? <img src={branding.icon_url || branding.logo_url} alt="" />
+              : <span>{branding?.initials || "FT"}</span>}
             Coach IA
           </button>
           <button type="button" onClick={() => onNavigate("agenda")}>Agenda</button>

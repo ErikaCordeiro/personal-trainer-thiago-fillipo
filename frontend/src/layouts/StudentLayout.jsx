@@ -14,7 +14,8 @@ export default function StudentLayout({
   setSidebarOpen,
   student,
   notifications,
-  onNotificationAction
+  onNotificationAction,
+  branding
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -30,7 +31,7 @@ export default function StudentLayout({
   };
 
   return (
-    <div className={`app-shell student-layout-shell ${sidebarCollapsed ? "sidebar-is-collapsed" : ""}`}>
+    <div className={`app-shell student-layout-shell ${sidebarCollapsed ? "sidebar-is-collapsed" : ""}`} style={{ "--brand-primary": branding?.primary_color || "#050505", "--brand-secondary": branding?.secondary_color || "#C0C0C0" }}>
       <Sidebar
         activePage={activePage}
         navItems={studentNavItems}
@@ -39,6 +40,7 @@ export default function StudentLayout({
         onClose={() => setSidebarOpen(false)}
         onCollapsedChange={setSidebarCollapsed}
         profileName={student?.name || session?.name || "Aluno"}
+        branding={branding}
         profileRole="Aluno"
         profileInitials={(student?.name || session?.name || "Aluno").slice(0, 2)}
         onLogout={onLogout}

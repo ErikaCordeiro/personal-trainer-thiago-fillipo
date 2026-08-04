@@ -23,24 +23,10 @@ import {
   loadWorkoutHistory,
   toLocalDateKey
 } from "../utils/activityData.js";
+import { getRecommendedWorkout } from "../utils/workoutSchedule.js";
 
 const week = ["S", "T", "Q", "Q", "S", "S", "D"];
 const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
-const ACTIVE_WORKOUT_KEY = "ptf_active_workout_id";
-const weekDays = ["Domingo", "Segunda", "Terca", "Quarta", "Quinta", "Sexta", "Sabado"];
-
-function normalizeText(value = "") {
-  return String(value).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-
-
-function resolveWorkout(workouts = [], activeWorkoutId) {
-  if (!workouts.length) return null;
-  const selected = workouts.find((item) => item.id === activeWorkoutId);
-  if (selected) return selected;
-  const today = normalizeText(weekDays[new Date().getDay()]);
-  return workouts.find((item) => normalizeText(item.date).includes(today)) || workouts[0];
-}
 
 function sumVolume(history) {
   return history.reduce((sum, item) => sum + (Number(item.volume) || 0), 0);
@@ -60,10 +46,7 @@ function currentWeekDoneSet(history) {
 
 export default function StudentDashboard({ students, workouts, onNavigate, onStartWorkout }) {
   const student = students[0];
-  const [activeWorkoutId, setActiveWorkoutId] = useState(() => {
-    try { return window.localStorage.getItem(ACTIVE_WORKOUT_KEY); } catch { return null; }
-  });
-  const todayWorkout = resolveWorkout(workouts, activeWorkoutId);
+  const todayWorkout = getRecommendedWorkout(workouts, new Date());
   const [history, setHistory] = useState(() => loadWorkoutHistory());
 
   useEffect(() => {
@@ -73,23 +56,6 @@ export default function StudentDashboard({ students, workouts, onNavigate, onSta
     return () => {
       window.removeEventListener("focus", refresh);
       window.removeEventListener("storage", refresh);
-    };
-  }, []);
-
-  useEffect(() => {
-    const refreshActiveWorkout = (event) => {
-      const nextId = event?.detail?.workoutId;
-      if (nextId) {
-        setActiveWorkoutId(nextId);
-        return;
-      }
-      try { setActiveWorkoutId(window.localStorage.getItem(ACTIVE_WORKOUT_KEY)); } catch {}
-    };
-    window.addEventListener("ptf-active-workout-changed", refreshActiveWorkout);
-    window.addEventListener("storage", refreshActiveWorkout);
-    return () => {
-      window.removeEventListener("ptf-active-workout-changed", refreshActiveWorkout);
-      window.removeEventListener("storage", refreshActiveWorkout);
     };
   }, []);
 
@@ -145,13 +111,13 @@ export default function StudentDashboard({ students, workouts, onNavigate, onSta
       <section className="student-workout-hero">
         <div>
           <p className="eyebrow">Treino do dia</p>
-          <h2>{todayWorkout?.name || "Treino de hoje"}</h2>
+          <h2>{todayWorkout?.name || "Dia de descanso"}</h2>
           <ul>
             <li><ClipboardCheck size={17} />{todayWorkout?.exercises?.length || 0} exercícios</li>
-            <li><BarChart3 size={17} />{todayWorkout?.duration || "60 min"}</li>
+            <li><BarChart3 size={17} />{todayWorkout?.duration || "Recuperação programada"}</li>
             <li><Flame size={17} />estimativa do treino</li>
           </ul>
-          <button type="button" onClick={() => todayWorkout ?onStartWorkout?.(todayWorkout.id) : onNavigate("student-view")}>Acessar treino <Play size={16} /></button>
+          <button type="button" onClick={() => todayWorkout ?onStartWorkout?.(todayWorkout.id) : onNavigate("student-view")}>{todayWorkout ? "Acessar treino" : "Ver semana"} <Play size={16} /></button>
         </div>
         <div className="student-workout-avatar premium-photo">
           <img src={student?.avatar || "/erika-gomes.jpeg"} alt={student?.name || "Aluno"} />

@@ -27,17 +27,9 @@ import {
   toLocalDateKey,
   workoutEventsFromHistory
 } from "../utils/activityData.js";
+import { getNextDays, getWorkoutsForDate } from "../utils/workoutSchedule.js";
 
 const weekLabels = ["SEG", "TER", "QUA", "QUI", "SEX", "SÁB", "DOM"];
-const availableDays = [
-  ["TER", "15", "JUL"],
-  ["QUA", "16", "JUL"],
-  ["QUI", "17", "JUL"],
-  ["SEX", "18", "JUL"],
-  ["SÁB", "19", "JUL"],
-  ["DOM", "20", "JUL"],
-  ["SEG", "21", "JUL"]
-];
 const availableTimes = ["08:00", "09:00", "10:00", "14:00", "15:00", "16:00", "18:00", "19:00", "20:00"];
 const eventLabels = {
   workout: "Treino concluído",
@@ -66,8 +58,11 @@ function buildMonthDays(monthDate) {
   });
 }
 
-export default function StudentCalendar({ student }) {
+export default function StudentCalendar({ student, workouts = [], onStartWorkout, branding }) {
   const firstName = student?.name?.split(" ")[0] || "Erika";
+  const personalName = branding?.display_name || "Seu personal";
+  const personalImage = branding?.profile_image_url || branding?.logo_url || branding?.icon_url || "/fitland-icon.svg";
+  const brandLogo = branding?.logo_url || branding?.icon_url || "/fitland-icon.svg";
   const [monthDate, setMonthDate] = useState(() => new Date());
   const [selectedKey, setSelectedKey] = useState(() => toLocalDateKey(new Date()));
   const [history, setHistory] = useState(() => loadWorkoutHistory());
@@ -81,6 +76,7 @@ export default function StudentCalendar({ student }) {
   const [goalOpen, setGoalOpen] = useState(false);
   const [monthlyGoalState, setMonthlyGoalState] = useState(() => getMonthlyWorkoutGoal() || 12);
   const [goalDraft, setGoalDraft] = useState(() => String(getMonthlyWorkoutGoal() || 12));
+  const availableDays = useMemo(() => getNextDays(7), []);
 
   useEffect(() => {
     const refresh = () => {
@@ -95,8 +91,19 @@ export default function StudentCalendar({ student }) {
     };
   }, []);
 
+  const monthDays = useMemo(() => buildMonthDays(monthDate), [monthDate]);
   const workoutEvents = useMemo(() => workoutEventsFromHistory(history), [history]);
-  const events = useMemo(() => [...workoutEvents, ...customEvents], [workoutEvents, customEvents]);
+  const scheduledWorkoutEvents = useMemo(() => monthDays.flatMap((day) => getWorkoutsForDate(workouts, day.date).map((item) => ({
+    id: `scheduled-${day.dateKey}-${item.id}`,
+    type: "workout",
+    status: "scheduled",
+    workoutId: item.id,
+    dateKey: day.dateKey,
+    title: item.name,
+    detail: `${item.exercises?.length || 0} exercícios - ${item.duration || "Duração não informada"}`,
+    time: "Treino programado"
+  }))), [monthDays, workouts]);
+  const events = useMemo(() => [...workoutEvents, ...scheduledWorkoutEvents, ...customEvents], [workoutEvents, scheduledWorkoutEvents, customEvents]);
   const eventsByDay = useMemo(() => {
     return events.reduce((map, event) => {
       if (!map.has(event.dateKey)) map.set(event.dateKey, []);
@@ -105,14 +112,13 @@ export default function StudentCalendar({ student }) {
     }, new Map());
   }, [events]);
 
-  const monthDays = useMemo(() => buildMonthDays(monthDate), [monthDate]);
   const todayKey = toLocalDateKey(new Date());
   const currentStreak = useMemo(() => calculateCurrentWorkoutStreak(history), [history]);
   const bestStreak = useMemo(() => calculateBestWorkoutStreak(history), [history]);
   const monthWorkouts = useMemo(() => completedWorkoutsInMonth(history, monthDate), [history, monthDate]);
   const monthlyGoal = monthlyGoalState;
   const selectedEvents = eventsByDay.get(selectedKey) || [];
-  const selectedDate = useMemo(() => `${availableDays[selectedDay][1]}/07/2026`, [selectedDay]);
+  const selectedDate = useMemo(() => formatDateBR(availableDays[selectedDay].date), [availableDays, selectedDay]);
 
   function changeMonth(delta) {
     setMonthDate((current) => new Date(current.getFullYear(), current.getMonth() + delta, 1));
@@ -138,13 +144,13 @@ export default function StudentCalendar({ student }) {
   }
 
   function confirmSchedule() {
-    const eventDate = new Date(2026, 6, Number(availableDays[selectedDay][1]));
+    const eventDate = availableDays[selectedDay].date;
     const event = {
       id: `consultation-${eventDate.getTime()}-${selectedTime}`,
       type: "consultation",
       date: eventDate.toISOString(),
       dateKey: toLocalDateKey(eventDate),
-      title: "Consulta com Personal Thiago Fillippo",
+      title: `Consulta com ${personalName}`,
       detail: `${serviceType} às ${selectedTime}`,
       time: selectedTime
     };
@@ -165,7 +171,7 @@ export default function StudentCalendar({ student }) {
 
       <article className="calendar-streak-card">
         <div className="calendar-lion-ring">
-          <img src="/lion-juda-logo.png" alt="" />
+          <img src={brandLogo} alt="" />
         </div>
         <div>
           <span>Sequência atual</span>
@@ -225,15 +231,15 @@ export default function StudentCalendar({ student }) {
           <button type="button" onClick={() => setScheduleOpen(true)}>Ver agenda</button>
         </div>
         <div className="calendar-return-body">
-          <img className="calendar-personal-photo" src="/personal-thiago.jpeg" alt="Personal Thiago Fillippo" onError={(event) => { event.currentTarget.src = "/erika-gomes.jpeg"; }} />
+          <img className="calendar-personal-photo" src={personalImage} alt={personalName} />
           <div>
             <span>Personal</span>
-            <strong>Thiago Fillippo</strong>
+            <strong>{personalName}</strong>
             <p><CalendarDays size={15} /> Sem consulta confirmada</p>
             <p><Clock size={15} /> Agende um horário</p>
             <p><Wifi size={15} /> Online ou presencial</p>
           </div>
-          <img className="calendar-return-lion" src="/lion-juda-logo.png" alt="" />
+          <img className="calendar-return-lion" src={brandLogo} alt="" />
         </div>
         <button className="calendar-metal-button" type="button" onClick={() => setScheduleOpen(true)}>
           Agendar consulta
@@ -276,10 +282,10 @@ export default function StudentCalendar({ student }) {
         <article className="calendar-mini-card message">
           <h3>Mensagem do seu Personal</h3>
           <div>
-            <img src="/lion-juda-logo.png" alt="" />
-            <span><strong>Thiago Fillippo</strong><small>Quando você concluir treinos, dieta ou avaliações, tudo aparecerá aqui com dados reais.</small></span>
+            <img src={brandLogo} alt="" />
+            <span><strong>{personalName}</strong><small>Quando você concluir treinos, dieta ou avaliações, tudo aparecerá aqui com dados reais.</small></span>
           </div>
-          <p>Pronto para iniciar novos registros em 24/07/2026.</p>
+          <p>Registros atualizados em {formatDateBR(new Date())}.</p>
           <button type="button"><MessageCircle size={17} /> Enviar mensagem</button>
         </article>
       </div>
@@ -288,7 +294,7 @@ export default function StudentCalendar({ student }) {
         <CalendarModal title={formatDateBR(`${dayDetail.dateKey}T00:00:00`)} onClose={() => setDayDetail(null)}>
           <div className="calendar-day-detail">
             {dayDetail.events.length ? dayDetail.events.map((event) => (
-              <p key={event.id}><EventIcon type={event.type} /> <strong>{eventLabels[event.type] || event.title}:</strong> {event.title} - {event.detail}</p>
+              <p key={event.id}><EventIcon type={event.type} /> <strong>{event.status === "scheduled" ? "Treino programado" : eventLabels[event.type] || event.title}:</strong> {event.title} - {event.detail} {event.status === "scheduled" && <button type="button" onClick={() => onStartWorkout?.(event.workoutId)}>Acessar treino</button>}</p>
             )) : <p>Nenhuma atividade registrada nesta data.</p>}
           </div>
         </CalendarModal>
@@ -310,9 +316,9 @@ export default function StudentCalendar({ student }) {
       {scheduleOpen && (
         <CalendarModal title="Agendar consulta" subtitle="Escolha o melhor dia e horário para seu retorno." onClose={() => setScheduleOpen(false)}>
           <div className="schedule-personal-card">
-            <img src="/personal-thiago.jpeg" alt="" onError={(event) => { event.currentTarget.src = "/lion-juda-logo.png"; }} />
-            <div><span>Personal</span><strong>Thiago Fillippo</strong></div>
-            <img src="/lion-juda-logo.png" alt="" />
+            <img src={personalImage} alt="" />
+            <div><span>Personal</span><strong>{personalName}</strong></div>
+            <img src={brandLogo} alt="" />
           </div>
 
           <div className="schedule-type-toggle">
@@ -326,7 +332,7 @@ export default function StudentCalendar({ student }) {
 
           <h4>1. Selecione o dia</h4>
           <div className="schedule-day-list">
-            {availableDays.map(([week, day, month], index) => (
+            {availableDays.map(({ weekday: week, day, month }, index) => (
               <button key={`${day}-${month}`} className={selectedDay === index ? "active" : ""} type="button" onClick={() => setSelectedDay(index)}>
                 <span>{week}</span><strong>{day}</strong><small>{month}</small>
               </button>
@@ -348,7 +354,7 @@ export default function StudentCalendar({ student }) {
             <h4>3. Resumo da consulta</h4>
             <p><span>Data</span><strong>{selectedDate}</strong></p>
             <p><span>Horário</span><strong>{selectedTime}</strong></p>
-            <p><span>Profissional</span><strong>Personal Thiago Fillippo</strong></p>
+            <p><span>Profissional</span><strong>{personalName}</strong></p>
             <p><span>Tipo de atendimento</span><strong>{serviceType}</strong></p>
           </div>
 

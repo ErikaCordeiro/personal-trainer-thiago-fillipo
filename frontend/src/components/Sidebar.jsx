@@ -60,10 +60,11 @@ export default function Sidebar({
   onClose,
   onCollapsedChange,
   navItems = personalNavItems,
-  profileName = "Thiago Fillippo",
+  profileName = "Personal",
   profileRole = "Personal trainer",
   profileInitials = "TF",
-  onLogout
+  onLogout,
+  branding
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const effectiveCollapsed = collapsed && !mobileOpen;
@@ -103,7 +104,7 @@ export default function Sidebar({
           >
             <Menu size={20} />
           </button>
-          <LionLogo compact={effectiveCollapsed} />
+          <LionLogo compact={effectiveCollapsed} branding={branding} />
         </div>
 
         <nav className="nav-list">

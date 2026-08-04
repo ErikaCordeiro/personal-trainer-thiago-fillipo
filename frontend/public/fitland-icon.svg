@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Fitland">
+  <rect width="512" height="512" rx="112" fill="#050505"/>
+  <rect x="18" y="18" width="476" height="476" rx="96" fill="none" stroke="#c0c0c0" stroke-width="12"/>
+  <path d="M126 130h260v58H196v74h158v58H196v112h-70z" fill="#f5f5f5"/>
+  <path d="M313 262h73v170h-73z" fill="#c0c0c0"/>
+</svg>

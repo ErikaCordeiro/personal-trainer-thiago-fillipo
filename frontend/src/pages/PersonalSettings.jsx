@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { apiRequest } from "../services/api.js";
 import {
   Bell,
   Bot,
@@ -37,6 +38,7 @@ const aiSettings = ["Habilitar Coach IA", "Análise de progresso", "Análise fin
 const privacySettings = ["Consentimento obrigatorio (LGPD)", "Compartilhamento de dados", "Armazenamento de exames"];
 
 export default function PersonalSettings() {
+  const [branding, setBranding] = useState({ display_name: "Fitland", logo_url: "", profile_image_url: "", icon_url: "", primary_color: "#050505", secondary_color: "#C0C0C0", login_subtitle: "" });
   const [toggles, setToggles] = useState({
     automaticApproval: false,
     initialAssessment: true,
@@ -62,6 +64,34 @@ export default function PersonalSettings() {
   const [theme, setTheme] = useState("dark");
   const [toast, setToast] = useState("");
   const [armedAction, setArmedAction] = useState(null);
+  const brandName = branding.display_name || "Fitland";
+  const brandImage = branding.profile_image_url || branding.logo_url || branding.icon_url || "/fitland-icon.svg";
+
+  useEffect(() => {
+    apiRequest("/branding/me").then(setBranding).catch(() => {});
+  }, []);
+
+  const saveBranding = async () => {
+    try {
+      const saved = await apiRequest("/branding/me", { method: "PUT", body: JSON.stringify(branding) });
+      setBranding(saved);
+      notify("Identidade da marca salva com sucesso.");
+    } catch (error) {
+      notify(error.message || "Não foi possível salvar a marca.");
+    }
+  };
+
+  const uploadBrandAsset = async (event, type) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      const result = await apiRequest(`/branding/upload/${type}`, { method: "POST", body: file, headers: { "Content-Type": file.type } });
+      setBranding(result.branding);
+      notify("Imagem da marca atualizada.");
+    } catch (error) {
+      notify(error.message || "Não foi possível enviar a imagem.");
+    }
+  };
 
   const toggle = (key) => setToggles((current) => ({ ...current, [key]: !current[key] }));
   const notify = (text) => {
@@ -78,7 +108,7 @@ export default function PersonalSettings() {
         </div>
         <div className="admin-settings-header-actions">
           <button type="button" aria-label="Notificações"><Bell size={21} /><i>3</i></button>
-          <button type="button" className="admin-settings-admin-chip"><img src="/lion-juda-logo.png" alt="" /><span><strong>Thiago Fillippo</strong><small>Administrador</small></span><ChevronRight size={17} /></button>
+          <button type="button" className="admin-settings-admin-chip"><img src={brandImage} alt="" /><span><strong>{brandName}</strong><small>Administrador</small></span><ChevronRight size={17} /></button>
         </div>
       </header>
 
@@ -87,22 +117,22 @@ export default function PersonalSettings() {
       <article className="admin-settings-hero">
         <div>
           <small>Personal</small>
-          <h3>Thiago Fillippo</h3>
+          <h3>{brandName}</h3>
           <span className="admin-plan-chip"><Trophy size={16} /> Plano Premium</span>
           <p>Disciplina - Foco - Propósito</p>
         </div>
         <HeroMetric icon={Users} value="128" label="Alunos ativos" trend="+12% este mês" />
         <HeroMetric icon={Dumbbell} value="482" label="Treinos concluidos" trend="+18% este mês" />
         <HeroMetric icon={DollarSign} value="R$ 24.580" label="Faturados este mês" trend="+15% este mês" />
-        <img src="/lion-juda-logo.png" alt="Leao de Juda" />
+        <img src={branding.logo_url || "/fitland-icon.svg"} alt={`Marca ${brandName}`} />
       </article>
 
       <div className="admin-settings-grid">
         <SettingsCard number="1" title="Perfil Profissional" icon={UserRound} className="profile">
           <div className="admin-profile-card-body">
-            <div className="admin-profile-photo"><img src="/lion-juda-logo.png" alt="Thiago Fillippo" /><button type="button"><Upload size={15} /></button></div>
+            <div className="admin-profile-photo"><img src={brandImage} alt={brandName} /><button type="button"><Upload size={15} /></button></div>
             <div className="admin-profile-lines">
-              <strong>Thiago Fillippo</strong>
+              <strong>{brandName}</strong>
               <span>CREF: 123456-G/SP</span>
               <span>thiagofilippo@personal.com</span>
               <span>(11) 98765-4321</span>
@@ -114,17 +144,22 @@ export default function PersonalSettings() {
         </SettingsCard>
 
         <SettingsCard number="2" title="Identidade da Marca" icon={Palette}>
-          <div className="admin-brand-body">
-            <div className="admin-brand-logo"><img src="/lion-juda-logo.png" alt="Logo" /></div>
-            <div className="admin-brand-lines">
-              <span><small>Nome do app</small><strong>Thiago Fillippo App</strong></span>
-              <span><small>Cor principal</small><i className="swatch dark" /></span>
-              <span><small>Cor secundaria</small><i className="swatch silver" /></span>
-              <span><small>Favicon</small><button type="button"><Image size={15} /></button></span>
-              <span><small>Tela de login</small><button type="button"><Settings2 size={15} /></button></span>
+          <div className="admin-brand-editor">
+            <div className="admin-brand-logo">
+              {branding.logo_url ? <img src={branding.logo_url} alt={`Logo ${branding.display_name}`} /> : <span>{branding.initials || "FT"}</span>}
+            </div>
+            <label>Nome profissional<input value={branding.display_name || ""} onChange={(event) => setBranding({ ...branding, display_name: event.target.value })} /></label>
+            <label>Texto do login<input value={branding.login_subtitle || ""} onChange={(event) => setBranding({ ...branding, login_subtitle: event.target.value })} /></label>
+            <div className="admin-brand-colors">
+              <label>Cor principal<input type="color" value={branding.primary_color || "#050505"} onChange={(event) => setBranding({ ...branding, primary_color: event.target.value })} /></label>
+              <label>Cor secundária<input type="color" value={branding.secondary_color || "#C0C0C0"} onChange={(event) => setBranding({ ...branding, secondary_color: event.target.value })} /></label>
+            </div>
+            <div className="admin-brand-uploads">
+              <label className="admin-settings-wide">Enviar logo<input hidden type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => uploadBrandAsset(event, "logo")} /></label>
+              <label className="admin-settings-wide">Enviar foto<input hidden type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => uploadBrandAsset(event, "profile")} /></label>
             </div>
           </div>
-          <button className="admin-settings-wide" type="button" onClick={() => notify("Central de marca aberta para personalizacao.")}>Personalizar marca</button>
+          <button className="admin-settings-wide" type="button" onClick={saveBranding}>Salvar identidade</button>
         </SettingsCard>
 
         <SettingsCard number="3" title="Configuração de Alunos" icon={Users}>
@@ -212,9 +247,9 @@ export default function PersonalSettings() {
         </article>
 
         <article className="admin-settings-footer">
-          <img src="/lion-juda-logo.png" alt="Thiago Fillippo" />
-          <div><p>Você está no controle do seu negócio. Cada configuração é um passo para transformar vidas e gerar resultados.</p><strong>Thiago Fillippo</strong><small>Personal Trainer</small></div>
-          <img src="/lion-juda-logo.png" alt="" />
+          <img src={brandImage} alt={brandName} />
+          <div><p>Você está no controle do seu negócio. Cada configuração é um passo para transformar vidas e gerar resultados.</p><strong>{brandName}</strong><small>Personal Trainer</small></div>
+          <img src={branding.logo_url || "/fitland-icon.svg"} alt="" />
         </article>
       </div>
     </section>

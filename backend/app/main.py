@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.api.routes import auth, exercises, progress, students, users, videos, workouts
+from app.api.routes import auth, branding, exercises, owner, progress, students, users, videos, workouts
 from app.core.config import settings
 from app.core.errors import register_error_handlers
 
@@ -28,6 +28,8 @@ app.include_router(workouts.router, prefix="/api/workouts", tags=["workouts"])
 app.include_router(exercises.router, prefix="/api/exercises", tags=["exercises"])
 app.include_router(progress.router, prefix="/api/progress", tags=["progress"])
 app.include_router(videos.router, prefix="/api/videos", tags=["videos"])
+app.include_router(owner.router, prefix="/api/owner", tags=["owner"])
+app.include_router(branding.router, prefix="/api/branding", tags=["branding"])
 
 
 @app.get("/health")
@@ -36,6 +38,9 @@ def health_check():
 
 
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+UPLOADS_DIR = Path(__file__).resolve().parents[1] / "uploads"
+UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
 
 if FRONTEND_DIST.exists():
     assets_dir = FRONTEND_DIST / "assets"

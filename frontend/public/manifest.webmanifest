@@ -1,8 +1,8 @@
 {
-  "name": "Thiago Filippo",
-  "short_name": "Thiago Filippo",
+  "name": "Fitland",
+  "short_name": "Fitland",
   "id": "/",
-  "description": "App premium para treinos, dieta, avaliacoes e progresso fisico.",
+  "description": "Plataforma Fitland para gestão fitness e acompanhamento de alunos.",
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
@@ -14,22 +14,16 @@
   "lang": "pt-BR",
   "icons": [
     {
-      "src": "/pwa-icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
+      "src": "/fitland-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "/pwa-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "src": "/fitland-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
-    },
-    {
-      "src": "/apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
     }
   ],
   "shortcuts": [
@@ -37,13 +31,13 @@
       "name": "Area do aluno",
       "short_name": "Aluno",
       "url": "/dashboard/aluno",
-      "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "/fitland-icon.svg", "sizes": "any", "type": "image/svg+xml" }]
     },
     {
       "name": "Painel do personal",
       "short_name": "Personal",
       "url": "/dashboard/personal",
-      "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "/fitland-icon.svg", "sizes": "any", "type": "image/svg+xml" }]
     }
   ]
 }

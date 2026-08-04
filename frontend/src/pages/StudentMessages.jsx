@@ -48,11 +48,13 @@ const days = [
 
 const times = ["08:00", "09:00", "10:00", "14:00", "16:00", "18:00", "19:00"];
 
-export default function StudentMessages({ student }) {
+export default function StudentMessages({ student, branding }) {
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const firstName = student?.name?.split(" ")[0] || "Erika";
+  const personalName = branding?.display_name || "Seu personal";
+  const personalImage = branding?.profile_image_url || branding?.logo_url || branding?.icon_url || "/fitland-icon.svg";
 
   const sendMessage = (customText) => {
     const text = (customText || draft).trim();
@@ -69,7 +71,7 @@ export default function StudentMessages({ student }) {
       setScheduleOpen(true);
       return;
     }
-    setDraft(action.prompt);
+    setDraft(action.prompt.replace("Thiago", personalName));
   };
 
   return (
@@ -87,16 +89,16 @@ export default function StudentMessages({ student }) {
 
       <article className="student-personal-card">
         <div className="student-personal-avatar-wrap">
-          <img src="/lion-juda-logo.png" alt="Personal Thiago Fillippo" />
+          <img src={personalImage} alt={personalName} />
           <i />
         </div>
         <div>
           <span>Personal</span>
-          <h3>Thiago Fillippo <ShieldCheck size={19} /></h3>
+          <h3>{personalName} <ShieldCheck size={19} /></h3>
           <p><i /> Online</p>
           <small>Disciplina • Foco • Propósito</small>
         </div>
-        <img className="student-personal-lion" src="/lion-juda-logo.png" alt="" />
+        <img className="student-personal-lion" src={branding?.logo_url || "/fitland-icon.svg"} alt="" />
       </article>
 
       <div className="student-message-shortcuts">
@@ -115,14 +117,14 @@ export default function StudentMessages({ student }) {
         <div className="student-chat-day"><span>Hoje, 24 de Junho</span></div>
         <div className="student-chat-thread">
           {messages.map((message) => (
-            <StudentMessage key={message.id} message={message} />
+            <StudentMessage key={message.id} message={message} personalName={personalName} personalImage={personalImage} />
           ))}
         </div>
         <footer className="student-message-composer">
           <textarea
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
-            placeholder={`Digite sua mensagem para o Thiago, ${firstName}...`}
+            placeholder={`Digite sua mensagem para ${personalName}, ${firstName}...`}
           />
           <div>
             <button type="button" aria-label="Arquivo"><Paperclip size={21} /></button>
@@ -137,17 +139,17 @@ export default function StudentMessages({ student }) {
 
       {scheduleOpen && <StudentScheduleModal onClose={() => setScheduleOpen(false)} onConfirm={() => {
         setScheduleOpen(false);
-        sendMessage("Oi, Thiago! Confirmei uma consulta pelo app. Pode verificar na sua agenda?");
-      }} />}
+        sendMessage(`Olá, ${personalName}! Confirmei uma consulta pelo app. Pode verificar na sua agenda?`);
+      }} personalName={personalName} personalImage={personalImage} />}
     </section>
   );
 }
 
-function StudentMessage({ message }) {
+function StudentMessage({ message, personalName, personalImage }) {
   const own = message.from === "student";
   return (
     <div className={`student-message-row ${own ? "own" : ""}`}>
-      {!own && <img src="/lion-juda-logo.png" alt="Thiago Fillippo" />}
+      {!own && <img src={personalImage} alt={personalName} />}
       <div className={`student-message-bubble ${message.type}`}>
         {message.type === "text" && <p>{message.text}</p>}
         {message.type === "video" && (
@@ -166,7 +168,7 @@ function StudentMessage({ message }) {
   );
 }
 
-function StudentScheduleModal({ onClose, onConfirm }) {
+function StudentScheduleModal({ onClose, onConfirm, personalName, personalImage }) {
   const [type, setType] = useState("Online");
   const [day, setDay] = useState(1);
   const [time, setTime] = useState("18:00");
@@ -176,11 +178,11 @@ function StudentScheduleModal({ onClose, onConfirm }) {
       <div className="student-message-schedule" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
         <button type="button" className="student-message-modal-close" onClick={onClose} aria-label="Fechar"><X size={18} /></button>
         <h3>Agendar consulta</h3>
-        <p>Escolha o melhor dia e horário para falar com o Thiago.</p>
+        <p>Escolha o melhor dia e horário para falar com {personalName}.</p>
 
         <div className="student-schedule-personal">
-          <img src="/lion-juda-logo.png" alt="" />
-          <div><span>Personal</span><strong>Thiago Fillippo</strong><small>Online agora</small></div>
+          <img src={personalImage} alt="" />
+          <div><span>Personal</span><strong>{personalName}</strong><small>Online agora</small></div>
           <Wifi size={22} />
         </div>
 

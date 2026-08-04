@@ -16,6 +16,9 @@ export default function Header({
 }) {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const firstName = user?.name?.split(" ")[0] || "Thiago";
+  const now = new Date();
+  const currentDate = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "long", year: "numeric" }).format(now);
+  const currentWeekday = new Intl.DateTimeFormat("pt-BR", { weekday: "long" }).format(now);
   const studentHeading = title?.startsWith("Dieta") || title?.startsWith("Avaliac") ? "Bom dia," : "Bora treinar,";
   const heading = variant === "student" ? studentHeading : "Central de controle,";
   const visibleNotifications = notifications.length
@@ -115,8 +118,8 @@ export default function Header({
         <div className="header-date">
           <CalendarDays size={19} />
           <div>
-            <strong>21 de Junho, 2025</strong>
-            <small>Sábado</small>
+            <strong>{currentDate}</strong>
+            <small>{currentWeekday.charAt(0).toUpperCase() + currentWeekday.slice(1)}</small>
           </div>
         </div>
         <div className="profile-chip">

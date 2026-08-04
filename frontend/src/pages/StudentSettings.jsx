@@ -43,7 +43,9 @@ const integrations = [
   { label: "Smartwatch", icon: Smartphone }
 ];
 
-export default function StudentSettings({ student }) {
+export default function StudentSettings({ student, branding }) {
+  const personalName = branding?.display_name || "Seu personal";
+  const personalImage = branding?.profile_image_url || branding?.logo_url || branding?.icon_url || "/fitland-icon.svg";
   const [profile, setProfile] = useState({
     name: student?.name || "Erika Gomes",
     email: "erika.gomes@email.com",
@@ -80,7 +82,7 @@ export default function StudentSettings({ student }) {
         </div>
         <div className="student-settings-safe-card">
           <Shield size={30} />
-          <span><strong>Seus dados estão seguros</strong><small>Compartilhados apenas com o Personal Thiago Fillippo.</small></span>
+          <span><strong>Seus dados estão seguros</strong><small>Compartilhados apenas com {personalName}.</small></span>
         </div>
       </header>
 
@@ -112,10 +114,10 @@ export default function StudentSettings({ student }) {
             <div className="settings-journey-list">
               <JourneyItem icon={CalendarDays} label="Aluno desde" value="10/03/2026" />
               <JourneyItem icon={Dumbbell} label="Objetivo atual" value="Hipertrofia" />
-              <JourneyItem icon={UserRound} label="Personal" value="Thiago Fillippo" />
+              <JourneyItem icon={UserRound} label="Personal" value={personalName} />
               <JourneyItem icon={Target} label="Dias de acompanhamento" value="187 dias" />
             </div>
-            <img src="/lion-juda-logo.png" alt="Leao de Juda" />
+            <img src={personalImage} alt={personalName} />
           </div>
         </article>
 
@@ -216,11 +218,11 @@ export default function StudentSettings({ student }) {
         <article className="student-settings-footer span-12">
           <div>
             <p>Cada configuração é um passo para uma jornada ainda mais personalizada e resultados extraordinários.</p>
-            <strong>Thiago Fillippo</strong>
+            <strong>{personalName}</strong>
             <small>Personal Trainer</small>
           </div>
-          <img className="settings-personal-photo" src="/lion-juda-logo.png" alt="Thiago Fillippo" />
-          <img className="settings-footer-lion" src="/lion-juda-logo.png" alt="" />
+          <img className="settings-personal-photo" src={personalImage} alt={personalName} />
+          <img className="settings-footer-lion" src={branding?.logo_url || "/fitland-icon.svg"} alt="" />
         </article>
       </div>
     </section>

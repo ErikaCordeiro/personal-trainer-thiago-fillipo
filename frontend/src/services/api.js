@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "/api" : "http://localhost:8000/api");
-const TOKEN_KEY = "ptf_token";
-const SESSION_TOKEN_KEY = "ptf_session_token";
+const TOKEN_KEY = "fitland_token";
+const SESSION_TOKEN_KEY = "fitland_session_token";
 
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(SESSION_TOKEN_KEY);

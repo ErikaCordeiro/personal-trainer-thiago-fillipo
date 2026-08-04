@@ -1,27 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { CheckCircle2, Circle, Clock, Dumbbell, Flame, Play, Video, X } from "lucide-react";
 import { loadWorkoutHistory } from "../utils/activityData.js";
+import { getRecommendedWorkout, getWeekdayName, groupWorkoutsByWeekday, normalizeScheduleText } from "../utils/workoutSchedule.js";
 
 const weekDays = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
 
-const ACTIVE_WORKOUT_KEY = "ptf_active_workout_id";
-
-function normalizeText(value = "") {
-  return String(value).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-
-function normalizeDay(value = "") {
-  const text = normalizeText(value);
-  return weekDays.find((day) => text.includes(normalizeText(day))) || null;
-}
-
 export default function StudentPortal({ workout, workouts = [], completed, onStartWorkout, onToggleExercise, onNavigate }) {
   const [loads, setLoads] = useState({});
-  const [selectedWorkoutId, setSelectedWorkoutId] = useState(() => {
-    try { return window.localStorage.getItem(ACTIVE_WORKOUT_KEY); } catch { return null; }
-  });
-  const availableWorkouts = workouts.length ?workouts : [workout];
-  const selectedWorkout = availableWorkouts.find((item) => item.id === selectedWorkoutId) || workout;
+  const availableWorkouts = workouts.length ? workouts : workout ? [workout] : [];
+  const recommendedWorkout = getRecommendedWorkout(availableWorkouts, new Date());
+  const [selectedWorkoutId, setSelectedWorkoutId] = useState(() => recommendedWorkout?.id || workout?.id || null);
+  const selectedWorkout = availableWorkouts.find((item) => item.id === selectedWorkoutId) || recommendedWorkout || availableWorkouts[0];
   const [workoutHistory, setWorkoutHistory] = useState([]);
   const [historyDetail, setHistoryDetail] = useState(null);
 
@@ -42,25 +31,25 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
     };
   }, []);
 
-  const workoutsByDay = useMemo(() => {
-    const grouped = Object.fromEntries(weekDays.map((day) => [day, []]));
-    availableWorkouts.forEach((item, index) => {
-      const day = normalizeDay(item.date) || weekDays[index % weekDays.length];
-      grouped[day].push(item);
-    });
-    return grouped;
-  }, [availableWorkouts]);
+  useEffect(() => {
+    if (recommendedWorkout?.id) setSelectedWorkoutId(recommendedWorkout.id);
+  }, [recommendedWorkout?.id]);
+
+  const workoutsByDay = useMemo(() => groupWorkoutsByWeekday(availableWorkouts), [availableWorkouts]);
+  const todayName = getWeekdayName(new Date());
 
   const percent = useMemo(() => {
-    const done = selectedWorkout.exercises.filter((exercise) => completed.has(exercise.id)).length;
-    return selectedWorkout.exercises.length ?Math.round((done / selectedWorkout.exercises.length) * 100) : 0;
+    const done = selectedWorkout?.exercises?.filter((exercise) => completed.has(exercise.id)).length || 0;
+    return selectedWorkout?.exercises?.length ?Math.round((done / selectedWorkout.exercises.length) * 100) : 0;
   }, [selectedWorkout, completed]);
+
+  if (!selectedWorkout) return <section className="student-training-page"><article className="premium-panel"><h2>Nenhum treino cadastrado</h2><p>Seu personal ainda não configurou sua semana de treinos.</p></article></section>;
 
   return (
     <section className="student-training-page">
       <article className="training-hero-card">
         <div>
-          <p className="eyebrow">Treino do dia</p>
+          <p className="eyebrow">{selectedWorkout.id === recommendedWorkout?.id ? "Treino recomendado para hoje" : "Treino selecionado"}</p>
           <h2>{selectedWorkout.name}</h2>
           <span>{selectedWorkout.date || "Hoje"} - {selectedWorkout.focus} - {selectedWorkout.duration}</span>
           <div className="training-facts">
@@ -96,7 +85,7 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
             return (
               <article className="weekday-card" key={day}>
                 <header>
-                  <strong>{day}</strong>
+                  <strong>{day}{normalizeScheduleText(day) === normalizeScheduleText(todayName) ? " - Hoje" : ""}</strong>
                   <span>{dayWorkouts.length ?`${dayWorkouts.length} treino(s)` : "Descanso"}</span>
                 </header>
                 {dayWorkouts.length ?dayWorkouts.map((item) => (
@@ -106,11 +95,6 @@ export default function StudentPortal({ workout, workouts = [], completed, onSta
                     type="button"
                     onClick={() => {
                       setSelectedWorkoutId(item.id);
-                      try {
-                        window.localStorage.setItem(ACTIVE_WORKOUT_KEY, item.id);
-                        window.dispatchEvent(new CustomEvent("ptf-active-workout-changed", { detail: { workoutId: item.id } }));
-                      } catch {}
-                      onNavigate?.("dashboard");
                     }}
                   >
                     <strong>{item.name}</strong>

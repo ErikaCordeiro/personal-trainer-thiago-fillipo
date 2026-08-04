@@ -30,6 +30,8 @@ def seed() -> None:
     init_db()
     db = SessionLocal()
     try:
+        from app.services.owner_service import ensure_owner
+        ensure_owner(db)
         is_production = settings.ENVIRONMENT.lower() == "production"
         personal_email = normalize_email(settings.SEED_PERSONAL_EMAIL)
         personal_password = normalize_password(settings.SEED_PERSONAL_PASSWORD)
@@ -51,6 +53,11 @@ def seed() -> None:
             f"student_password_len={len(student_password or '')}"
         )
 
+        # Migrate branding independently from credentials. Existing access and
+        # passwords remain untouched, and no duplicate personal is created.
+        from app.services.branding_service import ensure_thiago_branding
+        ensure_thiago_branding(db, personal_email or DEFAULT_PERSONAL_EMAIL)
+
         legacy_personal = db.scalar(select(User).where(User.email == "thiago@personal.com"))
         if is_production and legacy_personal and not personal_password:
             legacy_personal.hashed_password = hash_password(secrets.token_urlsafe(48))
@@ -64,16 +71,15 @@ def seed() -> None:
         existing = db.scalar(select(User).where(func.lower(User.email) == personal_email)) or legacy_personal
         if existing:
             existing.email = personal_email
-            existing.name = "Thiago Filippo"
-            existing.hashed_password = hash_password(personal_password)
+            existing.name = "Thiago Fillipo"
             existing.role = UserRole.PERSONAL
             existing.is_active = True
             db.commit()
             personal = existing
-            print(f"[seed] personal user updated: {personal_email}")
+            print(f"[seed] existing personal reused without changing password: {personal_email}")
         else:
             personal = User(
-                name="Thiago Filippo",
+                name="Thiago Fillipo",
                 email=personal_email,
                 hashed_password=hash_password(personal_password),
                 role=UserRole.PERSONAL,

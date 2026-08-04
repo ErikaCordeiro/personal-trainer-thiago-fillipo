@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Award, CheckCircle2, Dumbbell, Edit3, Instagram, Mail, Save, Star, Target } from "lucide-react";
 
-export default function AboutPersonal({ profile, editable = false, onSave }) {
+export default function AboutPersonal({ profile, editable = false, onSave, branding }) {
   const [draft, setDraft] = useState(profile);
   const [editing, setEditing] = useState(false);
   const data = editing ? draft : profile;
@@ -29,7 +29,7 @@ export default function AboutPersonal({ profile, editable = false, onSave }) {
             {editable && editing && <button type="button" onClick={save}><Save size={18} /> Salvar página</button>}
           </div>
         </div>
-        <img src="/lion-juda-logo.png" alt="Leão de Judá" />
+        <img src={branding?.logo_url || branding?.profile_image_url || "/fitland-icon.svg"} alt={branding?.display_name || data.name} />
       </article>
 
       <section className="about-personal-grid">
@@ -72,7 +72,7 @@ export default function AboutPersonal({ profile, editable = false, onSave }) {
       </section>
 
       <section className="about-contact-card">
-        <div><Dumbbell size={22} /><span>Personal Thiago Fillippo</span></div>
+        <div><Dumbbell size={22} /><span>{branding?.display_name || data.name || "Personal"}</span></div>
         <div><Mail size={20} /><span>{data.email}</span></div>
         <div><Instagram size={20} /><span>{data.instagram}</span></div>
       </section>

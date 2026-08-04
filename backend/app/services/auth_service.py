@@ -17,6 +17,7 @@ from app.core.security import (
     verify_password,
 )
 from app.models.student import Student
+from app.models.audit_log import AuditLog
 from app.models.user import User, UserRole
 from app.schemas.auth import LoginRequest, TokenResponse
 from app.schemas.user import UserCreate
@@ -39,7 +40,7 @@ def register_user(db: Session, payload: UserCreate) -> User:
         name=payload.name.strip(),
         email=payload.email.lower(),
         hashed_password=hash_password(payload.password),
-        role=payload.role,
+        role=UserRole.STUDENT,
     )
     db.add(user)
     db.commit()
@@ -68,6 +69,7 @@ def _register_success(email: str, user: User) -> None:
         }
     )
     del LOGIN_HISTORY[:-50]
+    user.last_login_at = datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 def _ensure_seed_user(db: Session, email: str, password: str, user: User | None) -> User | None:
@@ -75,7 +77,7 @@ def _ensure_seed_user(db: Session, email: str, password: str, user: User | None)
     seed_email = (settings.SEED_PERSONAL_EMAIL or DEFAULT_PERSONAL_EMAIL).strip().lower()
     if email == seed_email and seed_password and password == seed_password:
         if user:
-            user.name = "Thiago Filippo"
+            user.name = "Thiago Fillipo"
             user.email = seed_email
             user.hashed_password = hash_password(seed_password)
             user.role = UserRole.PERSONAL
@@ -83,7 +85,7 @@ def _ensure_seed_user(db: Session, email: str, password: str, user: User | None)
             print(f"[auth] seeded personal user refreshed during login: {seed_email}")
         else:
             user = User(
-                name="Thiago Filippo",
+                name="Thiago Fillipo",
                 email=seed_email,
                 hashed_password=hash_password(seed_password),
                 role=UserRole.PERSONAL,
@@ -192,11 +194,14 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
         _register_failure(email)
         print(f"[auth] login_failed email={email}; reason=invalid_credentials")
         raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED)
-    if not user.is_active:
+    if not user.is_active or user.deleted_at is not None or user.account_status != "active":
         print(f"[auth] login_failed email={email}; reason=inactive_user")
         raise DomainError("Inactive user", status.HTTP_403_FORBIDDEN)
 
     _register_success(email, user)
+    if user.role == UserRole.OWNER:
+        db.add(AuditLog(actor_user_id=user.id, action="owner_login", entity_type="user", entity_id=str(user.id), details={}))
+    db.commit()
     refresh_token = build_refresh_token(user) if payload.keep_connected else None
     return build_token_response(user), refresh_token
 
