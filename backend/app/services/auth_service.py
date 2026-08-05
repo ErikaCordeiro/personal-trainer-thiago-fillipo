@@ -73,6 +73,24 @@ def _register_success(email: str, user: User) -> None:
 
 
 def _ensure_seed_user(db: Session, email: str, password: str, user: User | None) -> User | None:
+    owner_email = (settings.OWNER_INITIAL_EMAIL or "").strip().lower()
+    owner_password = (settings.OWNER_INITIAL_PASSWORD or "").strip()
+    if (
+        settings.OWNER_FORCE_PASSWORD_RESET
+        and user
+        and user.role == UserRole.OWNER
+        and email == owner_email
+        and password == owner_password
+    ):
+        user.hashed_password = hash_password(owner_password)
+        user.is_active = True
+        user.account_status = "active"
+        user.must_change_password = True
+        db.commit()
+        db.refresh(user)
+        print(f"[auth] owner temporary access repaired during login: {owner_email}")
+        return user
+
     seed_password = (settings.SEED_PERSONAL_PASSWORD or "").strip()
     seed_email = (settings.SEED_PERSONAL_EMAIL or DEFAULT_PERSONAL_EMAIL).strip().lower()
     if email == seed_email and seed_password and password == seed_password:
