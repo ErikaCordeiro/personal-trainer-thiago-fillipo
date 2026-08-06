@@ -201,6 +201,14 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
         f"user_found={bool(user)}; "
         f"password_len={len(password)}"
     )
+    owner_email = (settings.OWNER_INITIAL_EMAIL or "").strip().lower()
+    if owner_email and email == owner_email:
+        print(
+            "[auth] owner_diagnostic "
+            f"force_reset={settings.OWNER_FORCE_PASSWORD_RESET}; "
+            f"user_role={user.role.value if user else 'not-found'}; "
+            f"configured_password_len={len((settings.OWNER_INITIAL_PASSWORD or '').strip())}"
+        )
 
     if _is_locked(email):
         print(f"[auth] login_failed email={email}; reason=locked")

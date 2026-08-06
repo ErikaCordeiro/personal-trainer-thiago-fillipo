@@ -39,7 +39,12 @@ def ensure_owner(db: Session) -> User | None:
             audit(db, existing, "owner_password_reset", "user", existing.id, {"source": "environment_reset"})
             db.commit()
             db.refresh(existing)
-            print("[owner] temporary password reset applied; disable OWNER_FORCE_PASSWORD_RESET after login")
+            password_verified = verify_password(password, existing.hashed_password)
+            print(
+                "[owner] temporary password reset applied; "
+                f"persisted_hash_valid={password_verified}; "
+                "disable OWNER_FORCE_PASSWORD_RESET after login"
+            )
         return existing
     owner = User(name=name, email=email, hashed_password=hash_password(password), role=UserRole.OWNER,
                  is_active=True, account_status="active", must_change_password=True)
