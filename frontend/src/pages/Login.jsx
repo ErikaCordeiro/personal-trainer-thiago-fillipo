@@ -27,13 +27,21 @@ export default function Login({ onLogin, onSignup, context = "platform", brandin
       .catch(() => setBranding({ display_name: "Fitland", initials: "FT", is_fallback: true }));
   }, [isOwnerContext, brandSlug]);
 
+  useEffect(() => {
+    if (isOwnerContext || brandSlug || !credentials.email.includes("@")) return undefined;
+    const timer = window.setTimeout(() => {
+      resolvePersonalBrand();
+    }, 450);
+    return () => window.clearTimeout(timer);
+  }, [credentials.email, isOwnerContext, brandSlug]);
+
   const resolvePersonalBrand = async () => {
     if (isOwnerContext || !credentials.email) return;
     try {
       const data = await apiRequest(`/branding/public?email=${encodeURIComponent(credentials.email)}`, { skipAuthRefresh: true });
       setBranding(data);
     } catch {
-      setBranding({ display_name: "Fitland", initials: "FT", is_fallback: true });
+      setBranding((current) => current || { display_name: "Personal", initials: "PT", is_fallback: true });
     }
   };
 

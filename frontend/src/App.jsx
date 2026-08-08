@@ -211,7 +211,13 @@ export default function App() {
     if (!session) return;
     apiRequest("/branding/me")
       .then(setBranding)
-      .catch(() => setBranding({ display_name: "Fitland", initials: "FT", is_fallback: true }));
+      .catch(() => setBranding(session.role === "owner"
+        ? { display_name: "Fitland", initials: "FT", is_fallback: false }
+        : {
+            display_name: session.name?.toLowerCase().startsWith("personal ") ? session.name : `Personal ${session.name || ""}`.trim(),
+            initials: (session.name || "PT").split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase(),
+            is_fallback: true
+          }));
   }, [session?.id, session?.role]);
 
   if (!authReady) {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "personal-thiago-filippo-v4";
+const CACHE_NAME = "fitland-app-v5";
 const APP_SHELL = [
   "/",
   "/manifest.webmanifest",
@@ -26,6 +26,10 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
 
   if (request.method !== "GET") {
+    return;
+  }
+
+  if (new URL(request.url).pathname.startsWith("/api/")) {
     return;
   }
 

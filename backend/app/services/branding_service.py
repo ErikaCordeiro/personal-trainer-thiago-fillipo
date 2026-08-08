@@ -23,12 +23,15 @@ FITLAND_BRANDING = {
 
 
 def fallback_branding(personal: User) -> dict:
-    initials = "".join(part[0] for part in personal.name.split()[:2]).upper() or "FT"
+    clean_name = (personal.name or "Personal").strip()
+    display_name = clean_name if clean_name.lower().startswith("personal ") else f"Personal {clean_name}"
+    initials = "".join(part[0] for part in clean_name.split()[:2]).upper() or "PT"
     return {
         "id": None,
         "personal_id": personal.id,
         **FITLAND_BRANDING,
-        "display_name": "Fitland",
+        "display_name": display_name,
+        "login_subtitle": "Disciplina • Foco • Propósito",
         "initials": initials,
         "is_fallback": True,
         "created_at": None,
@@ -98,10 +101,14 @@ def ensure_thiago_branding(db: Session, email: str | None) -> None:
         return
     existing = db.scalar(select(PersonalBranding).where(PersonalBranding.personal_id == personal.id))
     if existing:
+        if existing.display_name in {"Fitland", "Personal Thiago Fillipo"}:
+            existing.display_name = "Personal Thiago Fillippo"
+            existing.login_subtitle = "Disciplina • Foco • Propósito"
+            db.commit()
         return
     db.add(PersonalBranding(
         personal_id=personal.id,
-        display_name="Personal Thiago Fillipo",
+        display_name="Personal Thiago Fillippo",
         logo_url="/lion-juda-logo.png",
         profile_image_url=personal.avatar_url,
         primary_color="#050505",

@@ -10,6 +10,7 @@ from app.core.errors import DomainError
 from app.core.security import hash_password, verify_password
 from app.models.audit_log import AuditLog
 from app.models.student import Student
+from app.models.personal_branding import PersonalBranding
 from app.models.user import User, UserRole
 from app.models.workout import Workout
 from app.schemas.owner import OwnerPersonalCreate, OwnerPersonalUpdate
@@ -27,10 +28,19 @@ def ensure_owner(db: Session) -> User | None:
     password = (settings.OWNER_INITIAL_PASSWORD or "").strip()
     if not name or not email or not password:
         return None
-    existing = db.scalar(select(User).where(func.lower(User.email) == email))
+    matches = db.scalars(select(User).where(func.lower(func.trim(User.email)) == email)).all()
+    print(
+        "[owner] account_check "
+        f"user_found={str(bool(matches)).lower()} user_count={len(matches)} "
+        f"force_reset={str(settings.OWNER_FORCE_PASSWORD_RESET).lower()}"
+    )
+    if len(matches) > 1:
+        raise RuntimeError("Multiple owner candidates found after email normalization")
+    existing = matches[0] if matches else None
     if existing:
         if existing.role != UserRole.OWNER:
             raise RuntimeError("OWNER_INITIAL_EMAIL already belongs to another profile")
+        existing.email = email
         if settings.OWNER_FORCE_PASSWORD_RESET:
             existing.hashed_password = hash_password(password)
             existing.is_active = True
@@ -45,6 +55,15 @@ def ensure_owner(db: Session) -> User | None:
                 f"persisted_hash_valid={password_verified}; "
                 "disable OWNER_FORCE_PASSWORD_RESET after login"
             )
+            if not password_verified:
+                raise RuntimeError("Owner password reset was not persisted correctly")
+        else:
+            print(
+                "[owner] existing account preserved "
+                f"active={str(existing.is_active).lower()} status={existing.account_status} "
+                f"hash_present={str(bool(existing.hashed_password)).lower()} "
+                f"must_change_password={str(existing.must_change_password).lower()}"
+            )
         return existing
     owner = User(name=name, email=email, hashed_password=hash_password(password), role=UserRole.OWNER,
                  is_active=True, account_status="active", must_change_password=True)
@@ -53,6 +72,9 @@ def ensure_owner(db: Session) -> User | None:
     audit(db, owner, "owner_created", "user", owner.id, {"source": "environment_seed"})
     db.commit()
     db.refresh(owner)
+    if not verify_password(password, owner.hashed_password):
+        raise RuntimeError("Owner creation produced an unverifiable password hash")
+    print("[owner] account_created persisted_hash_valid=true")
     return owner
 
 
@@ -92,7 +114,7 @@ def personal_to_dict(user: User, student_count=0, workout_count=0):
     return {"id": user.id, "name": user.name, "email": user.email, "phone": user.phone,
             "avatar_url": user.avatar_url, "status": user.account_status, "student_count": student_count,
             "workout_count": workout_count, "created_at": user.created_at, "last_login_at": user.last_login_at,
-            "profile": "PERSONAL_ADMIN", "brand_name": branding.display_name if branding else "Fitland"}
+            "profile": "PERSONAL_ADMIN", "brand_name": branding.display_name if branding else f"Personal {user.name}"}
 
 
 def get_personal(db: Session, personal_id: uuid.UUID):
@@ -110,7 +132,18 @@ def create_personal(db: Session, actor: User, payload: OwnerPersonalCreate):
         raise DomainError("Email already registered", status.HTTP_409_CONFLICT)
     user = User(name=payload.name.strip(), email=email, phone=payload.phone, hashed_password=hash_password(payload.password),
                 role=UserRole.PERSONAL, account_status=payload.status, is_active=payload.status == "active", must_change_password=True)
-    db.add(user); db.flush(); audit(db, actor, "personal_created", "user", user.id, {"status": payload.status}); db.commit(); db.refresh(user)
+    db.add(user)
+    db.flush()
+    db.add(PersonalBranding(
+        personal_id=user.id,
+        display_name=f"Personal {user.name}",
+        primary_color="#050505",
+        secondary_color="#C0C0C0",
+        login_subtitle="Disciplina • Foco • Propósito",
+    ))
+    audit(db, actor, "personal_created", "user", user.id, {"status": payload.status})
+    db.commit()
+    db.refresh(user)
     return user
 
 

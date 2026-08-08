@@ -40,17 +40,12 @@ def seed() -> None:
 
         if personal_password and not personal_email:
             personal_email = DEFAULT_PERSONAL_EMAIL
-            print(
-                "[seed] SEED_PERSONAL_EMAIL not found; "
-                f"using test personal email fallback: {personal_email}"
-            )
+            print("[seed] personal email fallback selected")
 
         print(
-            "[seed] personal_email="
-            f"{personal_email or 'not-configured'}; "
-            f"personal_password_len={len(personal_password or '')}; "
-            f"student_email={student_email or 'not-configured'}; "
-            f"student_password_len={len(student_password or '')}"
+            "[seed] configuration "
+            f"personal_configured={str(bool(personal_email and personal_password)).lower()} "
+            f"student_configured={str(bool(student_email and student_password)).lower()}"
         )
 
         # Migrate branding independently from credentials. Existing access and
@@ -68,7 +63,7 @@ def seed() -> None:
             print("[seed] personal seed skipped: missing SEED_PERSONAL_EMAIL or SEED_PERSONAL_PASSWORD")
             return
 
-        existing = db.scalar(select(User).where(func.lower(User.email) == personal_email)) or legacy_personal
+        existing = db.scalar(select(User).where(func.lower(func.trim(User.email)) == personal_email)) or legacy_personal
         if existing:
             existing.email = personal_email
             existing.name = "Thiago Fillipo"
@@ -76,7 +71,7 @@ def seed() -> None:
             existing.is_active = True
             db.commit()
             personal = existing
-            print(f"[seed] existing personal reused without changing password: {personal_email}")
+            print("[seed] existing personal reused without changing password")
         else:
             personal = User(
                 name="Thiago Fillipo",
@@ -86,18 +81,18 @@ def seed() -> None:
             )
             db.add(personal)
             db.flush()
-            print(f"[seed] personal user created: {personal_email}")
+            print("[seed] personal user created")
 
         student_user = None
         if student_email and student_password:
-            student_user = db.scalar(select(User).where(func.lower(User.email) == student_email))
+            student_user = db.scalar(select(User).where(func.lower(func.trim(User.email)) == student_email))
             if student_user:
                 student_user.email = student_email
                 student_user.name = "Erika Gomes Cordeiro"
                 student_user.hashed_password = hash_password(student_password)
                 student_user.role = UserRole.STUDENT
                 student_user.is_active = True
-                print(f"[seed] student user updated: {student_email}")
+                print("[seed] student user updated")
             else:
                 student_user = User(
                     name="Erika Gomes Cordeiro",
@@ -107,7 +102,7 @@ def seed() -> None:
                 )
                 db.add(student_user)
                 db.flush()
-                print(f"[seed] student user created: {student_email}")
+                print("[seed] student user created")
 
         existing_student = None
         if student_user:
