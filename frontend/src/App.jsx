@@ -60,7 +60,7 @@ const pageMeta = {
 };
 
 const rolePath = {
-  owner: "/owner/dashboard",
+  owner: "/fitland/dashboard",
   personal: "/dashboard/personal",
   student: "/dashboard/aluno"
 };
@@ -100,6 +100,12 @@ function pageFromPath(pathname, role) {
     "/personal/sobre-o-personal": "about-personal"
   };
   const ownerRoutes = {
+    "/fitland/login": "dashboard",
+    "/fitland/dashboard": "dashboard",
+    "/fitland/personals": "personals",
+    "/fitland/logs": "logs",
+    "/fitland/configuracoes": "settings",
+    "/fitland/seguranca": "security",
     "/owner/dashboard": "dashboard",
     "/owner/personals": "personals",
     "/owner/logs": "logs",
@@ -157,7 +163,8 @@ export default function App() {
   useEffect(() => {
     if (!branding?.display_name) return;
     setPersonalProfile((current) => ({ ...current, name: branding.display_name }));
-  }, [branding?.display_name]);
+    document.title = session?.role === "owner" ? "Fitland" : branding.display_name;
+  }, [branding?.display_name, session?.role]);
 
   useEffect(() => {
     let mounted = true;
@@ -186,7 +193,7 @@ export default function App() {
           : pageFromPath(window.location.pathname, normalizedUser.role);
         setActivePage(requestedPage);
         if (normalizedUser.role === "owner" && normalizedUser.must_change_password) {
-          window.history.replaceState(null, "", "/owner/seguranca");
+          window.history.replaceState(null, "", "/fitland/seguranca");
         } else if (window.location.pathname === "/") {
           pushRoute(normalizedUser.role);
         }
@@ -233,7 +240,7 @@ export default function App() {
     const personalLoginMatch = loginPath.match(/^\/personal\/([^/]+)\/login\/?$/);
     return (
       <Login
-        context={loginPath.startsWith("/owner") ? "owner" : "personal"}
+        context={loginPath.startsWith("/owner") || loginPath.startsWith("/fitland") ? "owner" : "personal"}
         brandSlug={personalLoginMatch?.[1] || ""}
         branding={branding}
         onSignup={(student) => {
@@ -251,7 +258,7 @@ export default function App() {
             : pageFromPath(window.location.pathname, normalizedRole);
           setActivePage(requestedPage);
           if (normalizedRole === "owner" && normalizedUser.must_change_password) {
-            window.history.replaceState(null, "", "/owner/seguranca");
+            window.history.replaceState(null, "", "/fitland/seguranca");
           } else if (requestedPage === "dashboard") {
             pushRoute(normalizedRole);
           }
@@ -269,8 +276,8 @@ export default function App() {
       setExecutionWorkoutId(null);
     }
     if (isOwner) {
-      const ownerPaths = { dashboard: "/owner/dashboard", personals: "/owner/personals", logs: "/owner/logs", settings: "/owner/configuracoes", security: "/owner/seguranca" };
-      window.history.replaceState(null, "", ownerPaths[page] || "/owner/dashboard");
+      const ownerPaths = { dashboard: "/fitland/dashboard", personals: "/fitland/personals", logs: "/fitland/logs", settings: "/fitland/configuracoes", security: "/fitland/seguranca" };
+      window.history.replaceState(null, "", ownerPaths[page] || "/fitland/dashboard");
     } else if (page === "coach") {
       window.history.replaceState(null, "", isStudent ? "/aluno/coach-ia" : "/personal/coach-ia");
     } else if (page === "about-personal") {
@@ -520,7 +527,7 @@ export default function App() {
     <PersonalLayout {...commonLayoutProps}>
       {activePage === "dashboard" && <PersonalDashboard students={students} workouts={workouts} onNavigate={navigate} />}
       {activePage === "diet" && <PersonalDiet students={students} />}
-      {activePage === "finance" && <PersonalFinance />}
+      {activePage === "finance" && <PersonalFinance students={students} />}
       {activePage === "agenda" && <PersonalAgenda students={students} />}
       {activePage === "chat" && <PersonalMessages students={students} />}
       {activePage === "reports" && <PersonalReports students={students} />}

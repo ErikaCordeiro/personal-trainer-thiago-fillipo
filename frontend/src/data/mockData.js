@@ -10,6 +10,10 @@ export const students = [
     notes: "Rotina: treino 4x na semana, nível intermediário.",
     avatar: "/erika-gomes.jpeg",
     adherence: 94,
+    plan: "Plano Premium",
+    monthlyFee: 199,
+    paymentDueDay: 10,
+    paymentStatus: "Em dia",
     accessApproved: true,
     status: "active"
   }

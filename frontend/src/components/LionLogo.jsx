@@ -6,6 +6,8 @@ export default function LionLogo({ compact = false, hero = false, branding = nul
     : branding;
   const displayName = data?.display_name || "Fitland";
   const logoUrl = data?.logo_url || data?.icon_url;
+  const isPersonalBrand = !platform && displayName.toLowerCase().startsWith("personal ");
+  const brandName = isPersonalBrand ? displayName.slice("Personal ".length) : displayName;
 
   return (
     <div className={`lion-logo ${compact ? "compact" : ""} ${hero ? "hero" : ""}`} aria-label={displayName}>
@@ -14,8 +16,8 @@ export default function LionLogo({ compact = false, hero = false, branding = nul
       </div>
       {!compact && (
         <div className="brand-lockup">
-          <span>{platform || data?.is_fallback ? "Plataforma" : "Personal"}</span>
-          <strong>{displayName}</strong>
+          <span>{platform ? "Plataforma" : "Personal"}</span>
+          <strong>{brandName}</strong>
           <small>{data?.login_subtitle || "Performance • Gestão • Evolução"}</small>
         </div>
       )}

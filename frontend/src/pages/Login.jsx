@@ -19,6 +19,11 @@ export default function Login({ onLogin, onSignup, context = "platform", brandin
   const isOwnerContext = context === "owner";
 
   useEffect(() => {
+    const title = isOwnerContext ? "Fitland" : branding?.display_name || "Personal";
+    document.title = title;
+  }, [branding?.display_name, isOwnerContext]);
+
+  useEffect(() => {
     const endpoint = isOwnerContext || !brandSlug
       ? "/branding/platform"
       : `/branding/public?slug=${encodeURIComponent(brandSlug)}`;

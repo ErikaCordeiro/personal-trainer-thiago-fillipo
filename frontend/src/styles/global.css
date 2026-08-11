@@ -19402,6 +19402,220 @@ body.theme-light span {
   color: rgba(5,5,5,.72);
 }
 
+/* Personal workspace light theme: high contrast, neutral and intentionally bright. */
+body.theme-light .personal-layout {
+  --light-ink: #16181b;
+  --light-muted: #5f646b;
+  --light-line: rgba(20, 24, 28, .14);
+  --light-panel: rgba(255, 255, 255, .92);
+  --light-panel-soft: #eef0f1;
+  color: var(--light-ink);
+}
+
+body.theme-light .personal-layout .main-panel {
+  color: var(--light-ink);
+  background:
+    radial-gradient(circle at 88% 4%, rgba(255,255,255,.98), transparent 34%),
+    radial-gradient(circle at 10% 94%, rgba(203,207,210,.36), transparent 30%),
+    linear-gradient(145deg, #f3f4f3 0%, #e5e7e7 100%) !important;
+}
+
+body.theme-light .personal-layout .topbar h1,
+body.theme-light .personal-layout .topbar h1 span,
+body.theme-light .personal-layout .admin-panel h2,
+body.theme-light .personal-layout .admin-panel h3,
+body.theme-light .personal-layout .admin-panel strong,
+body.theme-light .personal-layout .admin-kpi-card strong,
+body.theme-light .personal-layout .admin-kpi-card span {
+  color: var(--light-ink) !important;
+  text-shadow: none !important;
+}
+
+body.theme-light .personal-layout .topbar > div:first-child > span,
+body.theme-light .personal-layout .admin-panel p,
+body.theme-light .personal-layout .admin-panel small,
+body.theme-light .personal-layout .admin-panel span,
+body.theme-light .personal-layout .admin-kpi-card small,
+body.theme-light .personal-layout .chart-legend span,
+body.theme-light .personal-layout .header-date small {
+  color: var(--light-muted) !important;
+}
+
+body.theme-light .personal-layout .admin-kpi-card,
+body.theme-light .personal-layout .admin-panel,
+body.theme-light .personal-layout .reports-card,
+body.theme-light .personal-layout .nutrition-admin-panel,
+body.theme-light .personal-layout .form-panel,
+body.theme-light .personal-layout .workout-list {
+  color: var(--light-ink) !important;
+  border-color: var(--light-line) !important;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.98), rgba(235,237,238,.9)) !important;
+  box-shadow:
+    0 14px 34px rgba(27,31,35,.12),
+    inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+
+body.theme-light .personal-layout button.admin-kpi-card:hover,
+body.theme-light .personal-layout .admin-panel[role="button"]:hover {
+  border-color: rgba(34, 39, 44, .28) !important;
+  box-shadow: 0 18px 42px rgba(27,31,35,.18) !important;
+}
+
+body.theme-light .personal-layout .compact-search,
+body.theme-light .personal-layout .header-date,
+body.theme-light .personal-layout .icon-button,
+body.theme-light .personal-layout .profile-chip,
+body.theme-light .personal-layout .ghost-button,
+body.theme-light .personal-layout .panel-head button,
+body.theme-light .personal-layout .table-actions button {
+  color: var(--light-ink) !important;
+  border-color: var(--light-line) !important;
+  background: rgba(255,255,255,.78) !important;
+  box-shadow: 0 8px 20px rgba(24,28,32,.08);
+}
+
+body.theme-light .personal-layout .compact-search input,
+body.theme-light .personal-layout input,
+body.theme-light .personal-layout select,
+body.theme-light .personal-layout textarea {
+  color: var(--light-ink) !important;
+}
+
+body.theme-light .personal-layout input::placeholder,
+body.theme-light .personal-layout textarea::placeholder {
+  color: #737980 !important;
+}
+
+body.theme-light .personal-layout .admin-line-chart {
+  border-color: rgba(22, 24, 27, .09);
+  background-image:
+    linear-gradient(rgba(22,24,27,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22,24,27,.07) 1px, transparent 1px);
+}
+
+body.theme-light .personal-layout .admin-line-chart polyline,
+body.theme-light .personal-layout .admin-line-chart circle {
+  stroke: #24282d;
+}
+
+body.theme-light .personal-layout .donut-total {
+  background: conic-gradient(#1f2327 0 45%, #777d82 45% 75%, #b6babd 75% 90%, #e1e3e4 90%);
+}
+
+body.theme-light .personal-layout .donut-total::after {
+  background: #f5f6f5;
+}
+
+/* The navigation intentionally stays charcoal in light mode for brand continuity. */
+body.theme-light .personal-layout .sidebar {
+  color: #f5f5f5 !important;
+  border-color: rgba(255,255,255,.13) !important;
+  background: linear-gradient(180deg, #202427 0%, #111315 100%) !important;
+  box-shadow: 12px 0 34px rgba(26,29,32,.16);
+}
+
+body.theme-light .personal-layout .sidebar span,
+body.theme-light .personal-layout .sidebar strong,
+body.theme-light .personal-layout .sidebar small,
+body.theme-light .personal-layout .sidebar p,
+body.theme-light .personal-layout .sidebar button,
+body.theme-light .personal-layout .sidebar a,
+body.theme-light .personal-layout .sidebar svg {
+  color: #eef0f1 !important;
+}
+
+body.theme-light .personal-layout .sidebar .brand-lockup small,
+body.theme-light .personal-layout .sidebar .sidebar-profile span,
+body.theme-light .personal-layout .sidebar .coach-card p {
+  color: rgba(238,240,241,.66) !important;
+}
+
+body.theme-light .personal-layout .sidebar .nav-item {
+  border-color: transparent;
+  background: transparent;
+}
+
+body.theme-light .personal-layout .sidebar .nav-item:hover {
+  background: rgba(255,255,255,.07);
+}
+
+body.theme-light .personal-layout .sidebar .nav-item.active {
+  border-color: rgba(255,255,255,.36) !important;
+  background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.07)) !important;
+  box-shadow: inset 3px 0 0 #f5f5f5, 0 12px 28px rgba(0,0,0,.2);
+}
+
+.finance-real-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.finance-real-summary > div {
+  display: grid;
+  gap: 8px;
+  min-height: 132px;
+  padding: 20px;
+  border: 1px solid rgba(245,245,245,.12);
+  border-radius: 18px;
+  background: rgba(255,255,255,.035);
+}
+
+.finance-real-summary strong { font-size: clamp(1.45rem, 3vw, 2.25rem); }
+.finance-real-summary small { color: rgba(245,245,245,.6); }
+.finance-kpi-card { text-align: left; color: inherit; cursor: pointer; }
+.finance-wide-button:disabled { opacity: .45; cursor: not-allowed; }
+
+.finance-empty-state {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 96px;
+  color: rgba(245,245,245,.65);
+  border: 1px dashed rgba(245,245,245,.14);
+  border-radius: 16px;
+}
+
+.finance-data-modal { width: min(92vw, 680px); }
+.finance-modal-list { display: grid; gap: 10px; max-height: 52vh; overflow-y: auto; margin: 18px 0; }
+.finance-modal-list > div {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(245,245,245,.12);
+  border-radius: 14px;
+  background: rgba(255,255,255,.04);
+}
+.finance-modal-list img { width: 44px; height: 44px; object-fit: cover; border-radius: 50%; }
+.finance-modal-list span { display: grid; gap: 3px; }
+.finance-modal-list small { color: rgba(245,245,245,.6); }
+.finance-modal-list em { color: #95d79c; font-style: normal; }
+.finance-modal-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0; }
+.finance-modal-rows span { display: grid; gap: 5px; padding: 14px; border: 1px solid rgba(245,245,245,.12); border-radius: 14px; }
+
+body.theme-light .finance-real-summary > div,
+body.theme-light .finance-modal-list > div,
+body.theme-light .finance-modal-rows span {
+  border-color: rgba(15,18,20,.13);
+  background: rgba(255,255,255,.72);
+}
+body.theme-light .finance-real-summary small,
+body.theme-light .finance-empty-state,
+body.theme-light .finance-modal-list small { color: #62686e; }
+
+@media (max-width: 760px) {
+  .finance-real-summary { grid-template-columns: 1fr; }
+  .finance-modal-list > div { grid-template-columns: 40px minmax(0, 1fr); }
+  .finance-modal-list > div > strong,
+  .finance-modal-list > div > em { grid-column: 2; }
+  .finance-modal-rows { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 760px) {
   .dashboard-utility-bar {
     justify-content: stretch;
