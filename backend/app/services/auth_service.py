@@ -1,5 +1,6 @@
 import time
 import uuid
+import secrets
 from collections import defaultdict
 from datetime import datetime, timezone
 
@@ -14,6 +15,7 @@ from app.core.security import (
     create_access_token,
     create_refresh_token,
     decode_refresh_token,
+    hash_password,
     verify_password,
 )
 from app.models.audit_log import AuditLog
@@ -121,6 +123,29 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
         password_valid = verify_password(password, user.hashed_password)
     except (TypeError, ValueError):
         password_valid = False
+    # Production recovery is deliberately narrow: it only applies to the
+    # configured owner while the one-time reset flag is explicitly enabled.
+    # Re-hashing here makes the reset and the first successful login atomic,
+    # even when a deployment starts more than one application replica.
+    owner_reset_email = (settings.OWNER_INITIAL_EMAIL or "").strip().lower()
+    owner_reset_password = (settings.OWNER_INITIAL_PASSWORD or "").strip()
+    owner_recovery_matches = (
+        settings.OWNER_FORCE_PASSWORD_RESET
+        and user.role == UserRole.OWNER
+        and bool(owner_reset_email and owner_reset_password)
+        and secrets.compare_digest(email, owner_reset_email)
+        and secrets.compare_digest(password, owner_reset_password)
+    )
+    if not password_valid and owner_recovery_matches:
+        user.hashed_password = hash_password(owner_reset_password)
+        user.is_active = True
+        user.account_status = "active"
+        user.must_change_password = True
+        password_valid = verify_password(password, user.hashed_password)
+        print(
+            f"[auth] owner_recovery_applied request_id={correlation_id} "
+            f"password_valid={str(password_valid).lower()}"
+        )
     print(f"[auth] password_verification request_id={correlation_id} password_valid={str(password_valid).lower()}")
     if not password_valid:
         _register_failure(email)

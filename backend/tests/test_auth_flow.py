@@ -153,6 +153,20 @@ def test_temporary_owner_reset_is_persisted_and_verifiable(monkeypatch):
     assert verify_password(PASSWORD, user.hashed_password)
 
 
+def test_owner_login_recovers_from_stale_hash_while_reset_is_enabled(monkeypatch):
+    user = make_user(hashed_password=hash_password("OldPassword123!"))
+    db = FakeSession([user])
+    monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "test@example.com")
+    monkeypatch.setattr(settings, "OWNER_INITIAL_PASSWORD", PASSWORD)
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", True)
+
+    response, refresh = authenticate(db, payload())
+
+    assert response.user.role == UserRole.OWNER
+    assert refresh
+    assert verify_password(PASSWORD, user.hashed_password)
+
+
 def test_owner_login_does_not_require_company_id():
     user = make_user()
     assert not hasattr(user, "company_id")
