@@ -1,4 +1,5 @@
 import os
+import time
 import uuid
 from datetime import datetime
 from pathlib import Path
@@ -166,6 +167,33 @@ def test_owner_login_recovers_from_stale_hash_while_reset_is_enabled(monkeypatch
     assert refresh
     assert verify_password(PASSWORD, user.hashed_password)
 
+
+def test_owner_recovery_clears_stale_attempt_lock(monkeypatch):
+    user = make_user(hashed_password=hash_password("OldPassword123!"))
+    db = FakeSession([user])
+    monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "test@example.com")
+    monkeypatch.setattr(settings, "OWNER_INITIAL_PASSWORD", PASSWORD)
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", True)
+    auth_service.FAILED_ATTEMPTS[user.email] = [time.time()] * auth_service.MAX_FAILED_ATTEMPTS
+
+    response, refresh = authenticate(db, payload())
+
+    assert response.user.role == UserRole.OWNER
+    assert refresh
+    assert user.email not in auth_service.FAILED_ATTEMPTS
+
+
+def test_lockout_still_blocks_non_owner_recovery(monkeypatch):
+    user = make_user(role=UserRole.PERSONAL)
+    monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "test@example.com")
+    monkeypatch.setattr(settings, "OWNER_INITIAL_PASSWORD", PASSWORD)
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", True)
+    auth_service.FAILED_ATTEMPTS[user.email] = [time.time()] * auth_service.MAX_FAILED_ATTEMPTS
+
+    with pytest.raises(DomainError) as error:
+        authenticate(FakeSession([user]), payload())
+
+    assert error.value.status_code == 429
 
 def test_owner_login_does_not_require_company_id():
     user = make_user()

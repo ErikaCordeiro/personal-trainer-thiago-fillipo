@@ -114,8 +114,13 @@ export default function Login({ onLogin, onSignup, context = "platform", brandin
       await apiLogin(email, password, keepConnected);
       const user = await apiRequest("/users/me");
       onLogin(user);
-    } catch {
-      setLoginError("E-mail ou senha invalidos.");
+    } catch (error) {
+      const message = error?.message || "Não foi possível entrar. Tente novamente.";
+      setLoginError(
+        message === "Invalid email or password"
+          ? "E-mail ou senha inválidos."
+          : message
+      );
     }
   };
 
@@ -131,7 +136,7 @@ export default function Login({ onLogin, onSignup, context = "platform", brandin
       objective: form.get("objective"),
       notes: form.get("notes")
     });
-    setSignupMessage("Cadastro enviado. águarde aprovação do personal para liberar seu acesso.");
+    setSignupMessage("Cadastro enviado. aguarde aprovação do personal para liberar seu acesso.");
     setSignupOpen(false);
     event.currentTarget.reset();
   };

@@ -107,9 +107,25 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
         f"password_hash_present={str(bool(user and user.hashed_password)).lower()}"
     )
 
-    if _is_locked(email):
+    # Allow the explicitly configured one-time owner recovery to clear a stale
+    # in-memory lockout. This never applies to other users.
+    owner_reset_email = (settings.OWNER_INITIAL_EMAIL or "").strip().lower()
+    owner_reset_password = (settings.OWNER_INITIAL_PASSWORD or "").strip()
+    owner_recovery_matches = (
+        settings.OWNER_FORCE_PASSWORD_RESET
+        and user is not None
+        and len(users) == 1
+        and user.role == UserRole.OWNER
+        and bool(owner_reset_email and owner_reset_password)
+        and secrets.compare_digest(email, owner_reset_email)
+        and secrets.compare_digest(password, owner_reset_password)
+    )
+
+    if _is_locked(email) and not owner_recovery_matches:
         print(f"[auth] login_failed request_id={correlation_id} reason=blocked_account")
         raise DomainError("Muitas tentativas. Aguarde alguns minutos e tente novamente.", status.HTTP_429_TOO_MANY_REQUESTS)
+    if owner_recovery_matches:
+        FAILED_ATTEMPTS.pop(email, None)
 
     if len(users) > 1:
         print(f"[auth] login_failed request_id={correlation_id} reason=internal_auth_error duplicate_accounts=true")
@@ -127,15 +143,7 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
     # configured owner while the one-time reset flag is explicitly enabled.
     # Re-hashing here makes the reset and the first successful login atomic,
     # even when a deployment starts more than one application replica.
-    owner_reset_email = (settings.OWNER_INITIAL_EMAIL or "").strip().lower()
-    owner_reset_password = (settings.OWNER_INITIAL_PASSWORD or "").strip()
-    owner_recovery_matches = (
-        settings.OWNER_FORCE_PASSWORD_RESET
-        and user.role == UserRole.OWNER
-        and bool(owner_reset_email and owner_reset_password)
-        and secrets.compare_digest(email, owner_reset_email)
-        and secrets.compare_digest(password, owner_reset_password)
-    )
+
     if not password_valid and owner_recovery_matches:
         user.hashed_password = hash_password(owner_reset_password)
         user.is_active = True
