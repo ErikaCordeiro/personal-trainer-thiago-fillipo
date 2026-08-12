@@ -111,15 +111,24 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
     # in-memory lockout. This never applies to other users.
     owner_reset_email = (settings.OWNER_INITIAL_EMAIL or "").strip().lower()
     owner_reset_password = (settings.OWNER_INITIAL_PASSWORD or "").strip()
+    owner_email_matches = bool(owner_reset_email) and secrets.compare_digest(email, owner_reset_email)
+    owner_password_matches = bool(owner_reset_password) and secrets.compare_digest(password, owner_reset_password)
     owner_recovery_matches = (
         settings.OWNER_FORCE_PASSWORD_RESET
         and user is not None
         and len(users) == 1
         and user.role == UserRole.OWNER
-        and bool(owner_reset_email and owner_reset_password)
-        and secrets.compare_digest(email, owner_reset_email)
-        and secrets.compare_digest(password, owner_reset_password)
+        and owner_email_matches
+        and owner_password_matches
     )
+    if owner_email_matches or (user is not None and user.role == UserRole.OWNER):
+        print(
+            f"[auth] owner_recovery_check request_id={correlation_id} "
+            f"force_reset={str(settings.OWNER_FORCE_PASSWORD_RESET).lower()} "
+            f"email_match={str(owner_email_matches).lower()} "
+            f"password_match={str(owner_password_matches).lower()} "
+            f"submitted_password_len={len(password)} configured_password_len={len(owner_reset_password)}"
+        )
 
     if _is_locked(email) and not owner_recovery_matches:
         print(f"[auth] login_failed request_id={correlation_id} reason=blocked_account")
