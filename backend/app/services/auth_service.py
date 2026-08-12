@@ -1,6 +1,7 @@
 import time
 import uuid
 import secrets
+import unicodedata
 from collections import defaultdict
 from datetime import datetime, timezone
 
@@ -30,6 +31,12 @@ MAX_FAILED_ATTEMPTS = 5
 FAILED_ATTEMPTS: dict[str, list[float]] = defaultdict(list)
 REVOKED_REFRESH_JTIS: set[str] = set()
 LOGIN_HISTORY: list[dict[str, str]] = []
+
+
+def _normalize_owner_bootstrap_secret(value: str | None) -> str:
+    """Normalize copy/paste artifacts only for the temporary owner bootstrap."""
+    normalized = unicodedata.normalize("NFKC", value or "")
+    return normalized.replace("\u200b", "").replace("\ufeff", "").strip()
 
 
 def register_user(db: Session, payload: UserCreate) -> User:
@@ -110,9 +117,13 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
     # Allow the explicitly configured one-time owner recovery to clear a stale
     # in-memory lockout. This never applies to other users.
     owner_reset_email = (settings.OWNER_INITIAL_EMAIL or "").strip().lower()
-    owner_reset_password = (settings.OWNER_INITIAL_PASSWORD or "").strip()
+    owner_reset_password = _normalize_owner_bootstrap_secret(settings.OWNER_INITIAL_PASSWORD)
+    submitted_owner_password = _normalize_owner_bootstrap_secret(password)
     owner_email_matches = bool(owner_reset_email) and secrets.compare_digest(email, owner_reset_email)
-    owner_password_matches = bool(owner_reset_password) and secrets.compare_digest(password, owner_reset_password)
+    owner_password_matches = bool(owner_reset_password) and secrets.compare_digest(
+        submitted_owner_password,
+        owner_reset_password,
+    )
     owner_recovery_matches = (
         settings.OWNER_FORCE_PASSWORD_RESET
         and user is not None
@@ -145,7 +156,7 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
         raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED)
 
     try:
-        password_valid = verify_password(password, user.hashed_password)
+        password_valid = verify_password(submitted_owner_password, user.hashed_password)
     except (TypeError, ValueError):
         password_valid = False
     # Production recovery is deliberately narrow: it only applies to the

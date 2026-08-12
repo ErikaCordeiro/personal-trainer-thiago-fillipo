@@ -183,6 +183,20 @@ def test_owner_recovery_clears_stale_attempt_lock(monkeypatch):
     assert user.email not in auth_service.FAILED_ATTEMPTS
 
 
+def test_owner_recovery_normalizes_copy_paste_artifacts(monkeypatch):
+    user = make_user(hashed_password=hash_password("OldPassword123!"))
+    db = FakeSession([user])
+    monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "test@example.com")
+    monkeypatch.setattr(settings, "OWNER_INITIAL_PASSWORD", f"\ufeff{PASSWORD}\u200b ")
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", True)
+
+    response, refresh = authenticate(db, payload())
+
+    assert response.user.role == UserRole.OWNER
+    assert refresh
+    assert verify_password(PASSWORD, user.hashed_password)
+
+
 def test_lockout_still_blocks_non_owner_recovery(monkeypatch):
     user = make_user(role=UserRole.PERSONAL)
     monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "test@example.com")

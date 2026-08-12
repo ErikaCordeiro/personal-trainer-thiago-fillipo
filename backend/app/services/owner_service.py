@@ -1,5 +1,6 @@
 import secrets
 import uuid
+import unicodedata
 from datetime import datetime
 
 from sqlalchemy import asc, desc, func, or_, select
@@ -25,7 +26,8 @@ def ensure_owner(db: Session) -> User | None:
     from app.core.config import settings
     name = (settings.OWNER_INITIAL_NAME or "").strip()
     email = (settings.OWNER_INITIAL_EMAIL or "").strip().lower()
-    password = (settings.OWNER_INITIAL_PASSWORD or "").strip()
+    password = unicodedata.normalize("NFKC", settings.OWNER_INITIAL_PASSWORD or "")
+    password = password.replace("\u200b", "").replace("\ufeff", "").strip()
     if not name or not email or not password:
         return None
     matches = db.scalars(select(User).where(func.lower(func.trim(User.email)) == email)).all()
