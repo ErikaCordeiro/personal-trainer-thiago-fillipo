@@ -39,6 +39,10 @@ def _normalize_owner_bootstrap_secret(value: str | None) -> str:
     return normalized.replace("\u200b", "").replace("\ufeff", "").strip()
 
 
+def _normalize_owner_bootstrap_email(value: str | None) -> str:
+    return _normalize_owner_bootstrap_secret(value).lower()
+
+
 def register_user(db: Session, payload: UserCreate) -> User:
     existing = db.scalar(select(User).where(User.email == payload.email.lower()))
     if existing:
@@ -98,7 +102,7 @@ def build_refresh_token(user: User) -> str:
 
 
 def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str | None]:
-    email = payload.email.strip().lower()
+    email = _normalize_owner_bootstrap_email(str(payload.email))
     password = payload.password
     correlation_id = request_id()
     users = db.scalars(
@@ -116,7 +120,7 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
 
     # Allow the explicitly configured one-time owner recovery to clear a stale
     # in-memory lockout. This never applies to other users.
-    owner_reset_email = (settings.OWNER_INITIAL_EMAIL or "").strip().lower()
+    owner_reset_email = _normalize_owner_bootstrap_email(settings.OWNER_INITIAL_EMAIL)
     owner_reset_password = _normalize_owner_bootstrap_secret(settings.OWNER_INITIAL_PASSWORD)
     submitted_owner_password = _normalize_owner_bootstrap_secret(password)
     owner_email_matches = bool(owner_reset_email) and secrets.compare_digest(email, owner_reset_email)
@@ -164,17 +168,25 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
     # Re-hashing here makes the reset and the first successful login atomic,
     # even when a deployment starts more than one application replica.
 
-    if not password_valid and owner_recovery_matches:
+    if owner_recovery_matches:
         user.hashed_password = hash_password(owner_reset_password)
         user.is_active = True
         user.account_status = "active"
         user.must_change_password = True
-        password_valid = verify_password(password, user.hashed_password)
+        # The environment credential was already compared in constant time.
+        # Accept this one-time recovery atomically instead of depending on a
+        # second bcrypt check against stale ORM/database state.
+        password_valid = True
         print(
             f"[auth] owner_recovery_applied request_id={correlation_id} "
-            f"password_valid={str(password_valid).lower()}"
+            "password_valid=true",
+            flush=True,
         )
-    print(f"[auth] password_verification request_id={correlation_id} password_valid={str(password_valid).lower()}")
+    print(
+        f"[auth] password_verification request_id={correlation_id} "
+        f"password_valid={str(password_valid).lower()}",
+        flush=True,
+    )
     if not password_valid:
         _register_failure(email)
         print(f"[auth] login_failed request_id={correlation_id} reason=invalid_credentials")

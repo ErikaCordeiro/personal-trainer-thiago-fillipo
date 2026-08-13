@@ -25,7 +25,8 @@ def audit(db: Session, actor: User | None, action: str, entity_type: str, entity
 def ensure_owner(db: Session) -> User | None:
     from app.core.config import settings
     name = (settings.OWNER_INITIAL_NAME or "").strip()
-    email = (settings.OWNER_INITIAL_EMAIL or "").strip().lower()
+    email = unicodedata.normalize("NFKC", settings.OWNER_INITIAL_EMAIL or "")
+    email = email.replace("\u200b", "").replace("\ufeff", "").strip().lower()
     password = unicodedata.normalize("NFKC", settings.OWNER_INITIAL_PASSWORD or "")
     password = password.replace("\u200b", "").replace("\ufeff", "").strip()
     if not name or not email or not password:

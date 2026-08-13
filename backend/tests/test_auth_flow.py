@@ -197,6 +197,29 @@ def test_owner_recovery_normalizes_copy_paste_artifacts(monkeypatch):
     assert verify_password(PASSWORD, user.hashed_password)
 
 
+def test_owner_recovery_accepts_normalized_email_and_password_atomically(monkeypatch):
+    user = make_user(email="owner@example.com", hashed_password=hash_password("OldPassword123!"))
+    db = FakeSession([user])
+    monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "\ufeffOWNER@example.com\u200b ")
+    monkeypatch.setattr(settings, "OWNER_INITIAL_PASSWORD", f"\ufeff{PASSWORD}\u200b ")
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", True)
+
+    response, refresh = authenticate(
+        db,
+        LoginRequest(
+            email="owner@example.com",
+            password=PASSWORD,
+            keep_connected=True,
+        ),
+    )
+
+    assert response.user.role == UserRole.OWNER
+    assert refresh
+    assert user.is_active is True
+    assert user.account_status == "active"
+    assert verify_password(PASSWORD, user.hashed_password)
+
+
 def test_lockout_still_blocks_non_owner_recovery(monkeypatch):
     user = make_user(role=UserRole.PERSONAL)
     monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "test@example.com")
