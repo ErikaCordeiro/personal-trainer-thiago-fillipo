@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, Check, ChevronLeft, ChevronRight, CircleOff, Eye, KeyRound, Moon, Pencil, Plus, Search, ShieldCheck, Sun, Trash2, Users, X } from "lucide-react";
+import { AlertTriangle, Check, ChevronLeft, ChevronRight, CircleOff, Eye, KeyRound, LockKeyhole, Moon, Pencil, Plus, Search, ShieldCheck, Sun, Trash2, Users, X } from "lucide-react";
 import { apiRequest } from "../services/api.js";
+import OwnerDashboard from "../components/OwnerDashboard.jsx";
 
 const emptySummary = { personals_active: 0, personals_suspended: 0, personals_blocked: 0, students_total: 0, alerts: [] };
 const statusLabel = { active: "Ativo", suspended: "Suspenso", blocked: "Bloqueado" };
@@ -68,5 +69,5 @@ export default function OwnerPortal({activePage,onNavigate,session,onSession}){
  const [theme,setTheme]=useState(()=>localStorage.getItem("owner_theme")||session.theme_preference||"auto");
  useEffect(()=>{localStorage.setItem("owner_theme",theme);const resolved=theme==="auto"?(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"):theme;document.body.classList.toggle("owner-light",resolved==="light")},[theme]);
  const meta=useMemo(()=>({dashboard:[`Bem-vinda, ${session.name.split(" ")[0]}!`,`Visão geral da sua plataforma`],personals:["Personais","Gerencie os profissionais cadastrados na plataforma."],logs:["Logs e atividades","Auditoria das ações administrativas."],settings:["Configurações","Gerencie seu perfil e suas preferências."],security:["Segurança","Proteja sua conta e altere sua senha."]}[activePage]||["Dashboard",""]),[activePage,session.name]);
- return <><Header title={meta[0]} subtitle={meta[1]} theme={theme} setTheme={setTheme}/>{activePage==="dashboard"&&<Dashboard onNavigate={onNavigate}/>} {activePage==="personals"&&<Personals/>}{activePage==="logs"&&<Logs/>}{activePage==="settings"&&<SettingsPage session={session} onSession={onSession}/>} {activePage==="security"&&<Security mustChange={session.must_change_password} session={session} onSession={onSession} onNavigate={onNavigate}/>}</>;
+ return <>{activePage!=="dashboard"&&<Header title={meta[0]} subtitle={meta[1]} theme={theme} setTheme={setTheme}/>} {activePage==="dashboard"&&<OwnerDashboard onNavigate={onNavigate} theme={theme} setTheme={setTheme}/>} {activePage==="personals"&&<Personals/>}{activePage==="logs"&&<Logs/>}{activePage==="settings"&&<SettingsPage session={session} onSession={onSession}/>} {activePage==="security"&&<Security mustChange={session.must_change_password} session={session} onSession={onSession} onNavigate={onNavigate}/>}</>;
 }

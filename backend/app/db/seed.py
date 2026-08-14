@@ -69,9 +69,11 @@ def seed() -> None:
             existing.name = "Thiago Fillipo"
             existing.role = UserRole.PERSONAL
             existing.is_active = True
+            existing.account_status = "active"
+            existing.deleted_at = None
             db.commit()
             personal = existing
-            print("[seed] existing personal reused without changing password")
+            print("[seed] existing personal reactivated and reused without changing password")
         else:
             personal = User(
                 name="Thiago Fillipo",

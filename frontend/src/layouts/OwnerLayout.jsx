@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Activity, ChevronLeft, ChevronRight, LayoutDashboard, LockKeyhole, LogOut, Menu, Settings, ShieldCheck, Users, X } from "lucide-react";
+import { Activity, LayoutDashboard, LogOut, Menu, Settings, ShieldCheck, Users, X } from "lucide-react";
 
 const items = [
   ["dashboard", "Dashboard", LayoutDashboard], ["personals", "Personais", Users],
@@ -14,6 +14,17 @@ export default function OwnerLayout({ session, activePage, onNavigate, onLogout,
     <button className="owner-mobile-menu" type="button" aria-label="Abrir menu" onClick={() => setMobileOpen(true)}><Menu /></button>
     {mobileOpen && <button className="owner-overlay" aria-label="Fechar menu" onClick={() => setMobileOpen(false)} />}
     <aside className={`owner-sidebar ${mobileOpen ? "open" : ""}`}>
+      <div className="owner-sidebar-head">
+        <div className="owner-fitland-logo"><span className="owner-fitland-mark">F</span><strong>FITLAND</strong></div>
+        <button
+          className="owner-sidebar-toggle"
+          type="button"
+          title={collapsed ? "Expandir menu" : "Recolher menu"}
+          aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+          aria-expanded={!collapsed}
+          onClick={() => setCollapsed(value => !value)}
+        ><Menu /></button>
+      </div>
       <button className="owner-close-mobile" aria-label="Fechar menu" onClick={() => setMobileOpen(false)}><X /></button>
       <div className="owner-identity">
         {session.avatar_url ? <img src={session.avatar_url} alt="Erika Cordeiro" /> : <span>EC</span>}
@@ -23,7 +34,7 @@ export default function OwnerLayout({ session, activePage, onNavigate, onLogout,
       <nav aria-label="Navegação da dona">{items.map(([key, label, Icon]) => <button title={label} className={activePage === key ? "active" : ""} key={key} onClick={() => navigate(key)}><Icon /><span>{label}</span></button>)}</nav>
       <div className="owner-sidebar-footer">
         <button className="owner-logout" onClick={onLogout}><LogOut /><span>Sair da conta</span></button>
-        <button className="owner-collapse" onClick={() => setCollapsed(v => !v)} aria-label={collapsed ? "Expandir menu" : "Recolher menu"}>{collapsed ? <ChevronRight /> : <ChevronLeft />}<span>Recolher</span></button>
+        <small className="owner-copyright">Fitland Platform<br />© 2026 Todos os direitos reservados.</small>
       </div>
     </aside>
     <main className="owner-main">{children}</main>
