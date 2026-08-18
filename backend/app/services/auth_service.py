@@ -1,7 +1,6 @@
 import time
 import uuid
 import secrets
-import unicodedata
 from collections import defaultdict
 from datetime import datetime, timezone
 
@@ -12,6 +11,7 @@ from starlette import status
 from app.core.config import settings
 from app.core.errors import DomainError
 from app.core.observability import request_id
+from app.core.owner_bootstrap import normalize_owner_email, normalize_owner_password
 from app.core.security import (
     create_access_token,
     create_refresh_token,
@@ -31,16 +31,6 @@ MAX_FAILED_ATTEMPTS = 5
 FAILED_ATTEMPTS: dict[str, list[float]] = defaultdict(list)
 REVOKED_REFRESH_JTIS: set[str] = set()
 LOGIN_HISTORY: list[dict[str, str]] = []
-
-
-def _normalize_owner_bootstrap_secret(value: str | None) -> str:
-    """Normalize copy/paste artifacts only for the temporary owner bootstrap."""
-    normalized = unicodedata.normalize("NFKC", value or "")
-    return normalized.replace("\u200b", "").replace("\ufeff", "").strip()
-
-
-def _normalize_owner_bootstrap_email(value: str | None) -> str:
-    return _normalize_owner_bootstrap_secret(value).lower()
 
 
 def register_user(db: Session, payload: UserCreate) -> User:
@@ -102,7 +92,7 @@ def build_refresh_token(user: User) -> str:
 
 
 def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str | None]:
-    email = _normalize_owner_bootstrap_email(str(payload.email))
+    email = normalize_owner_email(str(payload.email))
     password = payload.password
     correlation_id = request_id()
     users = db.scalars(
@@ -120,9 +110,9 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
 
     # Allow the explicitly configured one-time owner recovery to clear a stale
     # in-memory lockout. This never applies to other users.
-    owner_reset_email = _normalize_owner_bootstrap_email(settings.OWNER_INITIAL_EMAIL)
-    owner_reset_password = _normalize_owner_bootstrap_secret(settings.OWNER_INITIAL_PASSWORD)
-    submitted_owner_password = _normalize_owner_bootstrap_secret(password)
+    owner_reset_email = normalize_owner_email(settings.OWNER_INITIAL_EMAIL)
+    owner_reset_password = normalize_owner_password(settings.OWNER_INITIAL_PASSWORD)
+    submitted_owner_password = normalize_owner_password(password)
     owner_email_matches = bool(owner_reset_email) and secrets.compare_digest(email, owner_reset_email)
     owner_password_matches = bool(owner_reset_password) and secrets.compare_digest(
         submitted_owner_password,

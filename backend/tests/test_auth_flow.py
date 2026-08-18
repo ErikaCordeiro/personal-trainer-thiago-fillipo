@@ -220,6 +220,48 @@ def test_owner_recovery_accepts_normalized_email_and_password_atomically(monkeyp
     assert verify_password(PASSWORD, user.hashed_password)
 
 
+def test_owner_recovery_removes_invisible_control_characters_and_wrapping_quotes(monkeypatch):
+    user = make_user(email="owner@example.com", hashed_password=hash_password("OldPassword123!"))
+    db = FakeSession([user])
+    monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "owner\u2060@example.com")
+    monkeypatch.setattr(settings, "OWNER_INITIAL_PASSWORD", f'"{PASSWORD}\u2060"')
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", True)
+
+    response, refresh = authenticate(db, payload(email="owner@example.com"))
+
+    assert response.user.role == UserRole.OWNER
+    assert refresh
+    assert verify_password(PASSWORD, user.hashed_password)
+
+
+def test_http_owner_recovery_uses_same_normalization_as_startup(monkeypatch):
+    user = make_user(
+        email="programadoraerika@gmail.com",
+        hashed_password=hash_password("OldPassword123!"),
+    )
+    db = FakeSession([user])
+    monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "programadoraerika@gmail.com\u2060")
+    owner_password = "OwnerDeploy123!"
+    monkeypatch.setattr(settings, "OWNER_INITIAL_PASSWORD", f'"{owner_password}\u2060"')
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", True)
+    app.dependency_overrides[get_db] = lambda: db
+    try:
+        with TestClient(app) as client:
+            response = client.post(
+                "/api/auth/login",
+                json={
+                    "email": "programadoraerika@gmail.com",
+                    "password": owner_password,
+                    "keep_connected": True,
+                },
+            )
+        assert response.status_code == 200
+        assert response.json()["user"]["role"] == "owner"
+        assert settings.REFRESH_COOKIE_NAME in response.cookies
+    finally:
+        app.dependency_overrides.clear()
+
+
 def test_lockout_still_blocks_non_owner_recovery(monkeypatch):
     user = make_user(role=UserRole.PERSONAL)
     monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "test@example.com")

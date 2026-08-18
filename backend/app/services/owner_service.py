@@ -1,6 +1,5 @@
 import secrets
 import uuid
-import unicodedata
 from datetime import datetime
 
 from sqlalchemy import asc, desc, func, or_, select
@@ -8,6 +7,7 @@ from sqlalchemy.orm import Session
 from starlette import status
 
 from app.core.errors import DomainError
+from app.core.owner_bootstrap import normalize_owner_email, normalize_owner_password
 from app.core.security import hash_password, verify_password
 from app.models.audit_log import AuditLog
 from app.models.student import Student
@@ -25,10 +25,8 @@ def audit(db: Session, actor: User | None, action: str, entity_type: str, entity
 def ensure_owner(db: Session) -> User | None:
     from app.core.config import settings
     name = (settings.OWNER_INITIAL_NAME or "").strip()
-    email = unicodedata.normalize("NFKC", settings.OWNER_INITIAL_EMAIL or "")
-    email = email.replace("\u200b", "").replace("\ufeff", "").strip().lower()
-    password = unicodedata.normalize("NFKC", settings.OWNER_INITIAL_PASSWORD or "")
-    password = password.replace("\u200b", "").replace("\ufeff", "").strip()
+    email = normalize_owner_email(settings.OWNER_INITIAL_EMAIL)
+    password = normalize_owner_password(settings.OWNER_INITIAL_PASSWORD)
     if not name or not email or not password:
         return None
     matches = db.scalars(select(User).where(func.lower(func.trim(User.email)) == email)).all()
