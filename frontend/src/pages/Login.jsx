@@ -29,7 +29,18 @@ export default function Login({ onLogin, onSignup, context = "platform", brandin
       : `/branding/public?slug=${encodeURIComponent(brandSlug)}`;
     apiRequest(endpoint, { skipAuthRefresh: true })
       .then(setBranding)
-      .catch(() => setBranding({ display_name: "Fitland", initials: "FT", is_fallback: true }));
+      .catch(() => setBranding(isOwnerContext
+        ? { display_name: "Fitland", initials: "FT", is_fallback: true }
+        : {
+            display_name: brandSlug
+              ? `Personal ${brandSlug.split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ")}`
+              : "Personal",
+            initials: "PT",
+            logo_url: brandSlug === "thiago-fillipo" ? "/lion-juda-logo.png" : "",
+            icon_url: brandSlug === "thiago-fillipo" ? "/lion-juda-logo.png" : "",
+            login_subtitle: "Disciplina • Foco • Propósito",
+            is_fallback: true
+          }));
   }, [isOwnerContext, brandSlug]);
 
   useEffect(() => {

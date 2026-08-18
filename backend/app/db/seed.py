@@ -48,8 +48,7 @@ def seed() -> None:
             f"student_configured={str(bool(student_email and student_password)).lower()}"
         )
 
-        # Migrate branding independently from credentials. Existing access and
-        # passwords remain untouched, and no duplicate personal is created.
+        # Migrate branding for existing accounts without touching credentials.
         from app.services.branding_service import ensure_thiago_branding
         ensure_thiago_branding(db, personal_email or DEFAULT_PERSONAL_EMAIL)
 
@@ -84,6 +83,10 @@ def seed() -> None:
             db.add(personal)
             db.flush()
             print("[seed] personal user created")
+
+        # New accounts only exist after the block above. Running this again is
+        # idempotent and guarantees every seeded personal receives its brand.
+        ensure_thiago_branding(db, personal_email)
 
         student_user = None
         if student_email and student_password:

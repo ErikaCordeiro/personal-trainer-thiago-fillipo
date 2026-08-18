@@ -45,7 +45,19 @@ def public_branding(
             .join(PersonalBranding, PersonalBranding.personal_id == User.id)
             .where(User.role == UserRole.PERSONAL, User.is_active.is_(True))
         ).all()
-        personal = next((user for user, brand in rows if _brand_slug(brand.display_name) == requested_slug), None)
+        personal = next(
+            (
+                user
+                for user, brand in rows
+                if requested_slug
+                in {
+                    _brand_slug(brand.display_name),
+                    _brand_slug(user.name),
+                    _brand_slug(user.email.split("@", 1)[0]),
+                }
+            ),
+            None,
+        )
     elif email:
         normalized_email = email.strip().lower()
         personal = db.scalar(select(User).where(func.lower(User.email) == normalized_email, User.role == UserRole.PERSONAL))

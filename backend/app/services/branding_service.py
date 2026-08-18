@@ -101,14 +101,16 @@ def ensure_thiago_branding(db: Session, email: str | None) -> None:
         return
     existing = db.scalar(select(PersonalBranding).where(PersonalBranding.personal_id == personal.id))
     if existing:
-        if existing.display_name in {"Fitland", "Personal Thiago Fillipo"}:
-            existing.display_name = "Personal Thiago Fillippo"
+        if existing.display_name in {"Fitland", "Personal Thiago Fillipo", "Personal Thiago Fillippo"}:
+            existing.display_name = "Personal Thiago Fillipo"
             existing.login_subtitle = "Disciplina • Foco • Propósito"
+            existing.logo_url = existing.logo_url or "/lion-juda-logo.png"
+            existing.icon_url = existing.icon_url or "/lion-juda-logo.png"
             db.commit()
         return
     db.add(PersonalBranding(
         personal_id=personal.id,
-        display_name="Personal Thiago Fillippo",
+        display_name="Personal Thiago Fillipo",
         logo_url="/lion-juda-logo.png",
         profile_image_url=personal.avatar_url,
         primary_color="#050505",

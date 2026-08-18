@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
 from app.core.security import hash_password
+from app.api.routes.branding import public_branding
 from app.db.session import Base
 from app.models.personal_branding import PersonalBranding
 from app.models.student import Student
@@ -39,8 +40,10 @@ def run() -> None:
         assert db.scalar(select(PersonalBranding).where(PersonalBranding.personal_id == thiago.id)).logo_url == "/thiago.png"
         assert db.scalar(select(User).where(User.email == "thiago@fitland.test")) is thiago
         assert db.query(User).filter(User.name == "Thiago Fillipo").count() == 1
+        assert public_branding(email=None, slug="thiago-fillipo", db=db)["display_name"] == "Personal Thiago Fillipo"
+        assert public_branding(email=None, slug="marca-independente", db=db)["display_name"] == "Marca Independente"
 
-    print("branding smoke tests: 9 checks passed")
+    print("branding smoke tests: 11 checks passed")
 
 
 if __name__ == "__main__":
