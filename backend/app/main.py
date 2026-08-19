@@ -10,6 +10,11 @@ from app.api.routes import auth, branding, exercises, owner, progress, students,
 from app.core.config import settings
 from app.core.errors import register_error_handlers
 from app.core.observability import build_identity, request_id_context
+from app.core.owner_bootstrap import normalize_owner_email, normalize_owner_password
+from app.core.security import verify_password
+from app.db.session import SessionLocal
+from app.models.user import User, UserRole
+from sqlalchemy import func, select
 from sqlalchemy.engine import make_url
 
 app = FastAPI(title=settings.APP_NAME, version="1.0.0")
@@ -31,18 +36,18 @@ async def auth_request_observability(request: Request, call_next):
     token = request_id_context.set(correlation_id)
     is_auth_request = request.url.path.startswith("/api/auth/")
     if is_auth_request:
-        print(f"[request] id={correlation_id} method={request.method} path={request.url.path}")
+        print(f"[request] id={correlation_id} method={request.method} path={request.url.path}", flush=True)
     try:
         response = await call_next(request)
     except Exception:
         if is_auth_request:
-            print(f"[request] id={correlation_id} status=500 result=unhandled_error")
+            print(f"[request] id={correlation_id} status=500 result=unhandled_error", flush=True)
         raise
     finally:
         request_id_context.reset(token)
     response.headers["X-Request-ID"] = correlation_id
     if is_auth_request:
-        print(f"[request] id={correlation_id} status={response.status_code}")
+        print(f"[request] id={correlation_id} status={response.status_code}", flush=True)
     return response
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
@@ -64,16 +69,50 @@ def startup_diagnostics() -> None:
     )
     database_url = make_url(settings.DATABASE_URL)
     identity = build_identity()
-    print(f"[diagnostic] auth_login_route_registered={str(login_registered).lower()}")
+    print(f"[diagnostic] auth_login_route_registered={str(login_registered).lower()}", flush=True)
     print(
         "[diagnostic] build "
         f"environment={identity['environment']} version={identity['version']} deployment={identity['deployment']}"
-    )
+    , flush=True)
     print(
         "[db] "
         f"engine={database_url.get_backend_name()} host={'configured' if database_url.host else 'missing'} "
         f"database={database_url.database or 'missing'}"
-    )
+    , flush=True)
+
+    owner_email = normalize_owner_email(settings.OWNER_INITIAL_EMAIL)
+    owner_password = normalize_owner_password(settings.OWNER_INITIAL_PASSWORD)
+    db = SessionLocal()
+    try:
+        owners = db.scalars(
+            select(User).where(func.lower(func.trim(User.email)) == owner_email)
+        ).all() if owner_email else []
+        owner = owners[0] if len(owners) == 1 else None
+        password_valid = bool(
+            owner
+            and owner_password
+            and verify_password(owner_password, owner.hashed_password)
+        )
+        print(
+            "[diagnostic] owner_runtime_check "
+            f"configured={str(bool(owner_email and owner_password)).lower()} "
+            f"user_count={len(owners)} role_owner={str(bool(owner and owner.role == UserRole.OWNER)).lower()} "
+            f"active={str(bool(owner and owner.is_active)).lower()} "
+            f"status={owner.account_status if owner else 'none'} "
+            f"password_valid={str(password_valid).lower()} "
+            f"configured_password_len={len(owner_password)}",
+            flush=True,
+        )
+    except Exception as exc:
+        # Diagnostics must never prevent the API from starting. This also keeps
+        # HTTP tests isolated when their dependency override uses a fake DB.
+        print(
+            "[diagnostic] owner_runtime_check unavailable=true "
+            f"error_type={type(exc).__name__}",
+            flush=True,
+        )
+    finally:
+        db.close()
 
 
 @app.get("/health")

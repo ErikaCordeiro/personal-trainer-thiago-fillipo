@@ -105,7 +105,8 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
         f"request_id={correlation_id} user_found={str(bool(user)).lower()} "
         f"user_count={len(users)} role={role} active={str(bool(user and user.is_active)).lower()} "
         f"account_status={user.account_status if user else 'none'} "
-        f"password_hash_present={str(bool(user and user.hashed_password)).lower()}"
+        f"password_hash_present={str(bool(user and user.hashed_password)).lower()}",
+        flush=True,
     )
 
     # Allow the explicitly configured one-time owner recovery to clear a stale
@@ -132,21 +133,22 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
             f"force_reset={str(settings.OWNER_FORCE_PASSWORD_RESET).lower()} "
             f"email_match={str(owner_email_matches).lower()} "
             f"password_match={str(owner_password_matches).lower()} "
-            f"submitted_password_len={len(password)} configured_password_len={len(owner_reset_password)}"
+            f"submitted_password_len={len(password)} configured_password_len={len(owner_reset_password)}",
+            flush=True,
         )
 
     if _is_locked(email) and not owner_recovery_matches:
-        print(f"[auth] login_failed request_id={correlation_id} reason=blocked_account")
+        print(f"[auth] login_failed request_id={correlation_id} reason=blocked_account", flush=True)
         raise DomainError("Muitas tentativas. Aguarde alguns minutos e tente novamente.", status.HTTP_429_TOO_MANY_REQUESTS)
     if owner_recovery_matches:
         FAILED_ATTEMPTS.pop(email, None)
 
     if len(users) > 1:
-        print(f"[auth] login_failed request_id={correlation_id} reason=internal_auth_error duplicate_accounts=true")
+        print(f"[auth] login_failed request_id={correlation_id} reason=internal_auth_error duplicate_accounts=true", flush=True)
         raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED)
     if not user:
         _register_failure(email)
-        print(f"[auth] login_failed request_id={correlation_id} reason=user_not_found")
+        print(f"[auth] login_failed request_id={correlation_id} reason=user_not_found", flush=True)
         raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED)
 
     try:
@@ -179,23 +181,24 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
     )
     if not password_valid:
         _register_failure(email)
-        print(f"[auth] login_failed request_id={correlation_id} reason=invalid_credentials")
+        print(f"[auth] login_failed request_id={correlation_id} reason=invalid_credentials", flush=True)
         raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED)
     if user.deleted_at is not None or not user.is_active:
-        print(f"[auth] login_failed request_id={correlation_id} reason=inactive_account")
+        print(f"[auth] login_failed request_id={correlation_id} reason=inactive_account", flush=True)
         raise DomainError("Inactive user", status.HTTP_403_FORBIDDEN)
     if user.account_status != "active":
-        print(f"[auth] login_failed request_id={correlation_id} reason=blocked_account")
+        print(f"[auth] login_failed request_id={correlation_id} reason=blocked_account", flush=True)
         raise DomainError("Inactive user", status.HTTP_403_FORBIDDEN)
 
-    print(f"[auth] credentials_valid request_id={correlation_id} role={user.role.value}")
+    print(f"[auth] credentials_valid request_id={correlation_id} role={user.role.value}", flush=True)
     try:
         token_response = build_token_response(user)
-        print(f"[auth] access_token_created request_id={correlation_id}")
+        print(f"[auth] access_token_created request_id={correlation_id}", flush=True)
         refresh_token = build_refresh_token(user) if payload.keep_connected else None
         print(
             f"[auth] refresh_session_created request_id={correlation_id} "
-            f"persistent={str(bool(refresh_token)).lower()}"
+            f"persistent={str(bool(refresh_token)).lower()}",
+            flush=True,
         )
         _register_success(email, user)
         if user.role == UserRole.OWNER:
@@ -205,10 +208,11 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
         db.rollback()
         print(
             f"[auth] login_failed request_id={correlation_id} reason=session_creation_failed "
-            f"error_type={type(exc).__name__}"
+            f"error_type={type(exc).__name__}",
+            flush=True,
         )
         raise DomainError("Unable to create session", status.HTTP_500_INTERNAL_SERVER_ERROR) from exc
-    print(f"[auth] login_success request_id={correlation_id} role={user.role.value}")
+    print(f"[auth] login_success request_id={correlation_id} role={user.role.value}", flush=True)
     return token_response, refresh_token
 
 
