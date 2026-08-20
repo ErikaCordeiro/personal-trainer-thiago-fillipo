@@ -130,6 +130,31 @@ def test_dedicated_owner_login_authenticates_owner(monkeypatch):
     assert verify_password(PASSWORD, user.hashed_password)
 
 
+def test_dedicated_owner_login_recovers_legacy_email_artifacts(monkeypatch):
+    recovery_password = "RecoveryPass456!"
+    user = make_user(
+        email="ProgramadoraErika@gmail.com\u2060",
+        hashed_password=hash_password("OldPassword123!"),
+    )
+    db = FakeSession([user])
+    monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "programadoraerika@gmail.com")
+    monkeypatch.setattr(settings, "OWNER_INITIAL_PASSWORD", recovery_password)
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", True)
+
+    response, refresh = authenticate_owner(
+        db,
+        payload(
+            email="programadoraerika@gmail.com",
+            password=recovery_password,
+        ),
+    )
+
+    assert response.user.role == UserRole.OWNER
+    assert refresh
+    assert user.email == "programadoraerika@gmail.com"
+    assert verify_password(recovery_password, user.hashed_password)
+
+
 def test_dedicated_owner_login_rejects_non_owner(monkeypatch):
     user = make_user(role=UserRole.PERSONAL)
     monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "test@example.com")

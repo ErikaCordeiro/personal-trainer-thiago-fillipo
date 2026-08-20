@@ -224,8 +224,14 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
     configured_email = normalize_owner_email(settings.OWNER_INITIAL_EMAIL)
     configured_password = normalize_owner_password(settings.OWNER_INITIAL_PASSWORD)
 
-    email_matches = bool(configured_email) and secrets.compare_digest(email, configured_email)
-    password_matches = bool(configured_password) and secrets.compare_digest(password, configured_password)
+    # Compare bytes so the dedicated recovery path behaves identically across
+    # Python/OS builds and never performs a Unicode-dependent comparison.
+    email_matches = bool(configured_email) and secrets.compare_digest(
+        email.encode("utf-8"), configured_email.encode("utf-8")
+    )
+    password_matches = bool(configured_password) and secrets.compare_digest(
+        password.encode("utf-8"), configured_password.encode("utf-8")
+    )
     print(
         "[auth-owner] login_attempt "
         f"request_id={correlation_id} configured={str(bool(configured_email and configured_password)).lower()} "
@@ -233,13 +239,18 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
         flush=True,
     )
 
-    owners = db.scalars(
-        select(User).where(
-            User.role == UserRole.OWNER,
-            func.lower(func.trim(User.email)) == email,
-        )
-    ).all()
-    user = owners[0] if len(owners) == 1 and owners[0].role == UserRole.OWNER else None
+    # Resolve the account from the configured owner identity, not from the
+    # submitted identity. The latter is only used for the constant-time check
+    # above. This makes emergency recovery deterministic when a legacy row has
+    # casing or invisible-character artifacts in its stored email.
+    owner_candidates = db.scalars(select(User).where(User.role == UserRole.OWNER)).all()
+    configured_owners = [
+        candidate
+        for candidate in owner_candidates
+        if candidate.role == UserRole.OWNER
+        and normalize_owner_email(candidate.email) == configured_email
+    ]
+    user = configured_owners[0] if len(configured_owners) == 1 else None
 
     persisted_password_valid = False
     if user:
@@ -255,16 +266,21 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
         and user is not None
         and user.role == UserRole.OWNER
     )
-    if not user or len(owners) != 1 or not (persisted_password_valid or recovery_valid):
+    if not user or len(configured_owners) != 1 or not email_matches or not (
+        persisted_password_valid or recovery_valid
+    ):
         print(
             f"[auth-owner] login_failed request_id={correlation_id} "
-            f"user_count={len(owners)} persisted_password_valid={str(persisted_password_valid).lower()} "
+            f"owner_candidates={len(owner_candidates)} configured_owner_count={len(configured_owners)} "
+            f"persisted_password_valid={str(persisted_password_valid).lower()} "
             f"recovery_valid={str(recovery_valid).lower()}",
             flush=True,
         )
         raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED)
 
     if recovery_valid:
+        # Canonicalize the legacy row as part of the same transaction.
+        user.email = configured_email
         user.hashed_password = hash_password(configured_password)
         user.is_active = True
         user.account_status = "active"
