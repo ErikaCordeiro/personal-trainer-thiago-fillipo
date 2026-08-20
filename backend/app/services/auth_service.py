@@ -216,6 +216,88 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
     return token_response, refresh_token
 
 
+def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str | None]:
+    """Authenticate the platform owner through the dedicated Fitland entrypoint."""
+    correlation_id = request_id()
+    email = normalize_owner_email(str(payload.email))
+    password = normalize_owner_password(payload.password)
+    configured_email = normalize_owner_email(settings.OWNER_INITIAL_EMAIL)
+    configured_password = normalize_owner_password(settings.OWNER_INITIAL_PASSWORD)
+
+    email_matches = bool(configured_email) and secrets.compare_digest(email, configured_email)
+    password_matches = bool(configured_password) and secrets.compare_digest(password, configured_password)
+    print(
+        "[auth-owner] login_attempt "
+        f"request_id={correlation_id} configured={str(bool(configured_email and configured_password)).lower()} "
+        f"email_match={str(email_matches).lower()} password_match={str(password_matches).lower()}",
+        flush=True,
+    )
+
+    owners = db.scalars(
+        select(User).where(
+            User.role == UserRole.OWNER,
+            func.lower(func.trim(User.email)) == email,
+        )
+    ).all()
+    user = owners[0] if len(owners) == 1 and owners[0].role == UserRole.OWNER else None
+
+    persisted_password_valid = False
+    if user:
+        try:
+            persisted_password_valid = verify_password(password, user.hashed_password)
+        except (TypeError, ValueError):
+            persisted_password_valid = False
+
+    recovery_valid = (
+        settings.OWNER_FORCE_PASSWORD_RESET
+        and email_matches
+        and password_matches
+        and user is not None
+        and user.role == UserRole.OWNER
+    )
+    if not user or len(owners) != 1 or not (persisted_password_valid or recovery_valid):
+        print(
+            f"[auth-owner] login_failed request_id={correlation_id} "
+            f"user_count={len(owners)} persisted_password_valid={str(persisted_password_valid).lower()} "
+            f"recovery_valid={str(recovery_valid).lower()}",
+            flush=True,
+        )
+        raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED)
+
+    if recovery_valid:
+        user.hashed_password = hash_password(configured_password)
+        user.is_active = True
+        user.account_status = "active"
+        user.must_change_password = True
+
+    if user.deleted_at is not None or not user.is_active or user.account_status != "active":
+        raise DomainError("Inactive user", status.HTTP_403_FORBIDDEN)
+
+    try:
+        _register_success(email, user)
+        db.add(AuditLog(
+            actor_user_id=user.id,
+            action="owner_login",
+            entity_type="user",
+            entity_id=str(user.id),
+            details={"entrypoint": "fitland"},
+        ))
+        token_response = build_token_response(user)
+        refresh_token = build_refresh_token(user) if payload.keep_connected else None
+        db.commit()
+    except Exception as exc:
+        db.rollback()
+        print(
+            f"[auth-owner] login_failed request_id={correlation_id} "
+            f"reason=session_creation_failed error_type={type(exc).__name__}",
+            flush=True,
+        )
+        raise DomainError("Unable to create session", status.HTTP_500_INTERNAL_SERVER_ERROR) from exc
+
+    FAILED_ATTEMPTS.pop(email, None)
+    print(f"[auth-owner] login_success request_id={correlation_id}", flush=True)
+    return token_response, refresh_token
+
 def refresh_session(db: Session, refresh_token: str) -> tuple[TokenResponse, str]:
     try:
         payload = decode_refresh_token(refresh_token)

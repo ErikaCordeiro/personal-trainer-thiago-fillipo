@@ -18,7 +18,7 @@ from app.main import app
 from app.models.user import User, UserRole
 from app.schemas.auth import LoginRequest
 from app.services import auth_service
-from app.services.auth_service import authenticate, refresh_session
+from app.services.auth_service import authenticate, authenticate_owner, refresh_session
 from app.services.owner_service import ensure_owner
 
 
@@ -95,6 +95,10 @@ def test_login_route_is_registered():
     assert any(route.path == "/api/auth/login" and "POST" in route.methods for route in app.routes)
 
 
+def test_owner_login_route_is_registered():
+    assert any(route.path == "/api/auth/owner-login" and "POST" in route.methods for route in app.routes)
+
+
 def test_frontend_payload_matches_backend_schema():
     source = (Path(__file__).parents[2] / "frontend" / "src" / "services" / "api.js").read_text(encoding="utf-8")
     assert 'JSON.stringify({ email, password, keep_connected: keepConnected })' in source
@@ -109,6 +113,32 @@ def test_owner_is_found_and_authenticates():
 def test_owner_wrong_password_is_rejected():
     with pytest.raises(DomainError) as error:
         authenticate(FakeSession([make_user()]), payload(password="WrongPass123!"))
+    assert error.value.status_code == 401
+
+
+def test_dedicated_owner_login_authenticates_owner(monkeypatch):
+    user = make_user(hashed_password=hash_password("OldPassword123!"))
+    db = FakeSession([user])
+    monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "test@example.com")
+    monkeypatch.setattr(settings, "OWNER_INITIAL_PASSWORD", PASSWORD)
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", True)
+
+    response, refresh = authenticate_owner(db, payload())
+
+    assert response.user.role == UserRole.OWNER
+    assert refresh
+    assert verify_password(PASSWORD, user.hashed_password)
+
+
+def test_dedicated_owner_login_rejects_non_owner(monkeypatch):
+    user = make_user(role=UserRole.PERSONAL)
+    monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "test@example.com")
+    monkeypatch.setattr(settings, "OWNER_INITIAL_PASSWORD", PASSWORD)
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", True)
+
+    with pytest.raises(DomainError) as error:
+        authenticate_owner(FakeSession([user]), payload())
+
     assert error.value.status_code == 401
 
 
@@ -252,6 +282,33 @@ def test_http_owner_recovery_uses_same_normalization_as_startup(monkeypatch):
                 json={
                     "email": "programadoraerika@gmail.com",
                     "password": owner_password,
+                    "keep_connected": True,
+                },
+            )
+        assert response.status_code == 200
+        assert response.json()["user"]["role"] == "owner"
+        assert settings.REFRESH_COOKIE_NAME in response.cookies
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_http_dedicated_owner_login_creates_session(monkeypatch):
+    user = make_user(
+        email="programadoraerika@gmail.com",
+        hashed_password=hash_password("OldPassword123!"),
+    )
+    db = FakeSession([user])
+    monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "programadoraerika@gmail.com")
+    monkeypatch.setattr(settings, "OWNER_INITIAL_PASSWORD", PASSWORD)
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", True)
+    app.dependency_overrides[get_db] = lambda: db
+    try:
+        with TestClient(app) as client:
+            response = client.post(
+                "/api/auth/owner-login",
+                json={
+                    "email": "programadoraerika@gmail.com",
+                    "password": PASSWORD,
                     "keep_connected": True,
                 },
             )

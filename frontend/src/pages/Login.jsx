@@ -122,7 +122,7 @@ export default function Login({ onLogin, onSignup, context = "platform", brandin
     const password = String(form.get("password"));
 
     try {
-      await apiLogin(email, password, keepConnected);
+      await apiLogin(email, password, keepConnected, isOwnerContext);
       const user = await apiRequest("/users/me");
       onLogin(user);
     } catch (error) {

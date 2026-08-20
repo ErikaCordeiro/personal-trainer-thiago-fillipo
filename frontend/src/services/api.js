@@ -48,7 +48,11 @@ async function rawRequest(path, options = {}) {
 export async function apiRequest(path, options = {}) {
   let response = await rawRequest(path, options);
 
-  const canRefresh = response.status === 401 && !path.startsWith("/auth/login") && !path.startsWith("/auth/refresh") && !options.skipAuthRefresh;
+  const canRefresh = response.status === 401
+    && !path.startsWith("/auth/login")
+    && !path.startsWith("/auth/owner-login")
+    && !path.startsWith("/auth/refresh")
+    && !options.skipAuthRefresh;
   if (canRefresh) {
     try {
       await refreshSession();
@@ -66,8 +70,9 @@ export async function apiRequest(path, options = {}) {
   return parseResponse(response);
 }
 
-export async function login(email, password, keepConnected = true) {
-  const data = await apiRequest("/auth/login", {
+export async function login(email, password, keepConnected = true, ownerContext = false) {
+  const endpoint = ownerContext ? "/auth/owner-login" : "/auth/login";
+  const data = await apiRequest(endpoint, {
     method: "POST",
     body: JSON.stringify({ email, password, keep_connected: keepConnected }),
   });

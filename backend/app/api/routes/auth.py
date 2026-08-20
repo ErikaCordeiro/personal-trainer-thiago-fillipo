@@ -9,6 +9,7 @@ from app.schemas.auth import LoginRequest, SessionResponse, TokenResponse
 from app.schemas.user import UserCreate, UserRead
 from app.services.auth_service import (
     authenticate,
+    authenticate_owner,
     get_connected_devices,
     refresh_session,
     register_user,
@@ -48,6 +49,12 @@ def login(payload: LoginRequest, response: Response, db: Session = Depends(get_d
     _set_refresh_cookie(response, refresh_token)
     return token_response
 
+
+@router.post("/owner-login", response_model=TokenResponse)
+def owner_login(payload: LoginRequest, response: Response, db: Session = Depends(get_db)):
+    token_response, refresh_token = authenticate_owner(db, payload)
+    _set_refresh_cookie(response, refresh_token)
+    return token_response
 
 @router.post("/refresh", response_model=SessionResponse)
 def refresh(
