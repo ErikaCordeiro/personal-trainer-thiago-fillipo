@@ -218,6 +218,22 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
 
 def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str | None]:
     """Authenticate the platform owner through the dedicated Fitland entrypoint."""
+    # While the explicit recovery flag is enabled, make the configured OWNER
+    # canonical in the same database session used by this request. This keeps
+    # PostgreSQL as the source of truth and repairs only the OWNER account.
+    if settings.OWNER_FORCE_PASSWORD_RESET:
+        from app.services.owner_service import ensure_owner
+
+        try:
+            ensure_owner(db)
+        except RuntimeError as exc:
+            print(
+                "[auth-owner] owner_reset_rejected "
+                f"request_id={request_id()} error_type={type(exc).__name__}",
+                flush=True,
+            )
+            raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED) from exc
+
     correlation_id = request_id()
     email = normalize_owner_email(str(payload.email))
     password = normalize_owner_password(payload.password)
@@ -259,12 +275,11 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
         except (TypeError, ValueError):
             persisted_password_valid = False
 
-    recovery_valid = (
+    recovery_valid = bool(
         settings.OWNER_FORCE_PASSWORD_RESET
         and email_matches
         and password_matches
         and user is not None
-        and user.role == UserRole.OWNER
     )
     if not user or len(configured_owners) != 1 or not email_matches or not (
         persisted_password_valid or recovery_valid
@@ -277,14 +292,6 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
             flush=True,
         )
         raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED)
-
-    if recovery_valid:
-        # Canonicalize the legacy row as part of the same transaction.
-        user.email = configured_email
-        user.hashed_password = hash_password(configured_password)
-        user.is_active = True
-        user.account_status = "active"
-        user.must_change_password = True
 
     if user.deleted_at is not None or not user.is_active or user.account_status != "active":
         raise DomainError("Inactive user", status.HTTP_403_FORBIDDEN)

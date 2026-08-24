@@ -41,11 +41,13 @@ def ensure_owner(db: Session) -> User | None:
     if existing:
         if existing.role != UserRole.OWNER:
             raise RuntimeError("OWNER_INITIAL_EMAIL already belongs to another profile")
+        existing.name = name
         existing.email = email
         if settings.OWNER_FORCE_PASSWORD_RESET:
             existing.hashed_password = hash_password(password)
             existing.is_active = True
             existing.account_status = "active"
+            existing.deleted_at = None
             existing.must_change_password = True
             audit(db, existing, "owner_password_reset", "user", existing.id, {"source": "environment_reset"})
             db.commit()
