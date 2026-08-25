@@ -218,22 +218,6 @@ def authenticate(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str
 
 def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenResponse, str | None]:
     """Authenticate the platform owner through the dedicated Fitland entrypoint."""
-    # While the explicit recovery flag is enabled, make the configured OWNER
-    # canonical in the same database session used by this request. This keeps
-    # PostgreSQL as the source of truth and repairs only the OWNER account.
-    if settings.OWNER_FORCE_PASSWORD_RESET:
-        from app.services.owner_service import ensure_owner
-
-        try:
-            ensure_owner(db)
-        except RuntimeError as exc:
-            print(
-                "[auth-owner] owner_reset_rejected "
-                f"request_id={request_id()} error_type={type(exc).__name__}",
-                flush=True,
-            )
-            raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED) from exc
-
     correlation_id = request_id()
     email = normalize_owner_email(str(payload.email))
     password = normalize_owner_password(payload.password)
@@ -255,40 +239,57 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
         flush=True,
     )
 
-    # Resolve the account from the configured owner identity, not from the
-    # submitted identity. The latter is only used for the constant-time check
-    # above. This makes emergency recovery deterministic when a legacy row has
-    # casing or invisible-character artifacts in its stored email.
-    owner_candidates = db.scalars(select(User).where(User.role == UserRole.OWNER)).all()
-    configured_owners = [
-        candidate
-        for candidate in owner_candidates
-        if candidate.role == UserRole.OWNER
-        and normalize_owner_email(candidate.email) == configured_email
-    ]
-    user = configured_owners[0] if len(configured_owners) == 1 else None
+    user = None
+    password_valid = False
+    owner_count = 0
 
-    persisted_password_valid = False
-    if user:
+    if settings.OWNER_FORCE_PASSWORD_RESET:
+        # Recovery is intentionally restricted to the exact credentials from
+        # the environment. ``ensure_owner`` returns the row it has just
+        # persisted and verified, so do not perform a second independent
+        # lookup that can disagree because of stale ORM state or legacy email
+        # artifacts.
+        if not email_matches or not password_matches:
+            print(
+                f"[auth-owner] login_failed request_id={correlation_id} "
+                "reason=recovery_credentials_mismatch",
+                flush=True,
+            )
+            raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED)
+
+        from app.services.owner_service import ensure_owner
+
         try:
-            persisted_password_valid = verify_password(password, user.hashed_password)
-        except (TypeError, ValueError):
-            persisted_password_valid = False
+            user = ensure_owner(db)
+        except RuntimeError as exc:
+            print(
+                f"[auth-owner] owner_reset_rejected request_id={correlation_id} "
+                f"error_type={type(exc).__name__}",
+                flush=True,
+            )
+            raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED) from exc
+        password_valid = bool(user and user.role == UserRole.OWNER)
+        owner_count = 1 if user else 0
+    else:
+        owner_candidates = db.scalars(select(User).where(User.role == UserRole.OWNER)).all()
+        configured_owners = [
+            candidate
+            for candidate in owner_candidates
+            if normalize_owner_email(candidate.email) == configured_email
+        ]
+        owner_count = len(configured_owners)
+        user = configured_owners[0] if owner_count == 1 else None
+        if user and email_matches:
+            try:
+                password_valid = verify_password(password, user.hashed_password)
+            except (TypeError, ValueError):
+                password_valid = False
 
-    recovery_valid = bool(
-        settings.OWNER_FORCE_PASSWORD_RESET
-        and email_matches
-        and password_matches
-        and user is not None
-    )
-    if not user or len(configured_owners) != 1 or not email_matches or not (
-        persisted_password_valid or recovery_valid
-    ):
+    if not user or owner_count != 1 or not email_matches or not password_valid:
         print(
             f"[auth-owner] login_failed request_id={correlation_id} "
-            f"owner_candidates={len(owner_candidates)} configured_owner_count={len(configured_owners)} "
-            f"persisted_password_valid={str(persisted_password_valid).lower()} "
-            f"recovery_valid={str(recovery_valid).lower()}",
+            f"configured_owner_count={owner_count} "
+            f"password_valid={str(password_valid).lower()}",
             flush=True,
         )
         raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED)
