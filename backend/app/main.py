@@ -25,7 +25,13 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
     allow_headers=["Authorization", "Content-Type", "X-Request-ID", "X-Frontend-Build"],
-    expose_headers=["X-Request-ID", "X-Backend-Build", "X-Backend-Deployment"],
+    expose_headers=[
+        "X-Request-ID",
+        "X-Backend-Build",
+        "X-Backend-Deployment",
+        "X-Fitland-Service",
+        "X-Fitland-Build",
+    ],
 )
 
 register_error_handlers(app)
@@ -55,6 +61,8 @@ async def auth_request_observability(request: Request, call_next):
     response.headers["X-Request-ID"] = correlation_id
     response.headers["X-Backend-Build"] = identity["version"]
     response.headers["X-Backend-Deployment"] = identity["deployment"]
+    response.headers["X-Fitland-Service"] = "backend"
+    response.headers["X-Fitland-Build"] = identity["version"]
     if is_auth_request:
         print(f"[request] id={correlation_id} status={response.status_code}", flush=True)
     return response
@@ -132,6 +140,12 @@ def startup_diagnostics() -> None:
 @app.get("/health")
 def health_check():
     return {"status": "ok", "service": settings.APP_NAME, **build_identity()}
+
+
+@app.get("/api/diagnostic/ping", include_in_schema=False)
+def diagnostic_ping():
+    identity = build_identity()
+    return {"service": "fitland-backend", "build": identity["version"]}
 
 
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"

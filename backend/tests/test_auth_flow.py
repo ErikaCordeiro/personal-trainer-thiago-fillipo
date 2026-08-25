@@ -433,6 +433,8 @@ def test_http_login_endpoint_creates_session_cookie():
         assert response.json()["user"]["role"] == "owner"
         assert settings.REFRESH_COOKIE_NAME in response.cookies
         assert response.headers.get("X-Request-ID")
+        assert response.headers.get("X-Fitland-Service") == "backend"
+        assert response.headers.get("X-Fitland-Build")
     finally:
         app.dependency_overrides.clear()
 
@@ -447,8 +449,22 @@ def test_http_invalid_login_remains_generic_401():
             )
         assert response.status_code == 401
         assert response.json()["detail"] == "Invalid email or password"
+        assert response.headers.get("X-Request-ID")
+        assert response.headers.get("X-Fitland-Service") == "backend"
+        assert response.headers.get("X-Fitland-Build")
     finally:
         app.dependency_overrides.clear()
+
+
+def test_diagnostic_ping_identifies_backend_build():
+    with TestClient(app) as client:
+        response = client.get("/api/diagnostic/ping")
+    assert response.status_code == 200
+    assert response.json()["service"] == "fitland-backend"
+    assert response.json()["build"]
+    assert response.headers.get("X-Request-ID")
+    assert response.headers.get("X-Fitland-Service") == "backend"
+    assert response.headers.get("X-Fitland-Build") == response.json()["build"]
 
 
 def test_health_exposes_safe_build_identity():
