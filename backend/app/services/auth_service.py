@@ -238,6 +238,11 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
         f"email_match={str(email_matches).lower()} password_match={str(password_matches).lower()}",
         flush=True,
     )
+    print(
+        f"[auth-owner] stage=credentials request_id={correlation_id} "
+        f"email_match={str(email_matches).lower()} configured={str(bool(configured_email and configured_password)).lower()}",
+        flush=True,
+    )
 
     user = None
     password_valid = False
@@ -294,8 +299,17 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
         )
         raise DomainError("Invalid email or password", status.HTTP_401_UNAUTHORIZED)
 
+    print(
+        f"[auth-owner] stage=owner_validated request_id={correlation_id} owner_found=true "
+        f"role_valid={str(user.role == UserRole.OWNER).lower()} password_valid={str(password_valid).lower()}",
+        flush=True,
+    )
+
     if user.deleted_at is not None or not user.is_active or user.account_status != "active":
+        print(f"[auth-owner] stage=account_status request_id={correlation_id} active=false", flush=True)
         raise DomainError("Inactive user", status.HTTP_403_FORBIDDEN)
+
+    print(f"[auth-owner] stage=account_status request_id={correlation_id} active=true", flush=True)
 
     try:
         _register_success(email, user)
@@ -319,6 +333,7 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
         raise DomainError("Unable to create session", status.HTTP_500_INTERNAL_SERVER_ERROR) from exc
 
     FAILED_ATTEMPTS.pop(email, None)
+    print(f"[auth-owner] stage=session_created request_id={correlation_id} success=true", flush=True)
     print(f"[auth-owner] login_success request_id={correlation_id}", flush=True)
     return token_response, refresh_token
 

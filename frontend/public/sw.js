@@ -1,4 +1,5 @@
-const CACHE_NAME = "fitland-app-v5";
+const CACHE_PREFIX = "fitland-app-";
+const CACHE_NAME = `${CACHE_PREFIX}v6`;
 const APP_SHELL = [
   "/",
   "/manifest.webmanifest",
@@ -17,7 +18,7 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
+      Promise.all(keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map((key) => caches.delete(key)))
     ).then(() => self.clients.claim())
   );
 });
@@ -29,7 +30,12 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (new URL(request.url).pathname.startsWith("/api/")) {
+  const url = new URL(request.url);
+  if (!["http:", "https:"].includes(url.protocol) || url.origin !== self.location.origin) {
+    return;
+  }
+
+  if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/auth/")) {
     return;
   }
 
@@ -43,8 +49,10 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     fetch(request)
       .then((networkResponse) => {
-        const responseClone = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+        if (networkResponse.ok && ["basic", "default"].includes(networkResponse.type)) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+        }
         return networkResponse;
       })
       .catch(() => caches.match(request))

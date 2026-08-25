@@ -19,6 +19,11 @@ export default function Login({ onLogin, onSignup, context = "platform", brandin
   const isOwnerContext = context === "owner";
 
   useEffect(() => {
+    const build = typeof __APP_BUILD_ID__ !== "undefined" ? __APP_BUILD_ID__ : "unknown";
+    console.info(`[frontend] build=${build} pathname=${window.location.pathname} ownerContext=${isOwnerContext}`);
+  }, [isOwnerContext]);
+
+  useEffect(() => {
     const title = isOwnerContext ? "Fitland" : branding?.display_name || "Personal";
     document.title = title;
   }, [branding?.display_name, isOwnerContext]);

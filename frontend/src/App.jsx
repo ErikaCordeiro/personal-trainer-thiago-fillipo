@@ -35,6 +35,7 @@ import { students as mockStudents, workouts as mockWorkouts } from "./data/mockD
 import { apiRequest, clearToken, getToken, logoutSession, refreshSession } from "./services/api.js";
 import { clearDemoActivityDataOnce } from "./utils/activityData.js";
 import { getRecommendedWorkout } from "./utils/workoutSchedule.js";
+import { isOwnerLoginPath } from "./utils/authRouting.js";
 
 const pageMeta = {
   dashboard: ["Dashboard", "Disciplina hoje, liberdade amanhã."],
@@ -240,7 +241,7 @@ export default function App() {
     const personalLoginMatch = loginPath.match(/^\/personal\/([^/]+)\/login\/?$/);
     return (
       <Login
-        context={loginPath.startsWith("/owner") || loginPath.startsWith("/fitland") ? "owner" : "personal"}
+        context={isOwnerLoginPath(loginPath) ? "owner" : "personal"}
         brandSlug={personalLoginMatch?.[1] || ""}
         branding={branding}
         onSignup={(student) => {

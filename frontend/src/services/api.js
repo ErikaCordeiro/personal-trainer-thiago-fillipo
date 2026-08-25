@@ -1,6 +1,15 @@
+import { getLoginEndpoint } from "../utils/authRouting.js";
+import { createAuthSessionCoordinator } from "../utils/authSessionCoordinator.js";
+
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "/api" : "http://localhost:8000/api");
 const TOKEN_KEY = "fitland_token";
 const SESSION_TOKEN_KEY = "fitland_session_token";
+const FRONTEND_BUILD = typeof __APP_BUILD_ID__ !== "undefined" ? __APP_BUILD_ID__ : "unknown";
+const authCoordinator = createAuthSessionCoordinator();
+
+function createRequestId() {
+  return globalThis.crypto?.randomUUID?.() || `web-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
 
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(SESSION_TOKEN_KEY);
@@ -29,10 +38,16 @@ async function rawRequest(path, options = {}) {
   const token = getToken();
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), options.timeoutMs || 10000);
+  const requestId = options.requestId || createRequestId();
+  if (path.startsWith("/auth/")) {
+    console.info(`[frontend-auth] request=${requestId} method=${options.method || "GET"} path=${API_URL}${path} build=${FRONTEND_BUILD}`);
+  }
+  const diagnosticHeaders = { "X-Request-ID": requestId, "X-Frontend-Build": FRONTEND_BUILD };
   const headers = options.body instanceof FormData
-    ? { ...(token ? { Authorization: `Bearer ${token}` } : {}), ...options.headers }
+    ? { ...diagnosticHeaders, ...(token ? { Authorization: `Bearer ${token}` } : {}), ...options.headers }
     : {
         "Content-Type": "application/json",
+        ...diagnosticHeaders,
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...options.headers,
       };
@@ -54,11 +69,12 @@ export async function apiRequest(path, options = {}) {
     && !path.startsWith("/auth/refresh")
     && !options.skipAuthRefresh;
   if (canRefresh) {
+    const generation = authCoordinator.currentGeneration();
     try {
       await refreshSession();
       response = await rawRequest(path, options);
     } catch {
-      clearToken();
+      if (generation === authCoordinator.currentGeneration()) clearToken();
     }
   }
 
@@ -71,7 +87,9 @@ export async function apiRequest(path, options = {}) {
 }
 
 export async function login(email, password, keepConnected = true, ownerContext = false) {
-  const endpoint = ownerContext ? "/auth/owner-login" : "/auth/login";
+  authCoordinator.beginAuthentication();
+  const endpoint = getLoginEndpoint(ownerContext);
+  console.info(`[frontend-auth] action=login ownerContext=${ownerContext} endpoint=${endpoint}`);
   const data = await apiRequest(endpoint, {
     method: "POST",
     body: JSON.stringify({ email, password, keep_connected: keepConnected }),
@@ -81,12 +99,15 @@ export async function login(email, password, keepConnected = true, ownerContext 
 }
 
 export async function refreshSession() {
-  const data = await apiRequest("/auth/refresh", { method: "POST", timeoutMs: 12000, skipAuthRefresh: true });
-  setToken(data.access_token, true);
-  return data;
+  console.info("[frontend-auth] action=refresh endpoint=/api/auth/refresh");
+  return authCoordinator.runRefresh(
+    () => apiRequest("/auth/refresh", { method: "POST", timeoutMs: 12000, skipAuthRefresh: true }),
+    (data) => setToken(data.access_token, true),
+  );
 }
 
 export async function logoutSession() {
+  authCoordinator.invalidate();
   try {
     await apiRequest("/auth/logout", { method: "POST", timeoutMs: 8000 });
   } finally {

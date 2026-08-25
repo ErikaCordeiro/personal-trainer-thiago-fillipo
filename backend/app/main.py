@@ -24,7 +24,8 @@ app.add_middleware(
     allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allow_headers=["Authorization", "Content-Type"],
+    allow_headers=["Authorization", "Content-Type", "X-Request-ID", "X-Frontend-Build"],
+    expose_headers=["X-Request-ID", "X-Backend-Build", "X-Backend-Deployment"],
 )
 
 register_error_handlers(app)
@@ -35,8 +36,14 @@ async def auth_request_observability(request: Request, call_next):
     correlation_id = request.headers.get("X-Request-ID") or uuid.uuid4().hex[:16]
     token = request_id_context.set(correlation_id)
     is_auth_request = request.url.path.startswith("/api/auth/")
+    identity = build_identity()
     if is_auth_request:
-        print(f"[request] id={correlation_id} method={request.method} path={request.url.path}", flush=True)
+        frontend_build = request.headers.get("X-Frontend-Build", "unknown")
+        print(
+            f"[request] id={correlation_id} method={request.method} path={request.url.path} "
+            f"frontend_build={frontend_build} backend_build={identity['version']} deployment={identity['deployment']}",
+            flush=True,
+        )
     try:
         response = await call_next(request)
     except Exception:
@@ -46,6 +53,8 @@ async def auth_request_observability(request: Request, call_next):
     finally:
         request_id_context.reset(token)
     response.headers["X-Request-ID"] = correlation_id
+    response.headers["X-Backend-Build"] = identity["version"]
+    response.headers["X-Backend-Deployment"] = identity["deployment"]
     if is_auth_request:
         print(f"[request] id={correlation_id} status={response.status_code}", flush=True)
     return response
@@ -67,9 +76,14 @@ def startup_diagnostics() -> None:
         getattr(route, "path", None) == "/api/auth/login" and "POST" in getattr(route, "methods", set())
         for route in app.routes
     )
+    owner_login_registered = any(
+        getattr(route, "path", None) == "/api/auth/owner-login" and "POST" in getattr(route, "methods", set())
+        for route in app.routes
+    )
     database_url = make_url(settings.DATABASE_URL)
     identity = build_identity()
     print(f"[diagnostic] auth_login_route_registered={str(login_registered).lower()}", flush=True)
+    print(f"[diagnostic] auth_owner_login_route_registered={str(owner_login_registered).lower()}", flush=True)
     print(
         "[diagnostic] build "
         f"environment={identity['environment']} version={identity['version']} deployment={identity['deployment']}"
