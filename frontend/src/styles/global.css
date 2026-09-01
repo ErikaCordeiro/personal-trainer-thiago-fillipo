@@ -6060,7 +6060,6 @@ body {
 @media (max-width: 980px) {
   .personal-layout .main-panel {
     border-radius: 0;
-    padding-bottom: 110px;
   }
 
   .personal-layout .compact-search,

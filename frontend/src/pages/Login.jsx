@@ -3,6 +3,21 @@ import { Apple, Chrome, Download, Eye, EyeOff, Lock, Mail, UserPlus, X } from "l
 import LionLogo from "../components/LionLogo.jsx";
 import { apiRequest, login as apiLogin } from "../services/api.js";
 
+function personalBrandFallback(brandSlug) {
+  const isThiago = brandSlug === "thiago-fillipo";
+  const name = isThiago
+    ? "Thiago Fillipo"
+    : brandSlug.split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ");
+  return {
+    display_name: `Personal ${name}`.trim(),
+    initials: isThiago ? "TF" : "PT",
+    logo_url: isThiago ? "/lion-juda-logo.png" : "",
+    icon_url: isThiago ? "/lion-juda-logo.png" : "",
+    login_subtitle: "Disciplina • Foco • Propósito",
+    is_fallback: true
+  };
+}
+
 export default function Login({ onLogin, onSignup, context = "platform", branding: initialBranding = null, brandSlug = "" }) {
   const [credentials, setCredentials] = useState({
     email: "",
@@ -33,19 +48,14 @@ export default function Login({ onLogin, onSignup, context = "platform", brandin
       ? "/branding/platform"
       : `/branding/public?slug=${encodeURIComponent(brandSlug)}`;
     apiRequest(endpoint, { skipAuthRefresh: true })
-      .then(setBranding)
+      .then((data) => setBranding(
+        !isOwnerContext && brandSlug && data?.display_name === "Fitland"
+          ? personalBrandFallback(brandSlug)
+          : data
+      ))
       .catch(() => setBranding(isOwnerContext
         ? { display_name: "Fitland", initials: "FT", is_fallback: true }
-        : {
-            display_name: brandSlug
-              ? `Personal ${brandSlug.split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ")}`
-              : "Personal",
-            initials: "PT",
-            logo_url: brandSlug === "thiago-fillipo" ? "/lion-juda-logo.png" : "",
-            icon_url: brandSlug === "thiago-fillipo" ? "/lion-juda-logo.png" : "",
-            login_subtitle: "Disciplina • Foco • Propósito",
-            is_fallback: true
-          }));
+        : personalBrandFallback(brandSlug)));
   }, [isOwnerContext, brandSlug]);
 
   useEffect(() => {

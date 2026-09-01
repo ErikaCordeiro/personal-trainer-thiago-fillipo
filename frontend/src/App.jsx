@@ -35,7 +35,7 @@ import { students as mockStudents, workouts as mockWorkouts } from "./data/mockD
 import { apiRequest, clearToken, getToken, logoutSession, refreshSession } from "./services/api.js";
 import { clearDemoActivityDataOnce } from "./utils/activityData.js";
 import { getRecommendedWorkout } from "./utils/workoutSchedule.js";
-import { isOwnerLoginPath } from "./utils/authRouting.js";
+import { isAuthLoginPath, isOwnerLoginPath } from "./utils/authRouting.js";
 
 const pageMeta = {
   dashboard: ["Dashboard", "Disciplina hoje, liberdade amanhã."],
@@ -171,6 +171,12 @@ export default function App() {
     let mounted = true;
 
     async function restoreSession() {
+      if (isAuthLoginPath(window.location.pathname)) {
+        clearToken();
+        if (mounted) setAuthReady(true);
+        return;
+      }
+
       try {
         let user = null;
         if (getToken()) {

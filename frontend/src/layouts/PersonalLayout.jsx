@@ -60,18 +60,6 @@ export default function PersonalLayout({
           onApproveStudent={onApproveStudent}
         />
         {children}
-        <nav className="personal-mobile-nav" aria-label="Navegação mobile do personal">
-          <button type="button" onClick={() => onNavigate("dashboard")}>Home</button>
-          <button type="button" onClick={() => onNavigate("students")}>Alunos</button>
-          <button className="mobile-coach" type="button" onClick={() => onNavigate("coach")}>
-            {branding?.icon_url || branding?.logo_url
-              ? <img src={branding.icon_url || branding.logo_url} alt="" />
-              : <span>{branding?.initials || "FT"}</span>}
-            Coach IA
-          </button>
-          <button type="button" onClick={() => onNavigate("agenda")}>Agenda</button>
-          <button type="button" onClick={() => setSidebarOpen(true)}>Mais</button>
-        </nav>
       </main>
     </div>
   );
