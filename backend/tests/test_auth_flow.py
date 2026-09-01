@@ -257,9 +257,13 @@ def test_http_required_password_change_returns_normal_session_and_revokes_old_to
             )
         assert restricted.status_code == 403
         assert restricted.json()["detail"] == "Password change required"
+        assert restricted.headers.get("X-Request-ID")
+        assert restricted.headers.get("X-Fitland-Service") == "backend"
         assert changed.status_code == 200
         assert changed.json()["user"]["must_change_password"] is False
         assert stale.status_code == 401
+        assert stale.headers.get("X-Request-ID")
+        assert stale.headers.get("X-Fitland-Service") == "backend"
     finally:
         app.dependency_overrides.clear()
 
@@ -584,6 +588,40 @@ def test_diagnostic_ping_identifies_backend_build():
     assert response.headers.get("X-Request-ID")
     assert response.headers.get("X-Fitland-Service") == "backend"
     assert response.headers.get("X-Fitland-Build") == response.json()["build"]
+
+
+def test_diagnostic_post_identifies_backend_without_authentication_or_database():
+    def failing_db():
+        raise AssertionError("diagnostic endpoint must not access the database")
+
+    app.dependency_overrides[get_db] = failing_db
+    try:
+        with TestClient(app) as client:
+            response = client.post(
+                "/api/diagnostic/post",
+                headers={"X-Request-ID": "diagnostic-post-test"},
+            )
+    finally:
+        app.dependency_overrides.clear()
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "ok": True,
+        "service": "fitland-backend",
+        "build": response.headers["X-Fitland-Build"],
+    }
+    assert response.headers["X-Request-ID"] == "diagnostic-post-test"
+    assert response.headers["X-Fitland-Service"] == "backend"
+
+
+def test_identity_headers_cover_404():
+    with TestClient(app) as client:
+        response = client.get("/api/route-that-does-not-exist")
+
+    assert response.status_code == 404
+    assert response.headers.get("X-Request-ID")
+    assert response.headers.get("X-Fitland-Service") == "backend"
+    assert response.headers.get("X-Fitland-Build")
 
 
 def test_health_exposes_safe_build_identity():

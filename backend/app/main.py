@@ -1,11 +1,15 @@
 from pathlib import Path
 import logging
+import os
+import socket
 import uuid
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from starlette.datastructures import Headers, MutableHeaders
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from app.api.routes import auth, branding, exercises, owner, progress, students, users, videos, workouts
 from app.core.config import settings
@@ -18,9 +22,67 @@ from app.models.user import User, UserRole
 from sqlalchemy import func, select
 from sqlalchemy.engine import make_url
 
-app = FastAPI(title=settings.APP_NAME, version="1.0.0")
 logger = logging.getLogger("uvicorn.error")
 
+class RequestObservabilityMiddleware:
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        headers = Headers(scope=scope)
+        correlation_id = headers.get("X-Request-ID") or str(uuid.uuid4())
+        token = request_id_context.set(correlation_id)
+        path = scope.get("path", "")
+        method = scope.get("method", "")
+        is_auth_request = path.startswith("/api/auth/")
+        identity = build_identity()
+        status_code = 500
+
+        logger.info(
+            "[asgi-request] request_id=%s method=%s path=%s build=%s pid=%s hostname=%s deployment=%s replica=%s",
+            correlation_id, method, path, identity["version"], os.getpid(), socket.gethostname(),
+            identity["deployment"], os.getenv("RAILWAY_REPLICA_ID", "unknown"),
+        )
+        if is_auth_request:
+            logger.info(
+                "[request] id=%s method=%s path=%s frontend_build=%s backend_build=%s deployment=%s",
+                correlation_id, method, path, headers.get("X-Frontend-Build", "unknown"),
+                identity["version"], identity["deployment"],
+            )
+
+        async def send_with_identity(message: Message) -> None:
+            nonlocal status_code
+            if message["type"] == "http.response.start":
+                status_code = message["status"]
+                response_headers = MutableHeaders(scope=message)
+                response_headers["X-Request-ID"] = correlation_id
+                response_headers["X-Backend-Build"] = identity["version"]
+                response_headers["X-Backend-Deployment"] = identity["deployment"]
+                response_headers["X-Fitland-Service"] = "backend"
+                response_headers["X-Fitland-Build"] = identity["version"]
+            await send(message)
+
+        try:
+            await self.app(scope, receive, send_with_identity)
+        except Exception as exc:
+            logger.exception(
+                "[request] id=%s status=500 result=unhandled_error error_type=%s",
+                correlation_id, type(exc).__name__,
+            )
+            response = JSONResponse(status_code=500, content={"detail": "Internal server error"})
+            await response(scope, receive, send_with_identity)
+        finally:
+            if is_auth_request:
+                logger.info("[request] id=%s status=%s", correlation_id, status_code)
+            logger.info("[asgi-response] request_id=%s status=%s", correlation_id, status_code)
+            request_id_context.reset(token)
+
+
+app = FastAPI(title=settings.APP_NAME, version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
@@ -28,49 +90,11 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
     allow_headers=["Authorization", "Content-Type", "X-Request-ID", "X-Frontend-Build"],
     expose_headers=[
-        "X-Request-ID",
-        "X-Backend-Build",
-        "X-Backend-Deployment",
-        "X-Fitland-Service",
-        "X-Fitland-Build",
+        "X-Request-ID", "X-Backend-Build", "X-Backend-Deployment", "X-Fitland-Service", "X-Fitland-Build",
     ],
 )
-
+app.add_middleware(RequestObservabilityMiddleware)
 register_error_handlers(app)
-
-
-@app.middleware("http")
-async def auth_request_observability(request: Request, call_next):
-    correlation_id = request.headers.get("X-Request-ID") or uuid.uuid4().hex[:16]
-    token = request_id_context.set(correlation_id)
-    is_auth_request = request.url.path.startswith("/api/auth/")
-    identity = build_identity()
-    if is_auth_request:
-        frontend_build = request.headers.get("X-Frontend-Build", "unknown")
-        logger.info(
-            f"[request] id={correlation_id} method={request.method} path={request.url.path} "
-            f"frontend_build={frontend_build} backend_build={identity['version']} deployment={identity['deployment']}"
-        )
-    try:
-        response = await call_next(request)
-    except Exception as exc:
-        if is_auth_request:
-            logger.exception(
-                "[request] id=%s status=500 result=unhandled_error error_type=%s",
-                correlation_id,
-                type(exc).__name__,
-            )
-        response = JSONResponse(status_code=500, content={"detail": "Internal server error"})
-    finally:
-        request_id_context.reset(token)
-    response.headers["X-Request-ID"] = correlation_id
-    response.headers["X-Backend-Build"] = identity["version"]
-    response.headers["X-Backend-Deployment"] = identity["deployment"]
-    response.headers["X-Fitland-Service"] = "backend"
-    response.headers["X-Fitland-Build"] = identity["version"]
-    if is_auth_request:
-        logger.info("[request] id=%s status=%s", correlation_id, response.status_code)
-    return response
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(users.router, prefix="/api/users", tags=["users"])
@@ -150,7 +174,17 @@ def health_check():
 @app.get("/api/diagnostic/ping", include_in_schema=False)
 def diagnostic_ping():
     identity = build_identity()
-    return {"service": "fitland-backend", "build": identity["version"]}
+    return {"ok": True, "service": "fitland-backend", "build": identity["version"]}
+
+
+@app.post("/api/diagnostic/post", include_in_schema=False)
+def diagnostic_post():
+    identity = build_identity()
+    logger.info(
+        "[diagnostic-post] request_id=%s method=POST path=/api/diagnostic/post",
+        request_id_context.get(),
+    )
+    return {"ok": True, "service": "fitland-backend", "build": identity["version"]}
 
 
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
