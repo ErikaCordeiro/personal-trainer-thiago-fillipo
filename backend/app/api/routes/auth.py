@@ -1,15 +1,16 @@
-from fastapi import APIRouter, Cookie, Depends, Response
+from fastapi import APIRouter, Cookie, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, require_owner_password_change
 from app.core.config import settings
 from app.db.session import get_db
 from app.models.user import User
-from app.schemas.auth import LoginRequest, SessionResponse, TokenResponse
+from app.schemas.auth import LoginRequest, RequiredPasswordChange, SessionResponse, TokenResponse
 from app.schemas.user import UserCreate, UserRead
 from app.services.auth_service import (
     authenticate,
     authenticate_owner,
+    change_required_owner_password,
     get_connected_devices,
     refresh_session,
     register_user,
@@ -53,6 +54,20 @@ def login(payload: LoginRequest, response: Response, db: Session = Depends(get_d
 @router.post("/owner-login", response_model=TokenResponse)
 def owner_login(payload: LoginRequest, response: Response, db: Session = Depends(get_db)):
     token_response, refresh_token = authenticate_owner(db, payload)
+    _set_refresh_cookie(response, refresh_token)
+    return token_response
+
+
+@router.post("/change-required-password", response_model=TokenResponse)
+def change_required_password(
+    payload: RequiredPasswordChange,
+    response: Response,
+    owner: User = Depends(require_owner_password_change),
+    db: Session = Depends(get_db),
+):
+    if payload.new_password != payload.confirm_password:
+        raise HTTPException(status_code=422, detail="As senhas não coincidem.")
+    token_response, refresh_token = change_required_owner_password(db, owner, payload.new_password)
     _set_refresh_cookie(response, refresh_token)
     return token_response
 

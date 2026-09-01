@@ -1,9 +1,10 @@
 from pathlib import Path
+import logging
 import uuid
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api.routes import auth, branding, exercises, owner, progress, students, users, videos, workouts
@@ -18,6 +19,7 @@ from sqlalchemy import func, select
 from sqlalchemy.engine import make_url
 
 app = FastAPI(title=settings.APP_NAME, version="1.0.0")
+logger = logging.getLogger("uvicorn.error")
 
 app.add_middleware(
     CORSMiddleware,
@@ -45,17 +47,20 @@ async def auth_request_observability(request: Request, call_next):
     identity = build_identity()
     if is_auth_request:
         frontend_build = request.headers.get("X-Frontend-Build", "unknown")
-        print(
+        logger.info(
             f"[request] id={correlation_id} method={request.method} path={request.url.path} "
-            f"frontend_build={frontend_build} backend_build={identity['version']} deployment={identity['deployment']}",
-            flush=True,
+            f"frontend_build={frontend_build} backend_build={identity['version']} deployment={identity['deployment']}"
         )
     try:
         response = await call_next(request)
-    except Exception:
+    except Exception as exc:
         if is_auth_request:
-            print(f"[request] id={correlation_id} status=500 result=unhandled_error", flush=True)
-        raise
+            logger.exception(
+                "[request] id=%s status=500 result=unhandled_error error_type=%s",
+                correlation_id,
+                type(exc).__name__,
+            )
+        response = JSONResponse(status_code=500, content={"detail": "Internal server error"})
     finally:
         request_id_context.reset(token)
     response.headers["X-Request-ID"] = correlation_id
@@ -64,7 +69,7 @@ async def auth_request_observability(request: Request, call_next):
     response.headers["X-Fitland-Service"] = "backend"
     response.headers["X-Fitland-Build"] = identity["version"]
     if is_auth_request:
-        print(f"[request] id={correlation_id} status={response.status_code}", flush=True)
+        logger.info("[request] id=%s status=%s", correlation_id, response.status_code)
     return response
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])

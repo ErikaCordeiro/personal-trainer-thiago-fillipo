@@ -74,8 +74,12 @@ def _register_success(email: str, user: User) -> None:
     user.last_login_at = datetime.now(timezone.utc).replace(tzinfo=None)
 
 
-def _token_payload(user: User) -> dict[str, str]:
-    return {"role": user.role.value}
+def _token_payload(user: User) -> dict[str, str | int | bool]:
+    return {
+        "role": user.role.value,
+        "token_version": int(user.token_version or 0),
+        "password_change_required": bool(user.must_change_password),
+    }
 
 
 def build_token_response(user: User) -> TokenResponse:
@@ -232,6 +236,7 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
     password_matches = bool(configured_password) and secrets.compare_digest(
         password.encode("utf-8"), configured_password.encode("utf-8")
     )
+    owner_recovery_matches = settings.OWNER_FORCE_PASSWORD_RESET and email_matches and password_matches
     print(
         "[auth-owner] login_attempt "
         f"request_id={correlation_id} configured={str(bool(configured_email and configured_password)).lower()} "
@@ -247,6 +252,10 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
     user = None
     password_valid = False
     owner_count = 0
+
+    if _is_locked(email) and not owner_recovery_matches:
+        print(f"[auth-owner] login_failed request_id={correlation_id} reason=blocked_owner", flush=True)
+        raise DomainError("Muitas tentativas. Aguarde alguns minutos e tente novamente.", status.HTTP_429_TOO_MANY_REQUESTS)
 
     if settings.OWNER_FORCE_PASSWORD_RESET:
         # Recovery is intentionally restricted to the exact credentials from
@@ -277,23 +286,26 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
         owner_count = 1 if user else 0
     else:
         owner_candidates = db.scalars(select(User).where(User.role == UserRole.OWNER)).all()
-        configured_owners = [
+        matching_owners = [
             candidate
             for candidate in owner_candidates
-            if normalize_owner_email(candidate.email) == configured_email
+            if normalize_owner_email(candidate.email) == email
         ]
-        owner_count = len(configured_owners)
-        user = configured_owners[0] if owner_count == 1 else None
-        if user and email_matches:
+        owner_count = len(matching_owners)
+        user = matching_owners[0] if owner_count == 1 else None
+        if user:
             try:
                 password_valid = verify_password(password, user.hashed_password)
             except (TypeError, ValueError):
                 password_valid = False
 
-    if not user or owner_count != 1 or not email_matches or not password_valid:
+    if not user or owner_count != 1 or not password_valid:
+        _register_failure(email)
+        reason = "owner_not_found" if not user or owner_count != 1 else "password_mismatch"
         print(
             f"[auth-owner] login_failed request_id={correlation_id} "
-            f"configured_owner_count={owner_count} "
+            f"reason={reason} owner_count={owner_count} "
+            f"role_valid={str(bool(user and user.role == UserRole.OWNER)).lower()} "
             f"password_valid={str(password_valid).lower()}",
             flush=True,
         )
@@ -301,7 +313,10 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
 
     print(
         f"[auth-owner] stage=owner_validated request_id={correlation_id} owner_found=true "
-        f"role_valid={str(user.role == UserRole.OWNER).lower()} password_valid={str(password_valid).lower()}",
+        f"role_valid={str(user.role == UserRole.OWNER).lower()} active={str(user.is_active).lower()} "
+        f"blocked={str(user.account_status != 'active').lower()} "
+        f"must_change_password={str(user.must_change_password).lower()} "
+        f"password_valid={str(password_valid).lower()}",
         flush=True,
     )
 
@@ -337,6 +352,36 @@ def authenticate_owner(db: Session, payload: LoginRequest) -> tuple[TokenRespons
     print(f"[auth-owner] login_success request_id={correlation_id}", flush=True)
     return token_response, refresh_token
 
+
+def change_required_owner_password(
+    db: Session,
+    owner: User,
+    new_password: str,
+) -> tuple[TokenResponse, str]:
+    if owner.role != UserRole.OWNER or not owner.must_change_password:
+        raise DomainError("Password change is not pending", status.HTTP_409_CONFLICT)
+    if verify_password(new_password, owner.hashed_password):
+        raise DomainError("A nova senha deve ser diferente da senha temporária.", status.HTTP_422_UNPROCESSABLE_ENTITY)
+    owner.hashed_password = hash_password(new_password)
+    owner.must_change_password = False
+    owner.token_version = int(owner.token_version or 0) + 1
+    db.add(AuditLog(
+        actor_user_id=owner.id,
+        action="owner_required_password_changed",
+        entity_type="user",
+        entity_id=str(owner.id),
+        details={},
+    ))
+    try:
+        db.commit()
+        db.refresh(owner)
+        token_response = build_token_response(owner)
+        refresh_token = build_refresh_token(owner)
+        return token_response, refresh_token
+    except Exception as exc:
+        db.rollback()
+        raise DomainError("Unable to change password", status.HTTP_500_INTERNAL_SERVER_ERROR) from exc
+
 def refresh_session(db: Session, refresh_token: str) -> tuple[TokenResponse, str]:
     try:
         payload = decode_refresh_token(refresh_token)
@@ -350,6 +395,8 @@ def refresh_session(db: Session, refresh_token: str) -> tuple[TokenResponse, str
 
     user = db.get(User, user_id)
     if not user or not user.is_active:
+        raise DomainError("Sessão expirada. Entre novamente.", status.HTTP_401_UNAUTHORIZED)
+    if int(payload.get("token_version", 0)) != int(user.token_version or 0):
         raise DomainError("Sessão expirada. Entre novamente.", status.HTTP_401_UNAUTHORIZED)
 
     REVOKED_REFRESH_JTIS.add(jti)

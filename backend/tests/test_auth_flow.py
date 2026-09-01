@@ -12,13 +12,13 @@ os.environ.setdefault("DATABASE_URL", "sqlite+pysqlite:///:memory:")
 from app.api.deps import require_owner, require_personal, require_student_or_personal
 from app.core.config import settings
 from app.core.errors import DomainError
-from app.core.security import create_refresh_token, hash_password, verify_password
+from app.core.security import create_access_token, create_refresh_token, hash_password, verify_password
 from app.db.session import get_db
 from app.main import app
 from app.models.user import User, UserRole
 from app.schemas.auth import LoginRequest
 from app.services import auth_service
-from app.services.auth_service import authenticate, authenticate_owner, refresh_session
+from app.services.auth_service import authenticate, authenticate_owner, change_required_owner_password, refresh_session
 from app.services.owner_service import ensure_owner
 
 
@@ -69,6 +69,7 @@ def make_user(role=UserRole.OWNER, **changes):
         "is_active": True,
         "account_status": "active",
         "must_change_password": False,
+        "token_version": 0,
         "created_at": datetime.utcnow(),
         "deleted_at": None,
         "avatar_url": None,
@@ -165,6 +166,102 @@ def test_dedicated_owner_login_rejects_non_owner(monkeypatch):
         authenticate_owner(FakeSession([user]), payload())
 
     assert error.value.status_code == 401
+
+
+def test_owner_normal_login_uses_postgresql_hash_not_environment_password(monkeypatch):
+    user = make_user(must_change_password=True)
+    monkeypatch.setattr(settings, "OWNER_INITIAL_EMAIL", "different-bootstrap@example.com")
+    monkeypatch.setattr(settings, "OWNER_INITIAL_PASSWORD", "DifferentBootstrap123!")
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", False)
+
+    response, refresh = authenticate_owner(FakeSession([user]), payload())
+
+    assert response.user.role == UserRole.OWNER
+    assert response.user.must_change_password is True
+    assert refresh
+
+
+def test_owner_normal_login_wrong_password_is_401(monkeypatch):
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", False)
+    with pytest.raises(DomainError) as error:
+        authenticate_owner(FakeSession([make_user()]), payload(password="WrongPass123!"))
+    assert error.value.status_code == 401
+
+
+def test_owner_normal_login_rate_limit_blocks_repeated_failures(monkeypatch):
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", False)
+    db = FakeSession([make_user()])
+    for _ in range(auth_service.MAX_FAILED_ATTEMPTS):
+        with pytest.raises(DomainError) as error:
+            authenticate_owner(db, payload(password="WrongPass123!"))
+        assert error.value.status_code == 401
+    with pytest.raises(DomainError) as blocked:
+        authenticate_owner(db, payload())
+    assert blocked.value.status_code == 429
+
+
+def test_owner_normal_login_inactive_is_403(monkeypatch):
+    monkeypatch.setattr(settings, "OWNER_FORCE_PASSWORD_RESET", False)
+    with pytest.raises(DomainError) as error:
+        authenticate_owner(FakeSession([make_user(is_active=False)]), payload())
+    assert error.value.status_code == 403
+
+
+def test_required_password_change_rotates_hash_and_session_version():
+    user = make_user(must_change_password=True)
+    db = FakeSession([user])
+    old_hash = user.hashed_password
+    old_version = user.token_version
+
+    response, refresh = change_required_owner_password(db, user, "NewValidPass456!")
+
+    assert user.must_change_password is False
+    assert user.hashed_password != old_hash
+    assert verify_password("NewValidPass456!", user.hashed_password)
+    assert not verify_password(PASSWORD, user.hashed_password)
+    assert user.token_version == old_version + 1
+    assert response.user.must_change_password is False
+    assert refresh
+
+
+def test_required_password_change_rejects_reused_temporary_password():
+    user = make_user(must_change_password=True)
+    with pytest.raises(DomainError) as error:
+        change_required_owner_password(FakeSession([user]), user, PASSWORD)
+    assert error.value.status_code == 422
+
+
+def test_http_required_password_change_returns_normal_session_and_revokes_old_token():
+    user = make_user(must_change_password=True)
+    db = FakeSession([user])
+    token = create_access_token(str(user.id), {
+        "role": "owner",
+        "token_version": 0,
+        "password_change_required": True,
+    })
+    app.dependency_overrides[get_db] = lambda: db
+    try:
+        with TestClient(app) as client:
+            restricted = client.get(
+                "/api/owner/settings",
+                headers={"Authorization": f"Bearer {token}"},
+            )
+            changed = client.post(
+                "/api/auth/change-required-password",
+                headers={"Authorization": f"Bearer {token}"},
+                json={"new_password": "NewValidPass456!", "confirm_password": "NewValidPass456!"},
+            )
+            stale = client.get(
+                "/api/owner/settings",
+                headers={"Authorization": f"Bearer {token}"},
+            )
+        assert restricted.status_code == 403
+        assert restricted.json()["detail"] == "Password change required"
+        assert changed.status_code == 200
+        assert changed.json()["user"]["must_change_password"] is False
+        assert stale.status_code == 401
+    finally:
+        app.dependency_overrides.clear()
 
 
 def test_missing_owner_is_rejected():
@@ -454,6 +551,28 @@ def test_http_invalid_login_remains_generic_401():
         assert response.headers.get("X-Fitland-Build")
     finally:
         app.dependency_overrides.clear()
+
+
+def test_response_identity_headers_cover_422_and_500():
+    def failing_db():
+        raise RuntimeError("test-only database failure")
+
+    with TestClient(app, raise_server_exceptions=False) as client:
+        invalid = client.post("/api/auth/owner-login", json={})
+        app.dependency_overrides[get_db] = failing_db
+        try:
+            failed = client.post(
+                "/api/auth/owner-login",
+                json={"email": "owner@example.com", "password": PASSWORD},
+            )
+        finally:
+            app.dependency_overrides.clear()
+    for response in (invalid, failed):
+        assert response.headers.get("X-Request-ID")
+        assert response.headers.get("X-Fitland-Service") == "backend"
+        assert response.headers.get("X-Fitland-Build")
+    assert invalid.status_code == 422
+    assert failed.status_code == 500
 
 
 def test_diagnostic_ping_identifies_backend_build():

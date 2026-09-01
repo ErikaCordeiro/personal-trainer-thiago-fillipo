@@ -18,3 +18,8 @@ class TokenResponse(BaseModel):
 
 class SessionResponse(TokenResponse):
     pass
+
+
+class RequiredPasswordChange(BaseModel):
+    new_password: str = Field(min_length=10, max_length=128)
+    confirm_password: str = Field(min_length=10, max_length=128)

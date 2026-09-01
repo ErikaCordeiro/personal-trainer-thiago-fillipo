@@ -106,6 +106,16 @@ export async function refreshSession() {
   );
 }
 
+export async function changeRequiredPassword(newPassword, confirmPassword) {
+  const data = await apiRequest("/auth/change-required-password", {
+    method: "POST",
+    body: JSON.stringify({ new_password: newPassword, confirm_password: confirmPassword }),
+    skipAuthRefresh: true,
+  });
+  setToken(data.access_token, true);
+  return data;
+}
+
 export async function logoutSession() {
   authCoordinator.invalidate();
   try {

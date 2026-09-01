@@ -20063,3 +20063,31 @@ body.owner-light .owner-shell{--owner-bg:#e9eaec;--owner-panel:#f4f4f3;--owner-l
 .owner-brand-fields > div { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .owner-brand-fields input[type="color"] { width: 100%; min-height: 44px; padding: 4px; }
 @media (max-width: 600px) { .owner-brand-fields > div { grid-template-columns: 1fr; } }
+/* Required owner password change */
+.required-password-screen { min-height: 100vh; display: grid; place-items: center; padding: 28px; background: #050607; color: #f5f5f5; }
+.required-password-panel { width: min(100%, 480px); padding: 36px; border: 1px solid #292d31; border-radius: 8px; background: #0d0f11; box-shadow: 0 24px 70px rgba(0,0,0,.45); }
+.required-password-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; font-weight: 800; letter-spacing: 0; }
+.required-password-brand svg { color: #8b5cf6; }
+.required-password-panel h1 { margin: 8px 0; font-size: 2rem; letter-spacing: 0; }
+.required-password-panel > p { color: #a8adb4; }
+.required-password-panel form { display: grid; gap: 18px; margin-top: 28px; }
+.required-password-panel label { display: grid; gap: 8px; color: #d9dce0; font-weight: 650; }
+.required-password-panel label > div { display: grid; grid-template-columns: 20px 1fr 36px; align-items: center; gap: 10px; min-height: 50px; padding: 0 12px; border: 1px solid #34383d; border-radius: 6px; background: #15181b; }
+.required-password-panel input { width: 100%; border: 0; outline: 0; background: transparent; color: #fff; font: inherit; }
+.required-password-panel label button { display: grid; place-items: center; border: 0; background: transparent; color: #a8adb4; }
+.required-password-panel svg { width: 19px; height: 19px; }
+.required-password-panel ul { margin: 0; padding-left: 20px; color: #9fa5ac; line-height: 1.7; }
+.required-password-error { padding: 12px; border: 1px solid #7f1d1d; border-radius: 6px; background: #2a0c0c; color: #fecaca !important; }
+.required-password-submit { min-height: 50px; border: 0; border-radius: 6px; background: #f4f4f5; color: #09090b; font-weight: 800; text-transform: uppercase; }
+.required-password-submit:disabled { opacity: .6; }
+.required-password-logout { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 18px; border: 0; background: transparent; color: #a8adb4; }
+@media (max-width: 560px) { .required-password-screen { padding: 0; align-items: stretch; } .required-password-panel { min-height: 100vh; padding: 28px 20px; border: 0; border-radius: 0; } }
+@media (prefers-color-scheme: light) {
+  .required-password-screen { background: #eef0f2; color: #111315; }
+  .required-password-panel { border-color: #d6d9dd; background: #fff; box-shadow: 0 24px 70px rgba(31,35,40,.12); }
+  .required-password-panel > p, .required-password-panel ul, .required-password-logout { color: #5e646b; }
+  .required-password-panel label { color: #25282c; }
+  .required-password-panel label > div { border-color: #ccd0d5; background: #f5f6f7; }
+  .required-password-panel input { color: #111315; }
+  .required-password-submit { background: #111315; color: #fff; }
+}

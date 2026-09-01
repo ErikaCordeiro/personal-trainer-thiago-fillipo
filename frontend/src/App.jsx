@@ -4,6 +4,7 @@ import PersonalLayout from "./layouts/PersonalLayout.jsx";
 import StudentLayout from "./layouts/StudentLayout.jsx";
 import OwnerLayout from "./layouts/OwnerLayout.jsx";
 import Login from "./pages/Login.jsx";
+import RequiredPasswordChange from "./pages/RequiredPasswordChange.jsx";
 import StudentDashboard from "./pages/Dashboard.jsx";
 import PersonalDashboard from "./pages/PersonalDashboard.jsx";
 import Students from "./pages/Students.jsx";
@@ -200,7 +201,7 @@ export default function App() {
           : pageFromPath(window.location.pathname, normalizedUser.role);
         setActivePage(requestedPage);
         if (normalizedUser.role === "owner" && normalizedUser.must_change_password) {
-          window.history.replaceState(null, "", "/fitland/seguranca");
+          window.history.replaceState(null, "", "/fitland/change-password");
         } else if (window.location.pathname === "/") {
           pushRoute(normalizedUser.role);
         }
@@ -265,10 +266,27 @@ export default function App() {
             : pageFromPath(window.location.pathname, normalizedRole);
           setActivePage(requestedPage);
           if (normalizedRole === "owner" && normalizedUser.must_change_password) {
-            window.history.replaceState(null, "", "/fitland/seguranca");
+            window.history.replaceState(null, "", "/fitland/change-password");
           } else if (requestedPage === "dashboard") {
             pushRoute(normalizedRole);
           }
+        }}
+      />
+    );
+  }
+
+  if (session.role === "owner" && session.must_change_password) {
+    return (
+      <RequiredPasswordChange
+        onComplete={(user) => {
+          setSession(normalizeSessionUser(user));
+          setActivePage("dashboard");
+          window.history.replaceState(null, "", "/fitland/dashboard");
+        }}
+        onLogout={async () => {
+          await logoutSession();
+          setSession(null);
+          window.history.replaceState(null, "", "/fitland/login");
         }}
       />
     );
