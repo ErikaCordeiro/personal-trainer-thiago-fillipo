@@ -4111,6 +4111,23 @@ select {
 
 .nutrition-alert-list svg {
   color: #f0d58a;
+  flex: 0 0 auto;
+}
+
+.nutrition-alert-list span {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.nutrition-alert-list strong {
+  color: inherit;
+  line-height: 1.35;
+}
+
+.nutrition-alert-list time {
+  color: rgba(229, 229, 229, 0.55);
+  font-size: 0.76rem;
 }
 
 .nutrition-meal-review > div {
@@ -19455,6 +19472,203 @@ body.theme-light .personal-layout .workout-list {
     inset 0 1px 0 rgba(255,255,255,.95) !important;
 }
 
+/* Personal diets: fluid hierarchy and mobile-readable student records. */
+.personal-diet-page {
+  width: 100%;
+  min-width: 0;
+  gap: 24px;
+  overflow-x: clip;
+}
+
+.personal-diet-page > .section-heading,
+.nutrition-admin-stat,
+.nutrition-admin-panel,
+.nutrition-student-row,
+.nutrition-alert-list div,
+.nutrition-meal-review > div {
+  border-radius: 8px;
+}
+
+.nutrition-admin-grid {
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.nutrition-admin-stat {
+  min-width: 0;
+  min-height: 142px;
+  padding: 18px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, .24);
+}
+
+.nutrition-admin-stat strong {
+  font-size: clamp(1.75rem, 2.5vw, 2.2rem);
+}
+
+.nutrition-admin-layout {
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  gap: 20px;
+}
+
+.nutrition-admin-panel {
+  min-width: 0;
+  padding: 22px;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, .24);
+}
+
+.nutrition-student-table {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.nutrition-table-head,
+.nutrition-student-row {
+  grid-template-columns: minmax(180px, 1.5fr) minmax(116px, 1fr) minmax(82px, .7fr) minmax(100px, .85fr) minmax(84px, .7fr) minmax(76px, .65fr);
+  gap: 10px;
+}
+
+.nutrition-student-row > span,
+.nutrition-student-row mark {
+  min-width: 0;
+}
+
+.nutrition-admin-panel .section-heading > button {
+  min-height: 38px;
+  padding: 0 13px;
+  border-radius: 8px;
+}
+
+.diet-plan-list {
+  margin-top: 6px;
+}
+
+.diet-plan-list .section-heading {
+  gap: 16px;
+}
+
+body.theme-light .nutrition-alert-list time {
+  color: #646a70;
+}
+
+@media (max-width: 1500px) {
+  .nutrition-admin-grid {
+    grid-template-columns: repeat(3, minmax(170px, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  .nutrition-admin-layout,
+  .nutrition-admin-layout.bottom {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .nutrition-table-head,
+  .nutrition-student-row {
+    grid-template-columns: minmax(175px, 1.4fr) minmax(112px, 1fr) minmax(80px, .7fr) minmax(96px, .85fr) minmax(82px, .7fr) minmax(74px, .65fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .nutrition-admin-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .personal-diet-page {
+    gap: 18px;
+  }
+
+  .personal-diet-page > .section-heading,
+  .nutrition-admin-panel {
+    padding: 18px;
+  }
+
+  .personal-diet-page > .section-heading,
+  .diet-plan-list .section-heading {
+    align-items: stretch;
+  }
+
+  .personal-diet-page > .section-heading > button,
+  .diet-plan-list .section-heading > button {
+    width: 100%;
+  }
+
+  .nutrition-table-head {
+    display: none;
+  }
+
+  .nutrition-student-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 18px;
+    padding: 16px;
+  }
+
+  .nutrition-student-row > div:first-child {
+    grid-column: 1 / -1;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(229, 229, 229, .1);
+  }
+
+  .nutrition-student-row .nutrition-metric,
+  .nutrition-student-row mark {
+    display: grid;
+    gap: 5px;
+    width: auto;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font-size: .92rem;
+    font-weight: 800;
+  }
+
+  .nutrition-student-row .nutrition-metric::before,
+  .nutrition-student-row mark::before {
+    content: attr(data-label);
+    color: rgba(229, 229, 229, .56);
+    font-size: .7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  body.theme-light .nutrition-student-row .nutrition-metric::before,
+  body.theme-light .nutrition-student-row mark::before {
+    color: #656b71;
+  }
+
+  .nutrition-meal-review > div {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .nutrition-meal-review > div button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .nutrition-admin-grid,
+  .coach-admin-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .nutrition-admin-stat {
+    min-height: 126px;
+  }
+
+  .nutrition-student-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .nutrition-student-row > div:first-child {
+    grid-column: auto;
+  }
+
+  .nutrition-admin-button {
+    width: 100%;
+  }
+}
+
 body.theme-light .personal-layout button.admin-kpi-card:hover,
 body.theme-light .personal-layout .admin-panel[role="button"]:hover {
   border-color: rgba(34, 39, 44, .28) !important;
@@ -20041,6 +20255,101 @@ body.owner-light .owner-shell{--owner-bg:#e9eaec;--owner-panel:#f4f4f3;--owner-l
 .owner-platform-brand small { color: #929292; font-size: 11px; }
 .owner-collapsed .owner-platform-brand { display: none; }
 
+/* Owner sidebar header: reserve independent space for brand and toggle. */
+.owner-shell {
+  grid-template-columns: 260px minmax(0, 1fr);
+}
+
+.owner-sidebar {
+  width: 260px;
+}
+
+.owner-sidebar-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38px;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.owner-sidebar-head .owner-fitland-logo {
+  min-width: 0;
+  padding: 0;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.owner-sidebar-head .owner-fitland-logo strong {
+  min-width: max-content;
+  max-width: none;
+  overflow: visible;
+  font-size: 20px;
+  letter-spacing: .14em;
+}
+
+.owner-sidebar-toggle {
+  width: 38px;
+  height: 38px;
+  flex-basis: 38px;
+}
+
+.owner-collapsed {
+  grid-template-columns: 82px minmax(0, 1fr);
+}
+
+.owner-collapsed .owner-sidebar-head {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 10px;
+}
+
+.owner-collapsed .owner-fitland-logo {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+.owner-collapsed .owner-fitland-logo strong {
+  display: none;
+}
+
+@media (max-width: 1000px) and (min-width: 701px) {
+  .owner-sidebar-head {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .owner-sidebar-head .owner-fitland-logo {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .owner-sidebar-head .owner-fitland-logo strong {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .owner-sidebar-head {
+    grid-template-columns: minmax(0, 1fr);
+    margin-right: 42px;
+  }
+
+  .owner-sidebar-head .owner-fitland-logo {
+    display: flex;
+    justify-content: flex-start;
+    padding: 0;
+  }
+
+  .owner-sidebar-head .owner-fitland-logo strong {
+    display: block;
+    opacity: 1;
+    max-width: none;
+    overflow: visible;
+  }
+}
+
 .admin-brand-editor { display: grid; gap: 12px; }
 .admin-brand-editor > label { display: grid; gap: 6px; color: #bdbdbd; font-size: 12px; }
 .admin-brand-editor input:not([type="color"]) { width: 100%; }
@@ -20090,4 +20399,44 @@ body.owner-light .owner-shell{--owner-bg:#e9eaec;--owner-panel:#f4f4f3;--owner-l
   .required-password-panel label > div { border-color: #ccd0d5; background: #f5f6f7; }
   .required-password-panel input { color: #111315; }
   .required-password-submit { background: #111315; color: #fff; }
+}
+/* Structured workout techniques and progression alerts */
+.technique-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px 12px;
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+  border-radius: 8px;
+}
+
+.technique-entry legend {
+  grid-column: 1 / -1;
+  padding: 0 6px;
+  font-weight: 700;
+}
+
+.technique-entry label,
+.technique-entry input {
+  min-width: 0;
+}
+
+.calendar-progression-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(245, 190, 64, 0.45);
+  border-radius: 8px;
+  background: rgba(245, 190, 64, 0.08);
+}
+
+.calendar-progression-alert p {
+  margin: 4px 0 0;
+}
+
+@media (max-width: 560px) {
+  .technique-entry { grid-template-columns: 1fr; }
+  .technique-entry legend { grid-column: 1; }
 }

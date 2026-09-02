@@ -41,8 +41,8 @@ const meals = [
 ];
 
 const alerts = [
-  "Erika ficou abaixo da meta de fibras",
-  "1 refeição enviada por foto águarda revisão"
+  { text: "Erika ficou abaixo da meta de fibras", time: "Hoje, 09:20" },
+  { text: "1 refeição enviada por foto aguarda revisão", time: "Hoje, 11:45" }
 ];
 
 export default function PersonalDiet({ students }) {
@@ -144,11 +144,11 @@ export default function PersonalDiet({ students }) {
                     <small>{row.objective}</small>
                   </span>
                 </div>
-                <span>{row.calories}</span>
-                <span>{row.protein}</span>
-                <span>{row.water}</span>
-                <span>{row.adherence}</span>
-                <mark>{row.status}</mark>
+                <span className="nutrition-metric" data-label="Calorias">{row.calories}</span>
+                <span className="nutrition-metric" data-label="Proteína">{row.protein}</span>
+                <span className="nutrition-metric" data-label="Água">{row.water}</span>
+                <span className="nutrition-metric" data-label="Aderência">{row.adherence}</span>
+                <mark data-label="Status">{row.status}</mark>
               </div>
             ))}
           </div>
@@ -159,9 +159,9 @@ export default function PersonalDiet({ students }) {
           <h2>Hoje</h2>
           <div className="nutrition-alert-list">
             {alerts.map((alert) => (
-              <div key={alert}>
+              <div key={alert.text}>
                 <AlertTriangle size={18} />
-                <span>{alert}</span>
+                <span><strong>{alert.text}</strong><time>{alert.time}</time></span>
               </div>
             ))}
           </div>

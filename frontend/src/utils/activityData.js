@@ -4,6 +4,7 @@ export const BEST_STREAK_KEY = "ptf_best_workout_streak";
 export const CALENDAR_EVENTS_KEY = "ptf_calendar_events_v1";
 export const MONTHLY_GOAL_KEY = "ptf_monthly_workout_goal";
 export const ACTIVITY_RESET_KEY = "ptf_real_activity_reset_2026_07_24_v1";
+export const NOTIFICATION_SETTINGS_KEY = "ptf_notification_settings_v1";
 
 export function safeJsonParse(value, fallback = []) {
   try {
@@ -91,15 +92,15 @@ export function completedWorkoutDateSet(history = loadWorkoutHistory()) {
 }
 
 export function calculateCurrentWorkoutStreak(history = loadWorkoutHistory(), today = new Date()) {
-  const dates = completedWorkoutDateSet(history);
-  if (!dates.size) return 0;
   const cursor = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  let count = 0;
-  while (dates.has(toLocalDateKey(cursor))) {
-    count += 1;
-    cursor.setDate(cursor.getDate() - 1);
-  }
-  return count;
+  const mondayOffset = (cursor.getDay() + 6) % 7;
+  cursor.setDate(cursor.getDate() - mondayOffset);
+  const weekStart = cursor.getTime();
+  const weekEnd = weekStart + (7 * 86400000);
+  return history.filter((record) => {
+    const date = new Date(`${record.dateKey}T00:00:00`).getTime();
+    return date >= weekStart && date < weekEnd;
+  }).length;
 }
 
 export function calculateBestWorkoutStreak(history = loadWorkoutHistory()) {
@@ -135,10 +136,7 @@ export function getMonthlyWorkoutGoal() {
 export function clearDemoActivityDataOnce() {
   if (typeof window === "undefined") return;
   if (window.localStorage.getItem(ACTIVITY_RESET_KEY)) return;
-  const removablePrefixes = [WORKOUT_EXECUTION_PREFIX];
   const removableKeys = [
-    WORKOUT_HISTORY_KEY,
-    BEST_STREAK_KEY,
     "ptf_calendar_demo_events",
     "ptf_checkins",
     "ptf_checkin_history",
@@ -149,10 +147,16 @@ export function clearDemoActivityDataOnce() {
     "ptf_progress_demo"
   ];
   removableKeys.forEach((key) => window.localStorage.removeItem(key));
-  Object.keys(window.localStorage).forEach((key) => {
-    if (removablePrefixes.some((prefix) => key.startsWith(prefix))) {
-      window.localStorage.removeItem(key);
-    }
-  });
   window.localStorage.setItem(ACTIVITY_RESET_KEY, new Date().toISOString());
+}
+
+export function loadNotificationSettings() {
+  const defaults = { training: false, water: false, meal: false, messages: false, assessments: false, calendar: false, sound: true };
+  if (typeof window === "undefined") return defaults;
+  return { ...defaults, ...safeJsonParse(window.localStorage.getItem(NOTIFICATION_SETTINGS_KEY), {}) };
+}
+
+export function saveNotificationSettings(settings) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(NOTIFICATION_SETTINGS_KEY, JSON.stringify(settings));
 }

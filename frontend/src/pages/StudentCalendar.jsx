@@ -27,6 +27,8 @@ import {
   toLocalDateKey,
   workoutEventsFromHistory
 } from "../utils/activityData.js";
+import { loadNotificationSettings } from "../utils/activityData.js";
+import { fetchProgressionAlerts, syncWorkoutHistory } from "../services/workoutSessions.js";
 import { getNextDays, getWorkoutsForDate } from "../utils/workoutSchedule.js";
 
 const weekLabels = ["SEG", "TER", "QUA", "QUI", "SEX", "SÁB", "DOM"];
@@ -75,6 +77,7 @@ export default function StudentCalendar({ student, workouts = [], onStartWorkout
   const [selectedTime, setSelectedTime] = useState("18:00");
   const [goalOpen, setGoalOpen] = useState(false);
   const [monthlyGoalState, setMonthlyGoalState] = useState(() => getMonthlyWorkoutGoal() || 12);
+  const [progressionAlerts, setProgressionAlerts] = useState([]);
   const [goalDraft, setGoalDraft] = useState(() => String(getMonthlyWorkoutGoal() || 12));
   const availableDays = useMemo(() => getNextDays(7), []);
 
@@ -89,6 +92,17 @@ export default function StudentCalendar({ student, workouts = [], onStartWorkout
       window.removeEventListener("focus", refresh);
       window.removeEventListener("storage", refresh);
     };
+  }, []);
+
+  useEffect(() => {
+    syncWorkoutHistory().then(() => setHistory(loadWorkoutHistory())).catch(() => {});
+    fetchProgressionAlerts().then((items) => {
+      setProgressionAlerts(items);
+      const preferences = loadNotificationSettings();
+      if (items.length && preferences.training && "Notification" in window && Notification.permission === "granted") {
+        new Notification("Acompanhamento de progressão", { body: items[0].message, icon: "/pwa-icon-192.png" });
+      }
+    }).catch(() => {});
   }, []);
 
   const monthDays = useMemo(() => buildMonthDays(monthDate), [monthDate]);
@@ -174,9 +188,9 @@ export default function StudentCalendar({ student, workouts = [], onStartWorkout
           <img src={brandLogo} alt="" />
         </div>
         <div>
-          <span>Sequência atual</span>
+          <span>Treinos na semana</span>
           <strong>{currentStreak}</strong>
-          <p>{currentStreak === 1 ? "dia seguido" : "dias seguidos"}</p>
+          <p>{currentStreak === 1 ? "treino concluído" : "treinos concluídos"}</p>
           <small><CalendarDays size={14} /> {monthWorkouts.length} treino(s) concluído(s) este mês</small>
         </div>
         <div className="calendar-streak-side">
@@ -184,6 +198,13 @@ export default function StudentCalendar({ student, workouts = [], onStartWorkout
           <p><Target size={16} /> Meta do mês <strong>{monthWorkouts.length}/{monthlyGoal} treinos</strong></p>
         </div>
       </article>
+
+      {progressionAlerts.map((alert) => (
+        <article className="calendar-progression-alert" role="status" key={alert.id}>
+          <Dumbbell size={20} />
+          <div><strong>{alert.exercise_name}</strong><p>{alert.message}</p></div>
+        </article>
+      ))}
 
       <article className="calendar-month-card">
         <div className="calendar-card-title">

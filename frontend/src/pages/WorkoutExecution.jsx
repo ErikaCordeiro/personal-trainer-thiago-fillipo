@@ -16,6 +16,8 @@ import {
   Volume2,
   X
 } from "lucide-react";
+import { loadNotificationSettings, loadWorkoutHistory } from "../utils/activityData.js";
+import { backendToExecution, discardWorkoutSession, fetchActiveWorkout, saveWorkoutSession } from "../services/workoutSessions.js";
 
 const EXECUTION_PREFIX = "ptf_workout_execution_v2";
 const HISTORY_KEY = "ptf_workout_history_v2";
@@ -213,7 +215,14 @@ function buildInitialExecution(workout) {
           observation: "",
           startedAt: null,
           completedAt: null,
-          duration: 0
+          duration: 0,
+          setType: exercise.setType || exercise.set_type || "standard",
+          components: (exercise.techniqueConfig?.components || exercise.technique_config?.components || []).map((item, componentIndex) => ({
+            ...item, order: item.order ?? componentIndex, load: "", repetitions: "", completed: false
+          })),
+          drops: Array.from({ length: exercise.techniqueConfig?.dropCount || exercise.technique_config?.drop_count || 0 }, (_, dropIndex) => ({
+            order: dropIndex, load: "", repetitions: "", completed: false
+          }))
         }))
       };
     })
@@ -247,6 +256,19 @@ function loadExecution(workout) {
   } catch {
     return buildInitialExecution(workout);
   }
+}
+
+function hasRecoverableExecution(execution) {
+  return execution && !["nao_iniciado", "concluido", "incompleto"].includes(execution.status);
+}
+
+function findLastExercisePerformance(exerciseId) {
+  for (const record of loadWorkoutHistory()) {
+    const exercise = (record.exercises || []).find((item) => item.exerciseId === exerciseId);
+    const set = [...(exercise?.sets || [])].reverse().find((item) => item.status === "concluida");
+    if (set) return { usedLoad: set.usedLoad || "", completedReps: set.completedReps || "" };
+  }
+  return null;
 }
 
 function liveElapsed(execution) {
@@ -334,6 +356,7 @@ function saveHistory(execution, workout, duration, finishStatus) {
 
 export default function WorkoutExecution({ workout, onBack, onToggleExercise, onFinishWorkout }) {
   const [execution, setExecution] = useState(() => loadExecution(workout));
+  const [recoveryOpen, setRecoveryOpen] = useState(() => hasRecoverableExecution(loadExecution(workout)));
   const [tick, setTick] = useState(Date.now());
   const [setModal, setSetModal] = useState(null);
   const [videoExercise, setVideoExercise] = useState(null);
@@ -343,6 +366,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
   const [restFinishedNotice, setRestFinishedNotice] = useState(false);
   const [activePicker, setActivePicker] = useState(null);
   const [speakingId, setSpeakingId] = useState(null);
+  const saveSequence = React.useRef(0);
   const [feedback, setFeedback] = useState({
     feeling: "Bem",
     difficulty: "Moderado",
@@ -354,7 +378,25 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
   });
 
   useEffect(() => {
-    setExecution(loadExecution(workout));
+    const restored = loadExecution(workout);
+    setExecution(restored);
+    setRecoveryOpen(hasRecoverableExecution(restored));
+  }, [workout.id]);
+
+  useEffect(() => {
+    let active = true;
+    fetchActiveWorkout(String(workout.id)).then((remote) => {
+      if (!active || !remote) return;
+      setExecution((local) => {
+        const restored = backendToExecution(remote, buildInitialExecution(workout));
+        if (new Date(restored.updatedAt || 0) >= new Date(local.updatedAt || 0)) {
+          setRecoveryOpen(true);
+          return normalizeExecution(restored, workout);
+        }
+        return local;
+      });
+    }).catch(() => {});
+    return () => { active = false; };
   }, [workout.id]);
 
   useEffect(() => {
@@ -373,6 +415,20 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     }
     return undefined;
   }, [execution, workout.id]);
+
+  useEffect(() => {
+    if (execution.status === "nao_iniciado") return undefined;
+    const sequence = ++saveSequence.current;
+    const timer = window.setTimeout(async () => {
+      try {
+        await saveWorkoutSession(execution, workout);
+        if (sequence === saveSequence.current) setSaving("Salvo no servidor");
+      } catch {
+        if (sequence === saveSequence.current) setSaving("Salvo neste dispositivo - sincronização pendente");
+      }
+    }, 800);
+    return () => window.clearTimeout(timer);
+  }, [execution, workout]);
 
   useEffect(() => {
     const persist = () => {
@@ -399,12 +455,17 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
   const currentExecution = execution.exercises.find((item) => item.exerciseId === execution.currentExerciseId) || execution.exercises[0];
   const currentExercise = workout.exercises.find((item) => item.id === currentExecution?.exerciseId) || workout.exercises[0];
   const currentSet = currentExecution?.sets.find((set) => set.status === "em_andamento") || currentExecution?.sets.find((set) => set.status === "pendente") || currentExecution?.sets.at(-1);
+  const lastPerformance = findLastExercisePerformance(currentExecution?.exerciseId);
   const restSeconds = execution.rest?.status === "em_andamento" ?Math.max(0, Math.ceil((new Date(execution.rest?.restEndsAt).getTime() - Date.now()) / 1000)) : 0;
 
   useEffect(() => {
     if (execution.rest?.status === "em_andamento" && restSeconds <= 0) {
-      if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
-      playRestDoneSound();
+      const preferences = loadNotificationSettings();
+      if (preferences.training && navigator.vibrate) navigator.vibrate([120, 60, 120]);
+      if (preferences.training && preferences.sound) playRestDoneSound();
+      if (preferences.training && "Notification" in window && Notification.permission === "granted") {
+        new Notification("Descanso concluído", { body: "Hora da próxima série.", icon: "/pwa-icon-192.png" });
+      }
       setRestFinishedNotice(true);
       window.setTimeout(() => setRestFinishedNotice(false), 2800);
       setExecution((prev) => ({
@@ -477,7 +538,10 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
           setNumber: targetSet.setNumber,
           usedLoad: targetSet.usedLoad || targetSet.prescribedLoad || "",
           completedReps: targetSet.completedReps || parseRepsSuggestion(targetSet.prescribedReps) || "",
-          observation: targetSet.observation || ""
+          observation: targetSet.observation || "",
+          setType: targetSet.setType || "standard",
+          components: targetSet.components || [],
+          drops: targetSet.drops || []
         });
       }, 0);
     }
@@ -486,7 +550,11 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
   function handleSetClick(exerciseId, setNumber) {
     const exercise = execution.exercises.find((item) => item.exerciseId === exerciseId);
     const set = exercise?.sets.find((item) => item.setNumber === setNumber);
-    if (!set || set.status === "concluida") return;
+    if (!set) return;
+    if (set.status === "concluida") {
+      setSetModal({ exerciseId, setNumber, usedLoad: String(set.usedLoad || ""), completedReps: String(set.completedReps || ""), observation: set.observation || "", setType: set.setType || "standard", components: set.components || [], drops: set.drops || [], editing: true });
+      return;
+    }
     startSet(exerciseId, setNumber, { openModal: true });
   }
 
@@ -520,12 +588,20 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
       setNumber: targetSet.setNumber,
       usedLoad: targetSet.usedLoad || targetSet.prescribedLoad || "",
       completedReps: targetSet.completedReps || parseRepsSuggestion(targetSet.prescribedReps) || "",
-      observation: targetSet.observation || ""
+      observation: targetSet.observation || "",
+      setType: targetSet.setType || "standard",
+      components: targetSet.components || [],
+      drops: targetSet.drops || []
     });
   }
 
   function completeSet() {
-    if (!setModal?.usedLoad.trim() || !setModal?.completedReps.trim()) return;
+    if (!String(setModal?.usedLoad || "").trim() || !String(setModal?.completedReps || "").trim()) return;
+    const numericLoad = parseFirstNumber(setModal.usedLoad);
+    const numericReps = Math.round(parseFirstNumber(setModal.completedReps));
+    if (!Number.isFinite(numericLoad) || numericLoad < 0 || !Number.isFinite(numericReps) || numericReps <= 0) return;
+    if (setModal.setType === "biset" && (!setModal.components.length || setModal.components.some((item) => parseFirstNumber(item.load) < 0 || parseFirstNumber(item.repetitions) <= 0))) return;
+    if (setModal.setType === "drop_set" && (!setModal.drops.length || setModal.drops.some((item) => parseFirstNumber(item.load) < 0 || parseFirstNumber(item.repetitions) <= 0))) return;
     const completedAt = nowIso();
     const exerciseSource = workout.exercises.find((item) => item.id === setModal.exerciseId);
     const rest = parseRestSeconds(exerciseSource?.rest);
@@ -540,9 +616,12 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
           return {
             ...set,
             status: "concluida",
-            usedLoad: setModal.usedLoad,
-            completedReps: setModal.completedReps,
+            usedLoad: String(numericLoad),
+            completedReps: String(numericReps),
             observation: setModal.observation,
+            setType: setModal.setType || "standard",
+            components: setModal.components || [],
+            drops: setModal.drops || [],
             completedAt,
             duration: Math.max(0, Math.floor((Date.now() - started) / 1000))
           };
@@ -556,7 +635,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
       return {
         ...prev,
         exercises: nextExercises,
-        rest: shouldRest ?{
+        rest: shouldRest && !setModal.editing ?{
           status: "em_andamento",
           restStartedAt: completedAt,
           restEndsAt: new Date(Date.now() + rest * 1000).toISOString(),
@@ -569,6 +648,13 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     });
     if (completedExerciseId && onToggleExercise) onToggleExercise(completedExerciseId);
     setSetModal(null);
+  }
+
+  async function discardRecoveredExecution() {
+    if (execution.backendId) await discardWorkoutSession(execution.backendId).catch(() => {});
+    window.localStorage.removeItem(getExecutionKey(workout.id));
+    setExecution(buildInitialExecution(workout));
+    setRecoveryOpen(false);
   }
 
   function shouldRequestRestPermission(seconds) {
@@ -605,7 +691,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
     setFinishOpen(true);
   }
 
-  function submitFinish() {
+  async function submitFinish() {
     const complete = execution.exercises.every((item) => item.status === "concluido");
     const status = complete ?"concluido" : "incompleto";
     const finalDuration = liveElapsed(execution);
@@ -618,6 +704,14 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
       feedback,
       updatedAt: nowIso()
     };
+    setSaving("Salvando no servidor...");
+    try {
+      await saveWorkoutSession(finished, workout);
+    } catch {
+      setExecution(finished);
+      setSaving("Não foi possível finalizar no servidor. Tente novamente.");
+      return;
+    }
     setExecution(finished);
     saveHistory(finished, workout, finalDuration, status);
     window.localStorage.removeItem(getExecutionKey(workout.id));
@@ -673,6 +767,7 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
             <div className="current-prescription">
               <span>Descanso: {currentExercise?.rest || "60s"}</span>
               <span>Carga sugerida: {currentExercise?.load || "Livre"}</span>
+              {lastPerformance && <span>Último treino: {lastPerformance.usedLoad || "-"} kg • {lastPerformance.completedReps || "-"} reps</span>}
             </div>
             <div className="execution-v2-actions">
               {execution.status === "pausado" ?(
@@ -777,15 +872,47 @@ export default function WorkoutExecution({ workout, onBack, onToggleExercise, on
         <div className="modal-backdrop" role="dialog" aria-modal="true">
           <article className="form-modal premium-panel workout-set-modal">
             <button className="icon-button modal-close" type="button" onClick={() => setSetModal(null)} aria-label="Fechar"><X size={18} /></button>
-            <span className="eyebrow">Concluir série</span>
-            <h3>Registre o que você fez</h3>
+            <span className="eyebrow">{setModal.editing ? "Editar série" : "Concluir série"}</span>
+            <h3>{setModal.editing ? "Corrija os dados registrados" : "Registre o que você fez"}</h3>
             <label>Carga usada</label>
-            <input value={setModal.usedLoad} onChange={(event) => setSetModal((prev) => ({ ...prev, usedLoad: event.target.value }))} placeholder="Ex: 22,5 kg ou peso corporal" />
+            <input type="number" min="0" step="0.5" inputMode="decimal" value={setModal.usedLoad} onChange={(event) => setSetModal((prev) => ({ ...prev, usedLoad: event.target.value }))} placeholder="Ex: 22,5" />
             <label>Repetições realizadas</label>
-            <input value={setModal.completedReps} onChange={(event) => setSetModal((prev) => ({ ...prev, completedReps: event.target.value }))} placeholder="Ex: 12" />
+            <input type="number" min="1" step="1" inputMode="numeric" value={setModal.completedReps} onChange={(event) => setSetModal((prev) => ({ ...prev, completedReps: event.target.value }))} placeholder="Ex: 12" />
+            {setModal.setType === "biset" && setModal.components.map((component, index) => (
+              <fieldset className="technique-entry" key={`${component.exerciseId}-${index}`}>
+                <legend>{component.exerciseName || `Componente ${index + 1}`}</legend>
+                <label>Peso</label>
+                <input type="number" min="0" step="0.5" value={component.load} onChange={(event) => setSetModal((prev) => ({ ...prev, components: prev.components.map((item, itemIndex) => itemIndex === index ? { ...item, load: event.target.value } : item) }))} />
+                <label>Repetições</label>
+                <input type="number" min="1" step="1" value={component.repetitions} onChange={(event) => setSetModal((prev) => ({ ...prev, components: prev.components.map((item, itemIndex) => itemIndex === index ? { ...item, repetitions: event.target.value, completed: true } : item) }))} />
+              </fieldset>
+            ))}
+            {setModal.setType === "drop_set" && setModal.drops.map((drop, index) => (
+              <fieldset className="technique-entry" key={`drop-${drop.order}-${index}`}>
+                <legend>{index === 0 ? "Carga inicial" : `Drop ${index}`}</legend>
+                <label>Peso</label>
+                <input type="number" min="0" step="0.5" value={drop.load} onChange={(event) => setSetModal((prev) => ({ ...prev, drops: prev.drops.map((item, itemIndex) => itemIndex === index ? { ...item, load: event.target.value } : item) }))} />
+                <label>Repetições</label>
+                <input type="number" min="1" step="1" value={drop.repetitions} onChange={(event) => setSetModal((prev) => ({ ...prev, drops: prev.drops.map((item, itemIndex) => itemIndex === index ? { ...item, repetitions: event.target.value, completed: true } : item) }))} />
+              </fieldset>
+            ))}
             <label>Observação opcional</label>
             <textarea value={setModal.observation} onChange={(event) => setSetModal((prev) => ({ ...prev, observation: event.target.value }))} placeholder="Como foi a série?" />
-            <button className="metal-button light" type="button" onClick={completeSet}>Salvar e concluir série</button>
+            <button className="metal-button light" type="button" onClick={completeSet}>{setModal.editing ? "Salvar correção" : "Salvar e concluir série"}</button>
+          </article>
+        </div>
+      )}
+
+      {recoveryOpen && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="recovery-title">
+          <article className="form-modal premium-panel">
+            <span className="eyebrow">Treino recuperado</span>
+            <h3 id="recovery-title">Continuar de onde parou?</h3>
+            <p>Encontramos séries salvas neste dispositivo. Você pode continuar o treino ou descartar apenas esta execução.</p>
+            <div className="modal-actions">
+              <button className="metal-button ghost" type="button" onClick={discardRecoveredExecution}>Descartar</button>
+              <button className="metal-button light" type="button" onClick={() => setRecoveryOpen(false)}>Continuar treino</button>
+            </div>
           </article>
         </div>
       )}

@@ -6,6 +6,7 @@ from app.models.student import Student
 from app.models.user import User, UserRole
 from app.models.video import Video
 from app.models.workout import Workout, WorkoutExercise
+from app.models.workout_session import ProgressionAlert, WorkoutSession
 
 __all__ = [
     "Exercise",
@@ -18,4 +19,6 @@ __all__ = [
     "Video",
     "Workout",
     "WorkoutExercise",
+    "WorkoutSession",
+    "ProgressionAlert",
 ]

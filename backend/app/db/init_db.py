@@ -1,7 +1,7 @@
 from sqlalchemy import text
 
 from app.db.session import Base, engine
-from app.models import audit_log, exercise, personal_branding, progress, student, user, video, workout  # noqa: F401
+from app.models import audit_log, exercise, personal_branding, progress, student, user, video, workout, workout_session  # noqa: F401
 
 
 def init_db() -> None:
@@ -24,6 +24,8 @@ def init_db() -> None:
                 "ALTER TABLE users ADD COLUMN IF NOT EXISTS theme_preference VARCHAR(16) NOT NULL DEFAULT 'auto'",
                 "ALTER TABLE users ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP NULL",
                 "ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMP NULL",
+                "ALTER TABLE workout_exercises ADD COLUMN IF NOT EXISTS set_type VARCHAR(24) NOT NULL DEFAULT 'standard'",
+                "ALTER TABLE workout_exercises ADD COLUMN IF NOT EXISTS technique_config JSON NOT NULL DEFAULT '{}'",
             ]
             for statement in upgrades:
                 connection.execute(text(statement))

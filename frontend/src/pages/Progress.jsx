@@ -20,6 +20,7 @@ import {
   completedWorkoutsInMonth,
   loadWorkoutHistory
 } from "../utils/activityData.js";
+import { syncWorkoutHistory } from "../services/workoutSessions.js";
 
 function sumVolume(history) {
   return history.reduce((sum, item) => sum + (Number(item.volume) || 0), 0);
@@ -64,7 +65,8 @@ export default function Progress({ student, students = [] }) {
   const score = hasHistory ? Math.min(100, 60 + history.length * 4 + Math.min(streak * 3, 24)) : 0;
 
   useEffect(() => {
-    const refresh = () => setHistory(loadWorkoutHistory());
+    const refresh = () => syncWorkoutHistory().then(() => setHistory(loadWorkoutHistory())).catch(() => setHistory(loadWorkoutHistory()));
+    refresh();
     window.addEventListener("focus", refresh);
     window.addEventListener("storage", refresh);
     return () => {
@@ -75,7 +77,7 @@ export default function Progress({ student, students = [] }) {
 
   const metricCards = [
     { label: "Treinos concluídos", value: String(history.length), diff: `${monthWorkouts.length} este mês`, note: "dados reais", icon: TrendingUp },
-    { label: "Sequência atual", value: String(streak), diff: streak === 1 ? "dia seguido" : "dias seguidos", note: "baseada em treinos finalizados", icon: Flame },
+    { label: "Treinos na semana", value: String(streak), diff: streak === 1 ? "treino concluído" : "treinos concluídos", note: "de segunda-feira a domingo", icon: Flame },
     { label: "Volume total", value: `${Math.round(totalVolume).toLocaleString("pt-BR")} kg`, diff: "treinos concluídos", note: "soma das cargas registradas", icon: Dumbbell },
     { label: "Séries feitas", value: String(totalSeries), diff: "histórico real", note: "séries salvas no treino", icon: BadgeCheck },
     { label: "Peso atual", value: "A definir", diff: "Avaliação pendente", note: "aguardando registro do personal", icon: Scale },
@@ -142,15 +144,15 @@ export default function Progress({ student, students = [] }) {
           <div className="section-heading"><div><p className="eyebrow">Seus recordes</p><h2>Marcas reais</h2></div><Medal size={22} /></div>
           <div className="record-grid">
             <div><span>Maior carga</span><strong>{loadProgress[0]?.current ? `${loadProgress[0].current} kg` : "--"}</strong><small>após registrar carga</small></div>
-            <div><span>Maior sequência</span><strong>{streak}</strong><small>dias seguidos</small></div>
+            <div><span>Frequência atual</span><strong>{streak}</strong><small>treinos nesta semana</small></div>
             <div><span>Treinos concluídos</span><strong>{history.length}</strong><small>histórico real</small></div>
             <div><span>Volume total</span><strong>{Math.round(totalVolume).toLocaleString("pt-BR")} kg</strong><small>treinos finalizados</small></div>
           </div>
         </article>
 
         <article className="student-progress-card consistency-card">
-          <p className="eyebrow">Streak e consistência</p>
-          <strong>{streak} <span>{streak === 1 ? "dia seguido" : "dias seguidos"}</span></strong>
+          <p className="eyebrow">Frequência e consistência</p>
+          <strong>{streak} <span>{streak === 1 ? "treino na semana" : "treinos na semana"}</span></strong>
           <ul>
             <li><Flame size={17} /> Frequência semanal: dados apés treinos</li>
             <li><BadgeCheck size={17} /> Treinos concluídos: {history.length}</li>
@@ -193,7 +195,7 @@ export default function Progress({ student, students = [] }) {
           <div className="section-heading"><div><p className="eyebrow">Insights da IA</p><h2>Coach IA</h2></div><Sparkles size={22} /></div>
           <ul>
             <li>{hasHistory ? `Você já concluiu ${history.length} treino(s).` : "Finalize treinos para liberar insights reais de carga, consistência e evolução."}</li>
-            <li>{streak ? `Sua sequência atual é de ${streak} dia(s).` : "Sua sequência será calculada apenas com treinos finalizados."}</li>
+            <li>{streak ? `Você concluiu ${streak} treino(s) nesta semana.` : "A frequência semanal será calculada apenas com treinos finalizados."}</li>
             <li>O Coach IA não altera seus treinos; ele apenas explica e orienta.</li>
           </ul>
           <button type="button" onClick={() => setModal("coach")}>Perguntar ao Coach IA</button>

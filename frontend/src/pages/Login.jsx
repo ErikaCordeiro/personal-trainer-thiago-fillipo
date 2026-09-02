@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Apple, Chrome, Download, Eye, EyeOff, Lock, Mail, UserPlus, X } from "lucide-react";
 import LionLogo from "../components/LionLogo.jsx";
 import { apiRequest, login as apiLogin } from "../services/api.js";
+import { applyRouteBranding } from "../utils/authRouting.js";
 
 function personalBrandFallback(brandSlug) {
   const isThiago = brandSlug === "thiago-fillipo";
@@ -39,8 +40,7 @@ export default function Login({ onLogin, onSignup, context = "platform", brandin
   }, [isOwnerContext]);
 
   useEffect(() => {
-    const title = isOwnerContext ? "Fitland" : branding?.display_name || "Personal";
-    document.title = title;
+    applyRouteBranding(window.location.pathname, branding);
   }, [branding?.display_name, isOwnerContext]);
 
   useEffect(() => {

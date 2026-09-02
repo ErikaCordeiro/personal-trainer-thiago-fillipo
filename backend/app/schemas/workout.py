@@ -12,6 +12,8 @@ class WorkoutExerciseCreate(BaseModel):
     rest_seconds: int = Field(ge=0, le=600)
     load: float | None = Field(default=None, ge=0, le=2000)
     notes: str | None = Field(default=None, max_length=2000)
+    set_type: str = Field(default="standard", pattern="^(standard|biset|drop_set)$")
+    technique_config: dict = Field(default_factory=dict)
 
 
 class WorkoutExerciseRead(WorkoutExerciseCreate):

@@ -25,6 +25,7 @@ import {
   UserRound,
   Watch
 } from "lucide-react";
+import { loadNotificationSettings, saveNotificationSettings } from "../utils/activityData.js";
 
 const notificationItems = [
   { id: "training", label: "Lembrete de treino", icon: Dumbbell },
@@ -53,14 +54,8 @@ export default function StudentSettings({ student, branding }) {
     birthday: "15/08/1996"
   });
   const [editing, setEditing] = useState(false);
-  const [notifications, setNotifications] = useState({
-    training: true,
-    water: true,
-    meal: true,
-    messages: true,
-    assessments: true,
-    calendar: true
-  });
+  const [notifications, setNotifications] = useState(() => loadNotificationSettings());
+  const [notificationPermission, setNotificationPermission] = useState(() => typeof Notification === "undefined" ? "indisponível" : Notification.permission);
   const [privacy, setPrivacy] = useState({ photos: true, exams: true, assessments: true });
   const [reminder, setReminder] = useState("30 minutos antes");
   const [message, setMessage] = useState("");
@@ -72,6 +67,18 @@ export default function StudentSettings({ student, branding }) {
   };
 
   const updateProfile = (field, value) => setProfile((current) => ({ ...current, [field]: value }));
+
+  async function toggleNotification(id) {
+    let nextValue = !notifications[id];
+    if (nextValue && typeof Notification !== "undefined" && Notification.permission === "default") {
+      const permission = await Notification.requestPermission();
+      setNotificationPermission(permission);
+      if (permission !== "granted") nextValue = false;
+    }
+    const next = { ...notifications, [id]: nextValue };
+    setNotifications(next);
+    saveNotificationSettings(next);
+  }
 
   return (
     <section className="student-settings-page">
@@ -140,11 +147,13 @@ export default function StudentSettings({ student, branding }) {
               return (
                 <label key={item.id}>
                   <span><Icon size={18} /> {item.label}</span>
-                  <button type="button" className={notifications[item.id] ? "on" : ""} onClick={() => setNotifications((current) => ({ ...current, [item.id]: !current[item.id] }))} aria-label={item.label}><i /></button>
+                  <button type="button" className={notifications[item.id] ? "on" : ""} onClick={() => toggleNotification(item.id)} aria-label={item.label}><i /></button>
                 </label>
               );
             })}
           </div>
+          <p>Permissão do navegador: <strong>{notificationPermission}</strong>. A autorização só é solicitada quando você ativa um lembrete.</p>
+          <label className="settings-select-label"><span>Som do timer</span><button type="button" className={notifications.sound ? "on" : ""} onClick={() => { const next = { ...notifications, sound: !notifications.sound }; setNotifications(next); saveNotificationSettings(next); }} aria-label="Som do timer"><i /></button></label>
           <button className="settings-wide-button" type="button" onClick={() => requestChange("Preferências de notificação atualizadas.")}>Gerenciar preferências</button>
         </article>
 

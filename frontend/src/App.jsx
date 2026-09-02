@@ -36,7 +36,14 @@ import { students as mockStudents, workouts as mockWorkouts } from "./data/mockD
 import { apiRequest, clearToken, getToken, logoutSession, refreshSession } from "./services/api.js";
 import { clearDemoActivityDataOnce } from "./utils/activityData.js";
 import { getRecommendedWorkout } from "./utils/workoutSchedule.js";
-import { isAuthLoginPath, isOwnerLoginPath } from "./utils/authRouting.js";
+import {
+  applyRouteBranding,
+  getContextLoginPath,
+  getRequestedContext,
+  isAuthLoginPath,
+  isOwnerLoginPath,
+  isSessionCompatibleWithContext,
+} from "./utils/authRouting.js";
 
 const pageMeta = {
   dashboard: ["Dashboard", "Disciplina hoje, liberdade amanhã."],
@@ -165,20 +172,16 @@ export default function App() {
   useEffect(() => {
     if (!branding?.display_name) return;
     setPersonalProfile((current) => ({ ...current, name: branding.display_name }));
-    document.title = session?.role === "owner" ? "Fitland" : branding.display_name;
+    applyRouteBranding(window.location.pathname, branding);
   }, [branding?.display_name, session?.role]);
 
   useEffect(() => {
     let mounted = true;
 
     async function restoreSession() {
-      if (isAuthLoginPath(window.location.pathname)) {
-        clearToken();
-        if (mounted) setAuthReady(true);
-        return;
-      }
-
       try {
+        const pathname = window.location.pathname;
+        const requestedContext = getRequestedContext(pathname);
         let user = null;
         if (getToken()) {
           try {
@@ -195,6 +198,14 @@ export default function App() {
 
         if (!mounted) return;
         const normalizedUser = normalizeSessionUser(user);
+        if (!isSessionCompatibleWithContext(normalizedUser, requestedContext)) {
+          clearToken();
+          setSession(null);
+          if (!isAuthLoginPath(pathname) && requestedContext) {
+            window.history.replaceState(null, "", getContextLoginPath(requestedContext));
+          }
+          return;
+        }
         setSession(normalizedUser);
         const requestedPage = normalizedUser.role === "owner" && normalizedUser.must_change_password
           ? "security"
@@ -202,7 +213,7 @@ export default function App() {
         setActivePage(requestedPage);
         if (normalizedUser.role === "owner" && normalizedUser.must_change_password) {
           window.history.replaceState(null, "", "/fitland/change-password");
-        } else if (window.location.pathname === "/") {
+        } else if (isAuthLoginPath(pathname) || pathname === "/") {
           pushRoute(normalizedUser.role);
         }
       } catch {
@@ -259,6 +270,12 @@ export default function App() {
         }}
         onLogin={(user) => {
           const normalizedUser = normalizeSessionUser(user);
+          const requestedContext = getRequestedContext(window.location.pathname);
+          if (!isSessionCompatibleWithContext(normalizedUser, requestedContext)) {
+            clearToken();
+            setSession(null);
+            return;
+          }
           const normalizedRole = normalizedUser.role;
           setSession(normalizedUser);
           const requestedPage = normalizedRole === "owner" && normalizedUser.must_change_password
